@@ -154,7 +154,7 @@ Centos 7.2
 基础环境准备修改主机名添加hosts或者修改dns；
 安装docker-engine服务；
 关闭selin">
-<meta property="og:updated_time" content="2016-11-28T11:26:20.318Z">
+<meta property="og:updated_time" content="2016-11-28T11:29:01.384Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kubernetes 1.4版版本安装配配置">
 <meta name="twitter:description" content="基础环境准备
@@ -493,6 +493,7 @@ Centos 7.2
 <h3 id="搭建kubernetes集群"><a href="#搭建kubernetes集群" class="headerlink" title="搭建kubernetes集群"></a>搭建kubernetes集群</h3><h4 id="安装基本组建"><a href="#安装基本组建" class="headerlink" title="安装基本组建"></a>安装基本组建</h4><p>根据官方文档教程 需要先安装 kubelet、kubeadm、kubectl、 kubernetes-cni 这四个 rpm 包。<br>Kubernetes 编译的各种发行版安装包来源于 Github 上的另一个叫 release 的项目，地址 点这里，<br>把这个项目 clone 下来，由于本人是 Centos 用户，所以进入 rpm 目录，在安装好 docker 的机器上执行那个<br>docker-build.sh 脚本即可编译 rpm 包，最后会生成到当前目录的 output 目录下。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">git clone  https://github.com/kubernetes/release.git</div><div class="line">cd release/rpm</div><div class="line">sh docker-build.sh </div><div class="line">cd output/x86_64/</div><div class="line">[root@10-10-220-246 x86_64]# ll</div><div class="line">total 42796</div><div class="line">-rw-r--r-- 1 root root 10208670 Nov 28 18:18 kubeadm-1.5.0-3.alpha.2.421.a6bea3d79b8bba.x86_64.rpm</div><div class="line">-rw-r--r-- 1 root root  9524886 Nov 28 18:18 kubectl-1.4.4-3.x86_64.rpm</div><div class="line">-rw-r--r-- 1 root root 13794678 Nov 28 18:18 kubelet-1.4.4-3.x86_64.rpm</div><div class="line">-rw-r--r-- 1 root root 10283434 Nov 28 18:18 kubernetes-cni-0.3.0.1-3.07a8a2.x86_64.rpm</div><div class="line">drwxr-xr-x 2 root root     4096 Nov 28 18:18 repodata</div><div class="line">#软件包的安装</div><div class="line">rpm  -ivh   *.rpm</div></pre></td></tr></table></figure>
 <h4 id="启动相关组建"><a href="#启动相关组建" class="headerlink" title="启动相关组建"></a>启动相关组建</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">systemctl enable docker kubelet</div><div class="line">systemctl start docker  kubelet</div><div class="line">systemctl status docker  kubelet</div></pre></td></tr></table></figure>
+<h3 id="镜像获取"><a href="#镜像获取" class="headerlink" title="镜像获取"></a>镜像获取</h3><p>gcr.io 就是 Google 的域名，服务器更不用提，所以在进行 kubeadm init 操作时如果不先把这些镜像 load 进去绝对会卡死不动，<br>以下列出了所需镜像，但是版本号根据 rpm 版本不同可能略有不同，具体怎么看下面介绍。</p>
 
       
     </div>
@@ -673,7 +674,7 @@ Centos 7.2
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础环境准备"><span class="nav-number">1.</span> <span class="nav-text">基础环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基础环境准备-1"><span class="nav-number">2.</span> <span class="nav-text">基础环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建kubernetes集群"><span class="nav-number">3.</span> <span class="nav-text">搭建kubernetes集群</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装基本组建"><span class="nav-number">3.1.</span> <span class="nav-text">安装基本组建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动相关组建"><span class="nav-number">3.2.</span> <span class="nav-text">启动相关组建</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础环境准备"><span class="nav-number">1.</span> <span class="nav-text">基础环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基础环境准备-1"><span class="nav-number">2.</span> <span class="nav-text">基础环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建kubernetes集群"><span class="nav-number">3.</span> <span class="nav-text">搭建kubernetes集群</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装基本组建"><span class="nav-number">3.1.</span> <span class="nav-text">安装基本组建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动相关组建"><span class="nav-number">3.2.</span> <span class="nav-text">启动相关组建</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#镜像获取"><span class="nav-number">4.</span> <span class="nav-text">镜像获取</span></a></li></ol></div>
             
 
           </div>
