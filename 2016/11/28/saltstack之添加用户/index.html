@@ -84,16 +84,16 @@
 
 
 
-<meta name="description" content="添加用户123456789101112131415161718cat init/install.sls test:  user.present:    - fullname: test    - shell: /bin/bash    - uid: 501    - gid: 501    - password: $1$nhvIqNbN$aafafafafa/    - home: /home/t">
+<meta name="description" content="添加用户1234567891011121314151617181920212223242526272829303132333435363738cat init/install.sls test:  user.present:    - fullname: test    - shell: /bin/bash    - uid: 501    - gid: 501    - password: $1">
 <meta property="og:type" content="article">
-<meta property="og:title" content="saltstack之添加用户">
+<meta property="og:title" content="saltstack之初始化">
 <meta property="og:url" content="http://yoursite.com/2016/11/28/saltstack之添加用户/index.html">
 <meta property="og:site_name" content="Zero">
-<meta property="og:description" content="添加用户123456789101112131415161718cat init/install.sls test:  user.present:    - fullname: test    - shell: /bin/bash    - uid: 501    - gid: 501    - password: $1$nhvIqNbN$aafafafafa/    - home: /home/t">
-<meta property="og:updated_time" content="2016-11-28T09:14:42.460Z">
+<meta property="og:description" content="添加用户1234567891011121314151617181920212223242526272829303132333435363738cat init/install.sls test:  user.present:    - fullname: test    - shell: /bin/bash    - uid: 501    - gid: 501    - password: $1">
+<meta property="og:updated_time" content="2016-11-28T10:44:53.901Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="saltstack之添加用户">
-<meta name="twitter:description" content="添加用户123456789101112131415161718cat init/install.sls test:  user.present:    - fullname: test    - shell: /bin/bash    - uid: 501    - gid: 501    - password: $1$nhvIqNbN$aafafafafa/    - home: /home/t">
+<meta name="twitter:title" content="saltstack之初始化">
+<meta name="twitter:description" content="添加用户1234567891011121314151617181920212223242526272829303132333435363738cat init/install.sls test:  user.present:    - fullname: test    - shell: /bin/bash    - uid: 501    - gid: 501    - password: $1">
 
 
 
@@ -127,7 +127,7 @@
 
 
 
-  <title> saltstack之添加用户 | Zero </title>
+  <title> saltstack之初始化 | Zero </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -292,7 +292,7 @@
             
             
               
-                saltstack之添加用户
+                saltstack之初始化
               
             
           </h1>
@@ -359,7 +359,7 @@
       
 
       
-        <h4 id="添加用户"><a href="#添加用户" class="headerlink" title="添加用户"></a>添加用户</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">cat init/install.sls </div><div class="line">test:</div><div class="line">  user.present:</div><div class="line">    - fullname: test</div><div class="line">    - shell: /bin/bash</div><div class="line">    - uid: 501</div><div class="line">    - gid: 501</div><div class="line">    - password: $1$nhvIqNbN$aafafafafa/</div><div class="line">    - home: /home/test</div><div class="line">    - groups:</div><div class="line">      - test</div><div class="line">    - require:</div><div class="line">      - group: test</div><div class="line">  group.present:</div><div class="line">    - gid: 501</div><div class="line">    - name: test</div><div class="line">  cmd.run:</div><div class="line">    - name: systemctl stop firewalld.service  &amp;&amp; sed -i  &apos;s/SELINUX=enforce/SELINUX=disabled/g&apos; /etc/selinux/config</div></pre></td></tr></table></figure>
+        <h4 id="添加用户"><a href="#添加用户" class="headerlink" title="添加用户"></a>添加用户</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">cat init/install.sls </div><div class="line">test:</div><div class="line">  user.present:</div><div class="line">    - fullname: test</div><div class="line">    - shell: /bin/bash</div><div class="line">    - uid: 501</div><div class="line">    - gid: 501</div><div class="line">    - password: $1$nhvIqNbN$aafafafafa/</div><div class="line">    - home: /home/test</div><div class="line">    - groups:</div><div class="line">      - test</div><div class="line">    - require:</div><div class="line">      - group: test</div><div class="line">  group.present:</div><div class="line">    - gid: 501</div><div class="line">    - name: test</div><div class="line">  cmd.run:</div><div class="line">    - name: systemctl stop firewalld.service  &amp;&amp; sed -i  &apos;s/SELINUX=enforce/SELINUX=disabled/g&apos; /etc/selinux/config </div><div class="line">	</div><div class="line">#添加docker epol yum源</div><div class="line">/etc/yum.repos.d/docker.repo:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://init/files/docker.repo</div><div class="line">    - user: root</div><div class="line">    - group: root</div><div class="line">    - mode: 0644</div><div class="line">  cmd.run:</div><div class="line">    - name: yum -y install docker-engine </div><div class="line">    - unless:  docker --version |grep 1.12.3</div><div class="line">    - requrie:</div><div class="line">      - file: /etc/yum.repos.d/docker.repo</div><div class="line">#如果没有dns服务器执行如下操作</div><div class="line">/etc/hosts:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://init/files/hosts</div><div class="line">    - user: root</div><div class="line">    - group: root</div><div class="line">    - mode: 0644</div></pre></td></tr></table></figure>
 <h3 id="生成密码"><a href="#生成密码" class="headerlink" title="生成密码"></a>生成密码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">openssl passwd -1</div></pre></td></tr></table></figure>
 <h3 id="批量用户添加"><a href="#批量用户添加" class="headerlink" title="批量用户添加"></a>批量用户添加</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&#123;% set users = [&apos;jerry&apos;,&apos;tom&apos;,&apos;sunday&apos;] %&#125;</div><div class="line">&#123;% for user in users %&#125;</div><div class="line">&#123;&#123; user &#125;&#125;:</div><div class="line">user.present:</div><div class="line">   - shell: /bin/bash</div><div class="line">   - password: &apos;$1$h6niwjpG$2nAnRib36QUr2wnfYXC4u0&apos;</div><div class="line">   - unless: id &#123;&#123; user &#125;&#125;</div><div class="line">&#123;% endfor %&#125;</div></pre></td></tr></table></figure>
       
@@ -402,6 +402,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/28/kubernetes-1.4版版本安装配配置/" rel="prev" title="kubernetes 1.4版版本安装配配置">
+                kubernetes 1.4版版本安装配配置 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -469,7 +473,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-count">4</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -486,7 +490,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
