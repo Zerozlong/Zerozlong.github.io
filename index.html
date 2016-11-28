@@ -370,13 +370,17 @@
 - shell: /bin/bash
 - uid: 501
 - gid: 501
-- passwd: $1$nhvIqNbN$f3oIK9yFNcSezMb3HEZoS/
+- password: $1$nhvIqNbN$aafafafafa/
 - home: /home/test
 - groups:
   - test
 - require:
   - group: test
-- unless: id test
+</code></pre><p>  group.present:</p>
+<pre><code>- gid: 501
+- name: test
+</code></pre><p>  cmd.run:</p>
+<pre><code>- name: systemctl stop firewalld.service  &amp;&amp; sed -i  &apos;s/SELINUX=enforce/SELINUX=disabled&apos; /etc/selinux/config 
 </code></pre><p>‘’’</p>
 <h3 id="生成密码"><a href="#生成密码" class="headerlink" title="生成密码"></a>生成密码</h3><p>‘’’<br>openssl passwd -1<br>‘’’</p>
 <h3 id="批量用户添加"><a href="#批量用户添加" class="headerlink" title="批量用户添加"></a>批量用户添加</h3><p>‘’’<br><br>
