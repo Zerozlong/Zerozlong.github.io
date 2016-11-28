@@ -365,7 +365,7 @@
       
         
           
-            <h4 id="添加用户"><a href="#添加用户" class="headerlink" title="添加用户"></a>添加用户</h4><p>‘’’’<br>cat init/install.sls<br>test:<br>  user.present:</p>
+            <h4 id="添加用户"><a href="#添加用户" class="headerlink" title="添加用户"></a>添加用户</h4><p>‘’’<br>cat init/install.sls<br>test:<br>  user.present:</p>
 <pre><code>- fullname: test
 - shell: /bin/bash
 - uid: 501
@@ -377,7 +377,7 @@
 - require:
   - group: test
 - unless: id test
-</code></pre><p>‘’’’</p>
+</code></pre><p>‘’’</p>
 <h3 id="生成密码"><a href="#生成密码" class="headerlink" title="生成密码"></a>生成密码</h3><p>‘’’<br>openssl passwd -1<br>‘’’</p>
 <h3 id="批量用户添加"><a href="#批量用户添加" class="headerlink" title="批量用户添加"></a>批量用户添加</h3><p>‘’’<br><br>
 jerry:
