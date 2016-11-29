@@ -156,7 +156,7 @@ Centos 7.2
 关闭selinux">
 <meta property="og:image" content="http://yoursite.com/source/images/1.png">
 <meta property="og:image" content="http://yoursite.com/source/images/2.png">
-<meta property="og:updated_time" content="2016-11-29T07:18:41.563Z">
+<meta property="og:updated_time" content="2016-11-29T08:11:36.208Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kubernetes 1.4版版本安装配配置">
 <meta name="twitter:description" content="全局规划
@@ -513,6 +513,7 @@ Centos 7.2
 <p>将私服地址添加到docker启动文件中：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">for images in `docker images |grep  &quot;gcr&quot; | awk &apos;&#123;print $1,$2&#125;&apos; |awk -F&apos;/&apos; &apos;&#123;print $NF&#125;&apos; |awk   &apos;BEGIN&#123;OFS=&quot;:&quot;&#125;&#123;print $1,$2&#125;&apos;`; \</div><div class="line">do \</div><div class="line">echo $images  ;\</div><div class="line">docker tag gcr.io/google_containers/$images 10.10.132.89/k81.4/$images ; \</div><div class="line">docker push 10.10.132.89/k81.4/$images   ; \</div><div class="line">docker rmi 10.10.132.89/k81.4/$images ;\</div><div class="line">done</div></pre></td></tr></table></figure>
 <h5 id="从私服拉镜像"><a href="#从私服拉镜像" class="headerlink" title="从私服拉镜像"></a>从私服拉镜像</h5><p>脚本功能说明：<br>脚本包括拉取镜像，改名<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#date: 2016-11-29</div><div class="line">#auth: zero</div><div class="line">private_address=10.10.132.89/k81.4</div><div class="line">images=(kube-apiserver-amd64:v1.4.4 kube-controller-manager-amd64:v1.4.4 kube-scheduler-amd64:v1.4.4 kube-proxy-amd64:v1.4.4 \</div><div class="line">kubernetes-dashboard-amd64:v1.4.4 kube-discovery-amd64:1.0 kubedns-amd64:1.7 exechealthz-amd64:1.1 kube-dnsmasq-amd64:1.3 \</div><div class="line">pause-amd64:3.0 etcd-amd64:2.2.5)</div><div class="line">for image in $&#123;images[@]&#125; ;do</div><div class="line">docker pull $private_address/$image ;</div><div class="line">docker tag $private_address/$image gcr.io/google_containers/$image;</div><div class="line">docker rmi $private_address/$image ;</div><div class="line">done</div></pre></td></tr></table></figure></p>
+<p>自己制作本地yum源：</p>
 
       
     </div>
