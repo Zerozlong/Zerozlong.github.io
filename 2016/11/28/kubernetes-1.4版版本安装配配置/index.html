@@ -156,7 +156,7 @@ Centos 7.2
 关闭selinux">
 <meta property="og:image" content="http://yoursite.com/source/images/1.png">
 <meta property="og:image" content="http://yoursite.com/source/images/2.png">
-<meta property="og:updated_time" content="2016-11-29T09:27:38.932Z">
+<meta property="og:updated_time" content="2016-11-30T08:40:25.122Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kubernetes 1.4版版本安装配配置">
 <meta name="twitter:description" content="全局规划
@@ -522,6 +522,7 @@ Centos 7.2
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-test-bj2c-master1 output]# cat weave-kube.yaml |grep image</div><div class="line">image: weaveworks/weave-kube:1.8.1</div><div class="line">image: weaveworks/weave-npc:1.8.1</div></pre></td></tr></table></figure>
 <p>同样将这些镜像pull到本地，然后打包，所有服务器下载。</p>
 <h3 id="部署dashboard"><a href="#部署dashboard" class="headerlink" title="部署dashboard"></a>部署dashboard</h3><p>dashboard 的命令也跟 weave 的一样，不过有个大坑，默认的 yaml 文件中对于 image<br>拉取策略的定义是 无论何时都会去拉取镜像，导致即使你 load 进去也无卵用，<br>所以还得先把 yaml 搞下来然后改一下镜像拉取策略，最后再 create -f 即可</p>
+<p>### </p>
 
       
     </div>
@@ -563,6 +564,10 @@ Centos 7.2
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/30/k8s集群搭建/" rel="prev" title="k8s搭建之集群部署(二)">
+                k8s搭建之集群部署(二) <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -630,7 +635,7 @@ Centos 7.2
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -647,7 +652,7 @@ Centos 7.2
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
