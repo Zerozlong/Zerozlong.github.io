@@ -154,9 +154,9 @@ Centos 7.2
 基础环境准备修改主机名添加hosts或者修改dns；
 安装docker-engine服务；
 关闭selinux">
-<meta property="og:image" content="http://yoursite.com/source/images/1.png">
-<meta property="og:image" content="http://yoursite.com/source/images/2.png">
-<meta property="og:updated_time" content="2016-11-30T08:40:25.122Z">
+<meta property="og:image" content="http://yoursite.com/images/1.png">
+<meta property="og:image" content="http://yoursite.com/images/2.png">
+<meta property="og:updated_time" content="2016-12-02T08:41:27.152Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kubernetes 1.4版版本安装配配置">
 <meta name="twitter:description" content="全局规划
@@ -192,7 +192,7 @@ Centos 7.2
 基础环境准备修改主机名添加hosts或者修改dns；
 安装docker-engine服务；
 关闭selinux">
-<meta name="twitter:image" content="http://yoursite.com/source/images/1.png">
+<meta name="twitter:image" content="http://yoursite.com/images/1.png">
 
 
 
@@ -503,11 +503,11 @@ Centos 7.2
 <h4 id="镜像版本如何确定？"><a href="#镜像版本如何确定？" class="headerlink" title="镜像版本如何确定？"></a>镜像版本如何确定？</h4><p>但是一大心病就是 “我特么怎么知道是哪个版本的”，为了发扬 “刨根问底” 的精神，先进行一遍 kubeadm init，<br>这时候绝对卡死，此时进入 /etc/kubernetes/manifests 可以看到许多 json 文件，这些文件中定义了需要哪些基础镜像</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-test-bj2c-master1 manifests]# cat *.json |grep image</div><div class="line">        &quot;image&quot;: &quot;gcr.io/google_containers/etcd-amd64:2.2.5&quot;,</div><div class="line">        &quot;image&quot;: &quot;gcr.io/google_containers/kube-apiserver-amd64:v1.4.4&quot;,</div><div class="line">        &quot;image&quot;: &quot;gcr.io/google_containers/kube-controller-manager-amd64:v1.4.4&quot;,</div><div class="line">        &quot;image&quot;: &quot;gcr.io/google_containers/kube-scheduler-amd64:v1.4.4&quot;,</div></pre></td></tr></table></figure>
 <p>我这次版本用的v1.4.1的，因此修改配置文件为v1.4.1的,将其改为1.4.4即可。</p>
-<p>从上图中基本可以看到 kubeadm init 的时候会拉取哪些基础镜像了，但是还有一些镜像，仍然无法找到，比如kubedns、pause 等，<br>至于其他的镜像版本，可以从源码中找到，源码位置是 kubernetes/cmd/kubeadm/app/images/images.go 这个文件中，如下所示:<br>github位置：kubernetes/cmd/kubeadm/app/images/images.go<br>如下图所示：<br><img src="/source/images/1.png" alt="image"></p>
+<p>从上图中基本可以看到 kubeadm init 的时候会拉取哪些基础镜像了，但是还有一些镜像，仍然无法找到，比如kubedns、pause 等，<br>至于其他的镜像版本，可以从源码中找到，源码位置是 kubernetes/cmd/kubeadm/app/images/images.go 这个文件中，如下所示:<br>github位置：kubernetes/cmd/kubeadm/app/images/images.go<br>如下图所示：<br><img src="/images/1.png" alt="image"></p>
 <h4 id="初始化master"><a href="#初始化master" class="headerlink" title="初始化master"></a>初始化master</h4><p>等会有个坑，kubeadm 等相关 rpm 安装后会生成 /etc/kubernetes 目录，而 kubeadm init 时候又会检测这些目录是否存在，<br>如果存在则停止初始化，所以要先清理一下，以下清理脚本来源于 官方文档 Tear down 部分，该脚本同样适用于初始化失败进行重置</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">systemctl stop kubelet;</div><div class="line"># 注意: 下面这条命令会干掉所有正在运行的 docker 容器，</div><div class="line"># 如果要进行重置操作，最好先确定当前运行的所有容器都能干掉(干掉不影响业务)，</div><div class="line"># 否则的话最好手动删除 kubeadm 创建的相关容器(gcr.io 相关的)</div><div class="line">docker rm -f -v $(docker ps -q);</div><div class="line">find /var/lib/kubelet | xargs -n 1 findmnt -n -t tmpfs -o TARGET -T | uniq | xargs -r umount -v;</div><div class="line">rm -r -f /etc/kubernetes /var/lib/kubelet /var/lib/etcd;</div></pre></td></tr></table></figure>
 <p>还有个坑，初始化以前记得一定要启动 kubelet，虽然你 systemctl status kubelet 看着他是启动失败，但是也得启动，否则卡死。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">systemctl enable kubelet</div><div class="line">systemctl start kubelet</div></pre></td></tr></table></figure></p>
-<h4 id="开始创建集群"><a href="#开始创建集群" class="headerlink" title="开始创建集群"></a>开始创建集群</h4><p>首先在 master 上执行 init 操作<br>kubeadm init –api-advertise-addresses=10.10.220.246<br>配置成功图片如下图所示:<br><img src="/source/images/2.png" alt="image"></p>
+<h4 id="开始创建集群"><a href="#开始创建集群" class="headerlink" title="开始创建集群"></a>开始创建集群</h4><p>首先在 master 上执行 init 操作<br>kubeadm init –api-advertise-addresses=10.10.220.246<br>配置成功图片如下图所示:<br><img src="/images/2.png" alt="image"></p>
 <p>这里再爆料一个坑，底下的 kubeadm join –token=195294.d4d92941c02f244b 10.10.220.246<br>这条命令一定保存好，因为后期没法重现的，你们老大再让你添加机器的时候如果没这个你会哭的</p>
 <h4 id="node节点配置"><a href="#node节点配置" class="headerlink" title="node节点配置"></a>node节点配置</h4><h5 id="配置私服地址"><a href="#配置私服地址" class="headerlink" title="配置私服地址"></a>配置私服地址</h5><p>修改docker的启动参数，同步到客户端，添加私服地址：参考salt之init配置文件。</p>
 <p>将私服地址添加到docker启动文件中：</p>
