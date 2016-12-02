@@ -617,7 +617,7 @@
           
             <p>生活在于折腾，前几天搭建的kubernetes是单机模式，服务挂掉之后，容易影响到其它服务，故这次主要做服务的高可用。</p>
 <p>先上一个生产使用架构图：</p>
-<p><img src="/images/4.jpg" alt="image"></p>
+<p><img src="/images/6.jpg" alt="image"></p>
 <h2 id="etcd集群搭建"><a href="#etcd集群搭建" class="headerlink" title="etcd集群搭建"></a>etcd集群搭建</h2><p>默认 kubeadm 创建的集群会在内部启动一个单点的 etcd，当然大部分情况下 etcd 还是很稳定的，<br>但是一但 etcd 由于某种原因挂掉，这个问题会非常严重，会导致整个集群不可用。<br>具体原因是 etcd 存储着 kubernetes 各种元数据信息；包括 kubectl get pod 等等基础命令实际<br>上全部是调用 RESTful API 从 etcd 中获取的信息；所以一但 etcd 挂掉以后，基本等同于 kubectl 命令不可用，<br>此时将变为 ‘瞎子’，集群各节点也会因无法从 etcd 获取数据而出现无法调度，最终挂掉。</p>
 <h2 id="搭建注意事项"><a href="#搭建注意事项" class="headerlink" title="搭建注意事项"></a>搭建注意事项</h2><h3 id="etcd不能与master在一个节点上"><a href="#etcd不能与master在一个节点上" class="headerlink" title="etcd不能与master在一个节点上"></a>etcd不能与master在一个节点上</h3><p>这个坑是由于 kubeadm 的 check 机制的 bug 造成的，目前还没有修复；表现为 当 etcd 与 master 在同一节点时，<br>kubeadm init 会失败，同时报错信息提示 ‘已经存在了 /var/lib/etcd 目录，或者 2379 端口被占用’；因为默认 kubeadm 会创建 etcd，<br>而默认的 etcd 会占用这个目录和 2379 端口，即使你加了 –external-etcd-endpoints 参数，kubeadm 仍然会检测这两项条件是否满足，<br>不满足则禁止 init 操作<br>解决办法就是要么外部的 etcd 更换数据目录(/var/lib/etcd)和端口，要么干脆不要和 master 放在同一主机即可</p>
 <h3 id="日志级别调整"><a href="#日志级别调整" class="headerlink" title="日志级别调整"></a>日志级别调整</h3><p>熟悉的小伙伴应该清楚，基本上每个 kubernetes 组件都会有个通用的参数 –v；这个参数用于控制 kubernetes 各个组件的日志级别，<br>在早期(alpha)的 kubeadm 版本中，如果不进行调整，默认创建集群所有组件日志级别全部为 –v=4 即最高级别输出，这会导致在业务量大的时候磁盘空间以不够用<br>，尤其是 kube-proxy 组件的容器，会疯狂吃掉你的磁盘空间，然后剩下懵逼的你不知为何。在后续的版本中(beta)发现日志级别已经降到了 –v=2，</p>
