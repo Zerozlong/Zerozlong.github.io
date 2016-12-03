@@ -84,16 +84,19 @@
 
 
 
-<meta name="description" content="走过山山水水,脚下高高低低,人生难得糊涂！">
+<meta name="description" content="安装jdkjdk的安装用saltstack进行安装；
+12345678910111213141516171819jdk-file:  file.managed:    - source: salt://java/files/jdk1.8.0_73.tar.gz    - name: /usr/local/src/jdk1.8.0_73.tar.gzjdk-install:  cmd.run:">
 <meta property="og:type" content="article">
 <meta property="og:title" content="jenkins安装配置(二)">
 <meta property="og:url" content="http://yoursite.com/2016/12/03/jenkins安装配置/index.html">
 <meta property="og:site_name" content="Zero">
-<meta property="og:description" content="走过山山水水,脚下高高低低,人生难得糊涂！">
-<meta property="og:updated_time" content="2016-12-03T06:48:41.506Z">
+<meta property="og:description" content="安装jdkjdk的安装用saltstack进行安装；
+12345678910111213141516171819jdk-file:  file.managed:    - source: salt://java/files/jdk1.8.0_73.tar.gz    - name: /usr/local/src/jdk1.8.0_73.tar.gzjdk-install:  cmd.run:">
+<meta property="og:updated_time" content="2016-12-03T08:27:09.094Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jenkins安装配置(二)">
-<meta name="twitter:description" content="走过山山水水,脚下高高低低,人生难得糊涂！">
+<meta name="twitter:description" content="安装jdkjdk的安装用saltstack进行安装；
+12345678910111213141516171819jdk-file:  file.managed:    - source: salt://java/files/jdk1.8.0_73.tar.gz    - name: /usr/local/src/jdk1.8.0_73.tar.gzjdk-install:  cmd.run:">
 
 
 
@@ -375,7 +378,13 @@
       
 
       
-        
+        <h3 id="安装jdk"><a href="#安装jdk" class="headerlink" title="安装jdk"></a>安装jdk</h3><p>jdk的安装用saltstack进行安装；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">jdk-file:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://java/files/jdk1.8.0_73.tar.gz</div><div class="line">    - name: /usr/local/src/jdk1.8.0_73.tar.gz</div><div class="line">jdk-install:</div><div class="line">  cmd.run: </div><div class="line">    - name: cd /usr/local/src  &amp;&amp; tar -xvf jdk1.8.0_73.tar.gz -C /usr/local/ &amp;&amp; ln -s /usr/local/jdk1.8.0_73 /usr/local/jdk</div><div class="line">    - cwd: /usr/local</div><div class="line">    - unless: test -e jdk1.8.0_73</div><div class="line">    - require:</div><div class="line">      - file: jdk-file</div><div class="line">jdk-config:</div><div class="line">  file.append:</div><div class="line">    - name: /etc/profile</div><div class="line">    - text:</div><div class="line">      - export JAVA_HOME=/usr/local/jdk</div><div class="line">      - export PATH=$JAVA_HOME/bin:$PATH</div><div class="line">      - export CLASSPATH=.$CLASSPATH:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/dt.jar:,</div><div class="line">    - unless: java --version</div></pre></td></tr></table></figure>
+<h3 id="安装tomcat"><a href="#安装tomcat" class="headerlink" title="安装tomcat"></a>安装tomcat</h3><p><a href="http://tomcat.apache.org/" target="_blank" rel="external">http://tomcat.apache.org/</a><br>tomcat官网下载tomcat安装包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">tomcat-file:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://tomcat/files/apache-tomcat-8.0.39.tar.gz </div><div class="line">    - name: /usr/local/src/apache-tomcat-8.0.39.tar.gz </div><div class="line">tomcat-install:</div><div class="line">  cmd.run: </div><div class="line">    - name: cd /usr/local/src  &amp;&amp; tar -xvf apache-tomcat-8.0.39.tar.gz -C /usr/local/ &amp;&amp; ln -s /usr/local/apache-tomcat-8.0.39  /usr/local/tomcat</div><div class="line">    - cwd: /usr/local</div><div class="line">    - unless: test -e apache-tomcat-8.0.39</div><div class="line">    - require:</div><div class="line">      - file: tomcat-file</div></pre></td></tr></table></figure>
+<p>catalina.sh 修改启动文件加入如下参数调整优化：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">JAVA_OPTS=&apos;-server -Xms3g -Xmx3g -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+DisableExplicitGC -XX:CMSFullGCsBeforeCompaction=0 -Xnoclassgc  -XX:+UseBiasedLocking     </div><div class="line"> -XX:SoftRefLRUPolicyMSPerMB=0 -XX:+CMSParallelRemarkEnabled -XX:+CMSClassUnloadingEnabled -XX:+UseFastAccessorMethods -XX:+UseCMSCompactAtFullCollection -XX:+PrintG    </div><div class="line">CDetails -Xloggc:/data/server/tomcat-jenkins-8080/logs/tomcat_gc.log&apos;</div></pre></td></tr></table></figure></p>
+<h3 id="安装jenkins"><a href="#安装jenkins" class="headerlink" title="安装jenkins"></a>安装jenkins</h3><p>下载jenkins war包。</p>
+
       
     </div>
 
@@ -487,8 +496,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -561,6 +579,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装jdk"><span class="nav-number">1.</span> <span class="nav-text">安装jdk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装tomcat"><span class="nav-number">2.</span> <span class="nav-text">安装tomcat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装jenkins"><span class="nav-number">3.</span> <span class="nav-text">安装jenkins</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>
