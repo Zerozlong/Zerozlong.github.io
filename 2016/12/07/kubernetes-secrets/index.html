@@ -85,18 +85,21 @@
 
 
 <meta name="description" content="源码导读：123456789cat &amp;gt;&amp;gt;secret.yaml &amp;lt;&amp;lt;EOFapiVersion: v1kind: Secretmetadata:  name: test-secretdata:  data-1: dmFsdWUtMQ0K  data-2: dmFsdWUtMg0KDQo=EOF
-kubectl create -fkubectl get secret">
+kubectl create -f secret.yaml
+kubectl ge">
 <meta property="og:type" content="article">
-<meta property="og:title" content="kubernetes secrets">
+<meta property="og:title" content="kubernetes secrets（五）">
 <meta property="og:url" content="http://yoursite.com/2016/12/07/kubernetes-secrets/index.html">
 <meta property="og:site_name" content="Zero">
 <meta property="og:description" content="源码导读：123456789cat &amp;gt;&amp;gt;secret.yaml &amp;lt;&amp;lt;EOFapiVersion: v1kind: Secretmetadata:  name: test-secretdata:  data-1: dmFsdWUtMQ0K  data-2: dmFsdWUtMg0KDQo=EOF
-kubectl create -fkubectl get secret">
-<meta property="og:updated_time" content="2016-12-07T06:54:48.977Z">
+kubectl create -f secret.yaml
+kubectl ge">
+<meta property="og:updated_time" content="2016-12-07T07:11:09.079Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="kubernetes secrets">
+<meta name="twitter:title" content="kubernetes secrets（五）">
 <meta name="twitter:description" content="源码导读：123456789cat &amp;gt;&amp;gt;secret.yaml &amp;lt;&amp;lt;EOFapiVersion: v1kind: Secretmetadata:  name: test-secretdata:  data-1: dmFsdWUtMQ0K  data-2: dmFsdWUtMg0KDQo=EOF
-kubectl create -fkubectl get secret">
+kubectl create -f secret.yaml
+kubectl ge">
 
 
 
@@ -130,7 +133,7 @@ kubectl create -fkubectl get secret">
 
 
 
-  <title> kubernetes secrets | Zero </title>
+  <title> kubernetes secrets（五） | Zero </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -295,7 +298,7 @@ kubectl create -fkubectl get secret">
             
             
               
-                kubernetes secrets
+                kubernetes secrets（五）
               
             
           </h1>
@@ -353,7 +356,7 @@ kubectl create -fkubectl get secret">
 
           
           
-             <span id="/2016/12/07/kubernetes-secrets/" class="leancloud_visitors" data-flag-title="kubernetes secrets">
+             <span id="/2016/12/07/kubernetes-secrets/" class="leancloud_visitors" data-flag-title="kubernetes secrets（五）">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -379,7 +382,11 @@ kubectl create -fkubectl get secret">
 
       
         <p>源码导读：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">cat &gt;&gt;secret.yaml &lt;&lt;EOF</div><div class="line">apiVersion: v1</div><div class="line">kind: Secret</div><div class="line">metadata:</div><div class="line">  name: test-secret</div><div class="line">data:</div><div class="line">  data-1: dmFsdWUtMQ0K</div><div class="line">  data-2: dmFsdWUtMg0KDQo=</div><div class="line">EOF</div></pre></td></tr></table></figure></p>
-<p>kubectl create -f<br>kubectl get secret</p>
+<p>kubectl create -f secret.yaml</p>
+<p>kubectl get secret</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-test-bj2c-master1 template]# kubectl describe secret test-secret</div><div class="line">Name:		test-secret</div><div class="line">Namespace:	default</div><div class="line">Labels:		&lt;none&gt;</div><div class="line">Annotations:	&lt;none&gt;</div><div class="line"></div><div class="line">Type:	Opaque</div><div class="line"></div><div class="line">Data</div><div class="line">====</div><div class="line">data-1:	9 bytes</div><div class="line">data-2:	11 bytes</div></pre></td></tr></table></figure>
+<p>接下来创建一个pod，让其使用secret：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">cat &gt;&gt; secret-pod.yaml &lt;&lt;EOF</div><div class="line">apiVersion: v1</div><div class="line">kind: Pod</div><div class="line">metadata:</div><div class="line">  name: secret-test-pod</div><div class="line">spec:</div><div class="line">  containers:</div><div class="line">    - name: test-container</div><div class="line">      image: kubernetes/mounttest:0.1</div><div class="line">      command: [ &quot;/mt&quot;, &quot;--file_content=/etc/secret-volume/data-1&quot; ]</div><div class="line">      volumeMounts:</div><div class="line">          # name must match the volume name below</div><div class="line">          - name: secret-volume</div><div class="line">            mountPath: /etc/secret-volume</div><div class="line">  volumes:</div><div class="line">    - name: secret-volume  </div><div class="line">      secret:</div><div class="line">        secretName: test-secret</div><div class="line">  restartPolicy: Never</div><div class="line">EOF</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -433,8 +440,8 @@ kubectl create -fkubectl get secret">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/12/06/基础镜像/" rel="next" title="kuernetes v1.4 rc">
-                <i class="fa fa-chevron-left"></i> kuernetes v1.4 rc
+              <a href="/2016/12/06/基础镜像/" rel="next" title="kuernetes v1.4 rc（四）">
+                <i class="fa fa-chevron-left"></i> kuernetes v1.4 rc（四）
               </a>
             
           </div>
@@ -442,6 +449,10 @@ kubectl create -fkubectl get secret">
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/07/k8s资源管理/" rel="prev" title="k8s资源管理">
+                k8s资源管理 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -468,7 +479,7 @@ kubectl create -fkubectl get secret">
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2016/12/07/kubernetes-secrets/"
-           data-title="kubernetes secrets" data-url="http://yoursite.com/2016/12/07/kubernetes-secrets/">
+           data-title="kubernetes secrets（五）" data-url="http://yoursite.com/2016/12/07/kubernetes-secrets/">
       </div>
     
   </div>
@@ -504,7 +515,7 @@ kubectl create -fkubectl get secret">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-count">12</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
