@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Zero, Welcom!" />
+  <meta name="keywords" content="kubernetes," />
 
 
 
@@ -84,16 +84,16 @@
 
 
 
-<meta name="description" content="走过山山水水,脚下高高低低,人生难得糊涂！">
+<meta name="description" content="Deployment提供了pod和rc的设置，在deployment里面你只需要描述对象的最终状态。它就可以改变pod和rc的最终状态。你可以定义deployment来创建新的资源，或者替换已经存在的资源。下面将从如下几个方面来讲述deployment：1、创建一个deployment来启动rc和pods;2、查看deployment的状态，来看其是否成功；3、更新deployment重建pod;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="k8s资源管理">
+<meta property="og:title" content="k8s deployment">
 <meta property="og:url" content="http://yoursite.com/2016/12/07/k8s资源管理/index.html">
 <meta property="og:site_name" content="Zero">
-<meta property="og:description" content="走过山山水水,脚下高高低低,人生难得糊涂！">
-<meta property="og:updated_time" content="2016-12-07T07:08:48.388Z">
+<meta property="og:description" content="Deployment提供了pod和rc的设置，在deployment里面你只需要描述对象的最终状态。它就可以改变pod和rc的最终状态。你可以定义deployment来创建新的资源，或者替换已经存在的资源。下面将从如下几个方面来讲述deployment：1、创建一个deployment来启动rc和pods;2、查看deployment的状态，来看其是否成功；3、更新deployment重建pod;">
+<meta property="og:updated_time" content="2016-12-07T09:57:17.819Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="k8s资源管理">
-<meta name="twitter:description" content="走过山山水水,脚下高高低低,人生难得糊涂！">
+<meta name="twitter:title" content="k8s deployment">
+<meta name="twitter:description" content="Deployment提供了pod和rc的设置，在deployment里面你只需要描述对象的最终状态。它就可以改变pod和rc的最终状态。你可以定义deployment来创建新的资源，或者替换已经存在的资源。下面将从如下几个方面来讲述deployment：1、创建一个deployment来启动rc和pods;2、查看deployment的状态，来看其是否成功；3、更新deployment重建pod;">
 
 
 
@@ -127,7 +127,7 @@
 
 
 
-  <title> k8s资源管理 | Zero </title>
+  <title> k8s deployment | Zero </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -292,7 +292,7 @@
             
             
               
-                k8s资源管理
+                k8s deployment
               
             
           </h1>
@@ -316,6 +316,24 @@
           </span>
 
           
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/容器管理软件/" itemprop="url" rel="index">
+                    <span itemprop="name">容器管理软件</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -332,7 +350,7 @@
 
           
           
-             <span id="/2016/12/07/k8s资源管理/" class="leancloud_visitors" data-flag-title="k8s资源管理">
+             <span id="/2016/12/07/k8s资源管理/" class="leancloud_visitors" data-flag-title="k8s deployment">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -357,7 +375,21 @@
       
 
       
-        
+        <p>Deployment提供了pod和rc的设置，在deployment里面你只需要描述对象的最终状态。它就可以改变pod和rc的最终状态。<br>你可以定义deployment来创建新的资源，或者替换已经存在的资源。<br>下面将从如下几个方面来讲述deployment：<br>1、创建一个deployment来启动rc和pods;<br>2、查看deployment的状态，来看其是否成功；<br>3、更新deployment重建pod;<br>4、如果版本不稳定，deployment将如何回滚。<br>5、pause or go on一个deployment。</p>
+<h3 id="deployment创建rc"><a href="#deployment创建rc" class="headerlink" title="deployment创建rc"></a>deployment创建rc</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">apiVersion: extensions/v1beta1</div><div class="line">kind: Deployment</div><div class="line">metadata:</div><div class="line">  name: nginx-deployment</div><div class="line">spec:</div><div class="line">  replicas: 2</div><div class="line">  template:</div><div class="line">    metadata:</div><div class="line">      labels:</div><div class="line">        app: nginx</div><div class="line">    spec:</div><div class="line">      containers:</div><div class="line">      - name: nginx</div><div class="line">        image: nginx:1.7.9</div><div class="line">        ports:</div><div class="line">        - containerPort: 80</div></pre></td></tr></table></figure>
+<p>输入下面的命令，查看deployment的状态：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-test-bj2c-master1 template]# kubectl get deployments</div><div class="line">NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE</div><div class="line">nginx-deployment   2         2         2            2           10m</div><div class="line"></div><div class="line">[root@ucloud-test-bj2c-master1 template]# kubectl get pods --show-labels</div><div class="line">NAME                                READY     STATUS    RESTARTS   AGE       LABELS</div><div class="line">my-nginx-60xqb                      1/1       Running   0          6m        app=nginx,deployment=170462ea15f91a5358f9fb6c8c5e6f46-orig</div><div class="line">my-nginx-wvmmr                      1/1       Running   0          6m        app=nginx,deployment=170462ea15f91a5358f9fb6c8c5e6f46-orig</div></pre></td></tr></table></figure></p>
+<p>kubectl get rs and kubectl get pods</p>
+<h3 id="查看deployment的状态，来看其是否成功；"><a href="#查看deployment的状态，来看其是否成功；" class="headerlink" title="查看deployment的状态，来看其是否成功；"></a>查看deployment的状态，来看其是否成功；</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-test-bj2c-master1 template]# kubectl rollout status deployment/nginx-deployment</div><div class="line">deployment nginx-deployment successfully rolled out </div><div class="line">kubectl get deployments</div></pre></td></tr></table></figure>
+<h3 id="更新deployment只改变单一条件，查看其状态"><a href="#更新deployment只改变单一条件，查看其状态" class="headerlink" title="更新deployment只改变单一条件，查看其状态"></a>更新deployment只改变单一条件，查看其状态</h3><p>方法一：<br>kubectl set image deployment/nginx-deployment nginx=nginx:1.7.9</p>
+<p>方法二：<br>kubectl edit deployment/nginx-deployment</p>
+<p>通过这两个方法修改之后，可以查看当前的情况信息：<br>$ kubectl get deployments<br>NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE<br>nginx-deployment   3         3         3            3           36s</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-test-bj2c-master1 template]#  kubectl get  deployment/nginx-deployment </div><div class="line">NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE</div><div class="line">nginx-deployment   2         3         2            1           58m</div><div class="line">[root@ucloud-test-bj2c-master1 template]#  kubectl set image deployment/nginx-deployment nginx=nginx:1.9.0</div><div class="line">deployment &quot;nginx-deployment&quot; image updated</div><div class="line">[root@ucloud-test-bj2c-master1 template]#  kubectl get  deployment/nginx-deployment </div><div class="line">NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE</div><div class="line">nginx-deployment   2         2         2            1           58m</div><div class="line">[root@ucloud-test-bj2c-master1 template]#  kubectl get  deployment/nginx-deployment </div><div class="line">NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE</div><div class="line">nginx-deployment   2         2         2            2           58m</div><div class="line">[root@ucloud-test-bj2c-master1 template]#  kubectl get  deployment/nginx-deployment </div><div class="line">NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE</div><div class="line">nginx-deployment   2         2         2            2           58m</div></pre></td></tr></table></figure>
+<p>UP-TO-DATE: 表明deployment已经读取了最新的配置信息中rc的个数；<br>current：当前deployment管理的rc个数；<br>available：表明当前rc中那些副本是可用的；</p>
+<p>kubectl get rs：此命令能看出来deployment的历史版本，我们看到历史版本种数据都为0.</p>
+<p>[root@ucloud-test-bj2c-master1 template]#  kubectl get rs<br>NAME                          DESIRED   CURRENT   READY     AGE<br>nginx-deployment-3518414130   3         3         3         41m<br>nginx-deployment-3599416627   0         0         0         43m<br>nginx-deployment-3599678771   0         0         0         46m<br>nginx-deployment-4087004473   0         0         0         1h</p>
+<p>下次，我们要更新这些pod，我们只需要更新deployment的模板。</p>
+<p>deployment可以确保在更新的过程中部分pod是down的。它会确保至少有一个pod是up的状态。</p>
+<h3 id="复杂更新deployment，查看其状态"><a href="#复杂更新deployment，查看其状态" class="headerlink" title="复杂更新deployment，查看其状态"></a>复杂更新deployment，查看其状态</h3>
       
     </div>
 
@@ -399,6 +431,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
@@ -439,7 +477,7 @@
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2016/12/07/k8s资源管理/"
-           data-title="k8s资源管理" data-url="http://yoursite.com/2016/12/07/k8s资源管理/">
+           data-title="k8s deployment" data-url="http://yoursite.com/2016/12/07/k8s资源管理/">
       </div>
     
   </div>
@@ -463,8 +501,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -537,6 +584,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#deployment创建rc"><span class="nav-number">1.</span> <span class="nav-text">deployment创建rc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看deployment的状态，来看其是否成功；"><span class="nav-number">2.</span> <span class="nav-text">查看deployment的状态，来看其是否成功；</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更新deployment只改变单一条件，查看其状态"><span class="nav-number">3.</span> <span class="nav-text">更新deployment只改变单一条件，查看其状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复杂更新deployment，查看其状态"><span class="nav-number">4.</span> <span class="nav-text">复杂更新deployment，查看其状态</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>
