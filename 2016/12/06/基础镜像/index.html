@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="持续集成," />
+  <meta name="keywords" content="kubernetes," />
 
 
 
@@ -84,24 +84,19 @@
 
 
 
-<meta name="description" content="说明文章来源于互联网，服务于互联网，zero整理之后用以发表，做知识备用。Jenkins 是一个可扩展的持续集成引擎。主要用于：
-l 持续、自动地构建/测试软件项目。l 监控一些定时执行的任务。Jenkins拥有的特性包括：
-l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库支持。l 易于配置-所有配置都是通过其提供的web界面实现。l 集成RSS/E-mail通过R">
+<meta name="description" content="参照supervisor构建基础镜像，expose固定端口。
+rc的固定写法1234567891011121314151617181920apiVersion: v1   #当前版本kind: ReplicationController  #类型metadata:  name: my-nginx   #名字，一个namespace内唯一，不写namespace，默认属于default组；spec:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="jenkins是什么（-）">
-<meta property="og:url" content="http://yoursite.com/2016/12/02/jenkins搭建/index.html">
+<meta property="og:title" content="kuernetes v1.4 rc">
+<meta property="og:url" content="http://yoursite.com/2016/12/06/基础镜像/index.html">
 <meta property="og:site_name" content="Zero">
-<meta property="og:description" content="说明文章来源于互联网，服务于互联网，zero整理之后用以发表，做知识备用。Jenkins 是一个可扩展的持续集成引擎。主要用于：
-l 持续、自动地构建/测试软件项目。l 监控一些定时执行的任务。Jenkins拥有的特性包括：
-l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库支持。l 易于配置-所有配置都是通过其提供的web界面实现。l 集成RSS/E-mail通过R">
-<meta property="og:image" content="http://yoursite.com/images/20161203.jpg">
-<meta property="og:updated_time" content="2016-12-03T06:45:43.200Z">
+<meta property="og:description" content="参照supervisor构建基础镜像，expose固定端口。
+rc的固定写法1234567891011121314151617181920apiVersion: v1   #当前版本kind: ReplicationController  #类型metadata:  name: my-nginx   #名字，一个namespace内唯一，不写namespace，默认属于default组；spec:">
+<meta property="og:updated_time" content="2016-12-07T06:48:07.136Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="jenkins是什么（-）">
-<meta name="twitter:description" content="说明文章来源于互联网，服务于互联网，zero整理之后用以发表，做知识备用。Jenkins 是一个可扩展的持续集成引擎。主要用于：
-l 持续、自动地构建/测试软件项目。l 监控一些定时执行的任务。Jenkins拥有的特性包括：
-l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库支持。l 易于配置-所有配置都是通过其提供的web界面实现。l 集成RSS/E-mail通过R">
-<meta name="twitter:image" content="http://yoursite.com/images/20161203.jpg">
+<meta name="twitter:title" content="kuernetes v1.4 rc">
+<meta name="twitter:description" content="参照supervisor构建基础镜像，expose固定端口。
+rc的固定写法1234567891011121314151617181920apiVersion: v1   #当前版本kind: ReplicationController  #类型metadata:  name: my-nginx   #名字，一个namespace内唯一，不写namespace，默认属于default组；spec:">
 
 
 
@@ -129,13 +124,13 @@ l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库�
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/12/02/jenkins搭建/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/12/06/基础镜像/"/>
 
 
 
 
 
-  <title> jenkins是什么（-） | Zero </title>
+  <title> kuernetes v1.4 rc | Zero </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -276,7 +271,7 @@ l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库�
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/02/jenkins搭建/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/06/基础镜像/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Zero">
@@ -300,7 +295,7 @@ l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库�
             
             
               
-                jenkins是什么（-）
+                kuernetes v1.4 rc
               
             
           </h1>
@@ -313,8 +308,8 @@ l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库�
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-02T18:25:12+08:00">
-                2016-12-02
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-06T11:53:30+08:00">
+                2016-12-06
               </time>
             
 
@@ -332,8 +327,8 @@ l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库�
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/jenkins/" itemprop="url" rel="index">
-                    <span itemprop="name">jenkins</span>
+                  <a href="/categories/容器管理软件/" itemprop="url" rel="index">
+                    <span itemprop="name">容器管理软件</span>
                   </a>
                 </span>
 
@@ -347,8 +342,8 @@ l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库�
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2016/12/02/jenkins搭建/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/02/jenkins搭建/" itemprop="commentCount"></span>
+                <a href="/2016/12/06/基础镜像/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/06/基础镜像/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -358,7 +353,7 @@ l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库�
 
           
           
-             <span id="/2016/12/02/jenkins搭建/" class="leancloud_visitors" data-flag-title="jenkins是什么（-）">
+             <span id="/2016/12/06/基础镜像/" class="leancloud_visitors" data-flag-title="kuernetes v1.4 rc">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -383,31 +378,16 @@ l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库�
       
 
       
-        <h1 id="说明文章来源于互联网，服务于互联网，zero整理之后用以发表，做知识备用。"><a href="#说明文章来源于互联网，服务于互联网，zero整理之后用以发表，做知识备用。" class="headerlink" title="说明文章来源于互联网，服务于互联网，zero整理之后用以发表，做知识备用。"></a>说明文章来源于互联网，服务于互联网，zero整理之后用以发表，做知识备用。</h1><p>Jenkins 是一个可扩展的持续集成引擎。<br>主要用于：</p>
-<p>l 持续、自动地构建/测试软件项目。<br>l 监控一些定时执行的任务。<br>Jenkins拥有的特性包括：</p>
-<p>l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库支持。<br>l 易于配置-所有配置都是通过其提供的web界面实现。<br>l 集成RSS/E-mail通过RSS发布构建结果或当构建完成时通过e-mail通知。<br>l 生成JUnit/TestNG测试报告。<br>l 分布式构建支持Jenkins能够让多台计算机一起构建/测试。<br>l 文件识别:Jenkins能够跟踪哪次构建生成哪些jar，哪次构建使用哪个版本的jar等。<br>l 插件支持:支持扩展插件，你可以开发适合自己团队使用的工具。</p>
-<h2 id="jenkins的由来"><a href="#jenkins的由来" class="headerlink" title="jenkins的由来"></a>jenkins的由来</h2><p>目前持续集成(CI)已成为当前许多软件开发团队在整个软件开发生命周期内侧重于保证代码质量的常见做法。它是一种实践，旨在缓和和稳固软件的构建过程。并且能够帮助您的开发团队应对如下挑战：</p>
-<p>l 软件构建自动化 ：配置完成后，CI系统会依照预先制定的时间表，或者针对某一特定事件，对目标软件进行构建。<br>l 构建可持续的自动化检查 ：CI系统能持续地获取新增或修改后签入的源代码，也就是说，当软件开发团队需要周期性的检查新增或修改后的代码时，CI系统会不断确认这些新代码是否破坏了原有软件的成功构建。这减少了开发者们在检查彼此相互依存的代码中变化情况需要花费的时间和精力(说直接一点也是钱啊，呵呵)。<br>l 构建可持续的自动化测试 ：构建检查的扩展部分，构建后执行预先制定的一套测试规则，完成后触发通知(Email,RSS等等)给相关的当事人。<br>l 生成后后续过程的自动化 :当自动化检查和测试成功完成，软件构建的周期中可能也需要一些额外的任务，诸如生成文档、打包软件、部署构件到一个运行环境或者软件仓库。这样，构件才能更迅速地提供给用户使用。<br>部署一个CI系统需要的最低要求是，一个可获取的源代码的仓库，一个包含构建脚本的项目。</p>
-<p>下图概括了CI系统的基本结构：</p>
-<p><img src="/images/20161203.jpg" alt="image"></p>
-<p>该系统的各个组成部分是按如下顺序来发挥作用的：</p>
-<ol>
-<li><p>开发者检入代码到源代码仓库。</p>
-</li>
-<li><p>CI系统会为每一个项目创建了一个单独的工作区。当预设或请求一次新的构建时，它将把源代码仓库的源码存放到对应的工作区。</p>
-</li>
-<li><p>CI系统会在对应的工作区内执行构建过程。</p>
-</li>
-<li><p>（配置如果存在）构建完成后，CI系统会在一个新的构件中执行定义的一套测试。完成后触发通知(Email,RSS等等)给相关的当事人。</p>
-</li>
-<li><p>（配置如果存在）如果构建成功，这个构件会被打包并转移到一个部署目标(如应用服务器)或存储为软件仓库中的一个新版本。软件仓库可以是CI系统的一部分，也可以是一个外部的仓库，诸如一个文件服务器或者像Java.net、 SourceForge之类的网站。</p>
-</li>
-<li><p>CI系统通常会根据请求发起相应的操作，诸如即时构建、生成报告，或者检索一些构建好的构件。</p>
-</li>
-</ol>
-<p>Jenkins就是这么一个CI系统。之前叫做Hudson。</p>
-<p>以下是使用Jenkins的一些理由：</p>
-<p>l 是所有CI产品中在安装和配置上最简单的。<br>l 基于Web访问，用户界面非常友好、直观和灵活，在许多情况下，还提供了AJAX的即时反馈。<br>l Jenkins是基于Java开发的(如果你是一个Java开发人员，这是非常有用的)，但它不仅限于构建基于Java的软件。<br>l Jenkins拥有大量的插件。这些插件极大的扩展了Jenkins的功能；它们都是开源的，而且它们可以直接通过web界面来进行安装与管理。</p>
+        <p>参照supervisor构建基础镜像，expose固定端口。</p>
+<p>rc的固定写法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">apiVersion: v1   #当前版本</div><div class="line">kind: ReplicationController  #类型</div><div class="line">metadata:</div><div class="line">  name: my-nginx   #名字，一个namespace内唯一，不写namespace，默认属于default组；</div><div class="line">spec:</div><div class="line">  replicas: 5</div><div class="line">  selector:</div><div class="line">    app: nginx                       #可省略</div><div class="line">  template:</div><div class="line">    metadata:</div><div class="line">      labels:</div><div class="line">        app: nginx</div><div class="line">    spec:</div><div class="line">      containers:</div><div class="line">      - name: nginx</div><div class="line">        image: nginx:1.7.9</div><div class="line">        imagePullPolicy: IfNotPresent</div><div class="line">        ports:</div><div class="line">        - containerPort: 80</div><div class="line">      restartPolicy: Always</div></pre></td></tr></table></figure></p>
+<h3 id="rc-扩容或者缩容"><a href="#rc-扩容或者缩容" class="headerlink" title="rc 扩容或者缩容"></a>rc 扩容或者缩容</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kubectl scale rc my-nginx --replicas=3</div></pre></td></tr></table></figure>
+<h3 id="rc平滑升级"><a href="#rc平滑升级" class="headerlink" title="rc平滑升级"></a>rc平滑升级</h3><h3 id="如果只有镜像升级"><a href="#如果只有镜像升级" class="headerlink" title="如果只有镜像升级"></a>如果只有镜像升级</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kubectl rolling-update my-nginx --image=nginx:1.9.1</div></pre></td></tr></table></figure>
+<p>在其它窗口，你可以看到kubectl增加了一个新的部署label，这个label值是配置的hash值，来区别新的pod和老的pod。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-test-bj2c-master1 template]# kubectl get pods -l app=nginx -L deployment</div><div class="line">NAME                                              READY     STATUS    RESTARTS   AGE       DEPLOYMENT</div><div class="line">my-nginx-1378708fde7df099390a00ed9cf57dec-ar5fo   1/1       Running   0          1m        1378708fde7df099390a00ed9cf57dec</div><div class="line">my-nginx-1378708fde7df099390a00ed9cf57dec-k30uu   1/1       Running   0          9s        1378708fde7df099390a00ed9cf57dec</div><div class="line">my-nginx-1378708fde7df099390a00ed9cf57dec-p258p   1/1       Running   0          3m        1378708fde7df099390a00ed9cf57dec</div><div class="line">my-nginx-1378708fde7df099390a00ed9cf57dec-zrnsv   1/1       Running   0          2m        1378708fde7df099390a00ed9cf57dec</div><div class="line">my-nginx-1kp8h                                    1/1       Running   0          9m        170462ea15f91a5358f9fb6c8c5e6f46-orig</div><div class="line">my-nginx-g1st2                                    1/1       Running   0          12m       170462ea15f91a5358f9fb6c8c5e6f46-orig</div><div class="line">my-nginx-hplwl                                    1/1       Running   0          12m       170462ea15f91a5358f9fb6c8c5e6f46-orig</div><div class="line">my-nginx-tk2h4                                    1/1       Running   0          12m       170462ea15f91a5358f9fb6c8c5e6f46-orig</div></pre></td></tr></table></figure></p>
+<p>如果在升级的过程中遇到错误，你可以使用下面的命令来使其回滚。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kubectl rolling-update my-nginx --rollback</div></pre></td></tr></table></figure>
+<h3 id="升级的东西比较多，怎么办？"><a href="#升级的东西比较多，怎么办？" class="headerlink" title="升级的东西比较多，怎么办？"></a>升级的东西比较多，怎么办？</h3><p>直接重新写一个rc的配置文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">apiVersion: v1</div><div class="line">kind: ReplicationController</div><div class="line">metadata:</div><div class="line">  name: my-nginx-v4</div><div class="line">spec:</div><div class="line">  replicas: 5</div><div class="line">  selector:</div><div class="line">    app: nginx</div><div class="line">    deployment: v4</div><div class="line">  template:</div><div class="line">    metadata:</div><div class="line">      labels:</div><div class="line">        app: nginx</div><div class="line">        deployment: v4</div><div class="line">    spec:</div><div class="line">      containers:</div><div class="line">      - name: nginx</div><div class="line">        image: nginx:1.9.2</div><div class="line">        args: [&quot;nginx&quot;, &quot;-T&quot;]</div><div class="line">        ports:</div><div class="line">        - containerPort: 80</div></pre></td></tr></table></figure>
+<p>接下来进行升级部署：<br>kubectl rolling-update my-nginx -f ./nginx_rc_v2.yaml </p>
 
       
     </div>
@@ -452,7 +432,7 @@ l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库�
       
         <div class="post-tags">
           
-            <a href="/tags/持续集成/" rel="tag"># 持续集成</a>
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
           
         </div>
       
@@ -461,8 +441,8 @@ l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库�
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/12/01/glusterfs存储集群搭建/" rel="next" title="glusterfs存储集群搭建">
-                <i class="fa fa-chevron-left"></i> glusterfs存储集群搭建
+              <a href="/2016/12/05/docker01/" rel="next" title="docker01">
+                <i class="fa fa-chevron-left"></i> docker01
               </a>
             
           </div>
@@ -470,10 +450,6 @@ l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库�
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/12/03/jenkins安装配置/" rel="prev" title="jenkins安装配置(二)">
-                jenkins安装配置(二) <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -499,8 +475,8 @@ l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库�
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/12/02/jenkins搭建/"
-           data-title="jenkins是什么（-）" data-url="http://yoursite.com/2016/12/02/jenkins搭建/">
+      <div class="ds-thread" data-thread-key="2016/12/06/基础镜像/"
+           data-title="kuernetes v1.4 rc" data-url="http://yoursite.com/2016/12/06/基础镜像/">
       </div>
     
   </div>
@@ -617,7 +593,7 @@ l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库�
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#说明文章来源于互联网，服务于互联网，zero整理之后用以发表，做知识备用。"><span class="nav-number">1.</span> <span class="nav-text">说明文章来源于互联网，服务于互联网，zero整理之后用以发表，做知识备用。</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#jenkins的由来"><span class="nav-number">1.1.</span> <span class="nav-text">jenkins的由来</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#rc-扩容或者缩容"><span class="nav-number">1.</span> <span class="nav-text">rc 扩容或者缩容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rc平滑升级"><span class="nav-number">2.</span> <span class="nav-text">rc平滑升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如果只有镜像升级"><span class="nav-number">3.</span> <span class="nav-text">如果只有镜像升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#升级的东西比较多，怎么办？"><span class="nav-number">4.</span> <span class="nav-text">升级的东西比较多，怎么办？</span></a></li></ol></div>
             
 
           </div>

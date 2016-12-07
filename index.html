@@ -269,6 +269,166 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/06/基础镜像/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/06/基础镜像/" itemprop="url">
+                  kuernetes v1.4 rc
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-06T11:53:30+08:00">
+                2016-12-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/容器管理软件/" itemprop="url" rel="index">
+                    <span itemprop="name">容器管理软件</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/12/06/基础镜像/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/06/基础镜像/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/12/06/基础镜像/" class="leancloud_visitors" data-flag-title="kuernetes v1.4 rc">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>参照supervisor构建基础镜像，expose固定端口。</p>
+<p>rc的固定写法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">apiVersion: v1   #当前版本</div><div class="line">kind: ReplicationController  #类型</div><div class="line">metadata:</div><div class="line">  name: my-nginx   #名字，一个namespace内唯一，不写namespace，默认属于default组；</div><div class="line">spec:</div><div class="line">  replicas: 5</div><div class="line">  selector:</div><div class="line">    app: nginx                       #可省略</div><div class="line">  template:</div><div class="line">    metadata:</div><div class="line">      labels:</div><div class="line">        app: nginx</div><div class="line">    spec:</div><div class="line">      containers:</div><div class="line">      - name: nginx</div><div class="line">        image: nginx:1.7.9</div><div class="line">        imagePullPolicy: IfNotPresent</div><div class="line">        ports:</div><div class="line">        - containerPort: 80</div><div class="line">      restartPolicy: Always</div></pre></td></tr></table></figure></p>
+<h3 id="rc-扩容或者缩容"><a href="#rc-扩容或者缩容" class="headerlink" title="rc 扩容或者缩容"></a>rc 扩容或者缩容</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kubectl scale rc my-nginx --replicas=3</div></pre></td></tr></table></figure>
+<h3 id="rc平滑升级"><a href="#rc平滑升级" class="headerlink" title="rc平滑升级"></a>rc平滑升级</h3><h3 id="如果只有镜像升级"><a href="#如果只有镜像升级" class="headerlink" title="如果只有镜像升级"></a>如果只有镜像升级</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kubectl rolling-update my-nginx --image=nginx:1.9.1</div></pre></td></tr></table></figure>
+<p>在其它窗口，你可以看到kubectl增加了一个新的部署label，这个label值是配置的hash值，来区别新的pod和老的pod。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-test-bj2c-master1 template]# kubectl get pods -l app=nginx -L deployment</div><div class="line">NAME                                              READY     STATUS    RESTARTS   AGE       DEPLOYMENT</div><div class="line">my-nginx-1378708fde7df099390a00ed9cf57dec-ar5fo   1/1       Running   0          1m        1378708fde7df099390a00ed9cf57dec</div><div class="line">my-nginx-1378708fde7df099390a00ed9cf57dec-k30uu   1/1       Running   0          9s        1378708fde7df099390a00ed9cf57dec</div><div class="line">my-nginx-1378708fde7df099390a00ed9cf57dec-p258p   1/1       Running   0          3m        1378708fde7df099390a00ed9cf57dec</div><div class="line">my-nginx-1378708fde7df099390a00ed9cf57dec-zrnsv   1/1       Running   0          2m        1378708fde7df099390a00ed9cf57dec</div><div class="line">my-nginx-1kp8h                                    1/1       Running   0          9m        170462ea15f91a5358f9fb6c8c5e6f46-orig</div><div class="line">my-nginx-g1st2                                    1/1       Running   0          12m       170462ea15f91a5358f9fb6c8c5e6f46-orig</div><div class="line">my-nginx-hplwl                                    1/1       Running   0          12m       170462ea15f91a5358f9fb6c8c5e6f46-orig</div><div class="line">my-nginx-tk2h4                                    1/1       Running   0          12m       170462ea15f91a5358f9fb6c8c5e6f46-orig</div></pre></td></tr></table></figure></p>
+<p>如果在升级的过程中遇到错误，你可以使用下面的命令来使其回滚。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kubectl rolling-update my-nginx --rollback</div></pre></td></tr></table></figure>
+<h3 id="升级的东西比较多，怎么办？"><a href="#升级的东西比较多，怎么办？" class="headerlink" title="升级的东西比较多，怎么办？"></a>升级的东西比较多，怎么办？</h3><p>直接重新写一个rc的配置文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">apiVersion: v1</div><div class="line">kind: ReplicationController</div><div class="line">metadata:</div><div class="line">  name: my-nginx-v4</div><div class="line">spec:</div><div class="line">  replicas: 5</div><div class="line">  selector:</div><div class="line">    app: nginx</div><div class="line">    deployment: v4</div><div class="line">  template:</div><div class="line">    metadata:</div><div class="line">      labels:</div><div class="line">        app: nginx</div><div class="line">        deployment: v4</div><div class="line">    spec:</div><div class="line">      containers:</div><div class="line">      - name: nginx</div><div class="line">        image: nginx:1.9.2</div><div class="line">        args: [&quot;nginx&quot;, &quot;-T&quot;]</div><div class="line">        ports:</div><div class="line">        - containerPort: 80</div></pre></td></tr></table></figure>
+<p>接下来进行升级部署：<br>kubectl rolling-update my-nginx -f ./nginx_rc_v2.yaml </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/05/docker01/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -890,172 +1050,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/30/k8s集群搭建/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/11/30/k8s集群搭建/" itemprop="url">
-                  k8s搭建之高可用方案(二)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-30T16:42:28+08:00">
-                2016-11-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/容器管理软件/" itemprop="url" rel="index">
-                    <span itemprop="name">容器管理软件</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2016/11/30/k8s集群搭建/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/30/k8s集群搭建/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/11/30/k8s集群搭建/" class="leancloud_visitors" data-flag-title="k8s搭建之高可用方案(二)">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>生活在于折腾，前几天搭建的kubernetes是单机模式，服务挂掉之后，容易影响到其它服务，故这次主要做服务的高可用。</p>
-<p>先上一个生产使用架构图：</p>
-<p><img src="/images/6.jpg" alt="image"></p>
-<h2 id="etcd集群搭建"><a href="#etcd集群搭建" class="headerlink" title="etcd集群搭建"></a>etcd集群搭建</h2><p>默认 kubeadm 创建的集群会在内部启动一个单点的 etcd，当然大部分情况下 etcd 还是很稳定的，<br>但是一但 etcd 由于某种原因挂掉，这个问题会非常严重，会导致整个集群不可用。<br>具体原因是 etcd 存储着 kubernetes 各种元数据信息；包括 kubectl get pod 等等基础命令实际<br>上全部是调用 RESTful API 从 etcd 中获取的信息；所以一但 etcd 挂掉以后，基本等同于 kubectl 命令不可用，<br>此时将变为 ‘瞎子’，集群各节点也会因无法从 etcd 获取数据而出现无法调度，最终挂掉。</p>
-<h2 id="搭建注意事项"><a href="#搭建注意事项" class="headerlink" title="搭建注意事项"></a>搭建注意事项</h2><h3 id="etcd不能与master在一个节点上"><a href="#etcd不能与master在一个节点上" class="headerlink" title="etcd不能与master在一个节点上"></a>etcd不能与master在一个节点上</h3><p>这个坑是由于 kubeadm 的 check 机制的 bug 造成的，目前还没有修复；表现为 当 etcd 与 master 在同一节点时，<br>kubeadm init 会失败，同时报错信息提示 ‘已经存在了 /var/lib/etcd 目录，或者 2379 端口被占用’；因为默认 kubeadm 会创建 etcd，<br>而默认的 etcd 会占用这个目录和 2379 端口，即使你加了 –external-etcd-endpoints 参数，kubeadm 仍然会检测这两项条件是否满足，<br>不满足则禁止 init 操作<br>解决办法就是要么外部的 etcd 更换数据目录(/var/lib/etcd)和端口，要么干脆不要和 master 放在同一主机即可</p>
-<h3 id="日志级别调整"><a href="#日志级别调整" class="headerlink" title="日志级别调整"></a>日志级别调整</h3><p>熟悉的小伙伴应该清楚，基本上每个 kubernetes 组件都会有个通用的参数 –v；这个参数用于控制 kubernetes 各个组件的日志级别，<br>在早期(alpha)的 kubeadm 版本中，如果不进行调整，默认创建集群所有组件日志级别全部为 –v=4 即最高级别输出，这会导致在业务量大的时候磁盘空间以不够用<br>，尤其是 kube-proxy 组件的容器，会疯狂吃掉你的磁盘空间，然后剩下懵逼的你不知为何。在后续的版本中(beta)发现日志级别已经降到了 –v=2，</p>
-<p>解决办法有两种方案:<br>如果已经 –v=4 跑起来了(检查方法就是随便 describe 一个 kube-proxy 的容器，看下 command 字段就能看到)，并且无法停止重建集群，那么最简单的办法就是<br>使用 kubectl edit ds xxx 方式编译一下相关 ds 文件等，然后手动杀掉相关 pod，让 kubernetes 自动重建即可，如果命令行用着不爽也可以通过 dashboard 更改<br>如果还没开始搭建，或者可以停掉重建，那么只需在 kubeadm init 之前 export KUBE_COMPONENT_LOGLEVEL=’–v=0’ 即可</p>
-<h3 id="新节点加入dns故障引起down机"><a href="#新节点加入dns故障引起down机" class="headerlink" title="新节点加入dns故障引起down机"></a>新节点加入dns故障引起down机</h3><p>当 kubeadm 创建好集群以后，如果有需要增加新节点，那么在 kubeadm join 之后务必检查 kube-dns 组件，dns 在某些(weave 启动不完整或不正常)情况下，<br>会由于新节点加入而挂掉，此时整个集群 dns 失效，所以最好 join 完观察一会 dns 状态，如果发现不正常马上杀掉 dns pod，让 kubernetes 自动重建；<br>如果情况允许最好全部 join 完成后直接干掉 dns 让 kubernetes 重建一下。</p>
-<h3 id="dns单点的解决"><a href="#dns单点的解决" class="headerlink" title="dns单点的解决"></a>dns单点的解决</h3><p>kubeadm 创建的 dns 默认也是单点的，而 dns 至关重要，只要一挂瞬间整个集群全部 game over；不过暂时还是没有发现能在 init 时候创建多个 dns 的方法；<br>不过在集群创建后可以通过 kubectl edit deploy kube-dns 的方式修改其副本数量，让其创建多个副本即可</p>
-<p>将现在的服务器清空，重新格式化脚本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">systemctl stop kubelet</div><div class="line">docker rm -f -v $(docker ps -q);</div><div class="line">find /var/lib/kubelet | xargs -n 1 findmnt -n -t tmpfs -o TARGET -T | uniq | xargs -r umount -v;</div><div class="line">rm -r -f /etc/kubernetes /var/lib/kubelet /var/lib/etcd</div></pre></td></tr></table></figure></p>
-<p>解决办法是在使用 kubeadm 创建集群时使用 –external-etcd-endpoints 参数指定外部 etcd 集群.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-test-bj2c-master1 etcd]# kubeadm init  --external-etcd-endpoints http://10.10.151.214:2379  --api-advertise-addresses=10.10.220.246</div><div class="line">Flag --external-etcd-endpoints has been deprecated, this flag will be removed when componentconfig exists</div><div class="line">Running pre-flight checks</div><div class="line">&lt;master/tokens&gt; generated token: &quot;9b9b9e.1f9f452ef2a96821&quot;</div><div class="line">&lt;master/pki&gt; generated Certificate Authority key and certificate:</div><div class="line">Issuer: CN=kubernetes | Subject: CN=kubernetes | CA: true</div><div class="line">Not before: 2016-12-02 08:53:24 +0000 UTC Not After: 2026-11-30 08:53:24 +0000 UTC</div><div class="line">Public: /etc/kubernetes/pki/ca-pub.pem</div><div class="line">Private: /etc/kubernetes/pki/ca-key.pem</div><div class="line">Cert: /etc/kubernetes/pki/ca.pem</div><div class="line">&lt;master/pki&gt; generated API Server key and certificate:</div><div class="line">Issuer: CN=kubernetes | Subject: CN=kube-apiserver | CA: false</div><div class="line">Not before: 2016-12-02 08:53:24 +0000 UTC Not After: 2017-12-02 08:53:24 +0000 UTC</div><div class="line">Alternate Names: [10.10.220.246 10.96.0.1 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local]</div><div class="line">Public: /etc/kubernetes/pki/apiserver-pub.pem</div><div class="line">Private: /etc/kubernetes/pki/apiserver-key.pem</div><div class="line">Cert: /etc/kubernetes/pki/apiserver.pem</div><div class="line">&lt;master/pki&gt; generated Service Account Signing keys:</div><div class="line">Public: /etc/kubernetes/pki/sa-pub.pem</div><div class="line">Private: /etc/kubernetes/pki/sa-key.pem</div><div class="line">&lt;master/pki&gt; created keys and certificates in &quot;/etc/kubernetes/pki&quot;</div><div class="line">&lt;util/kubeconfig&gt; created &quot;/etc/kubernetes/kubelet.conf&quot;</div><div class="line">&lt;util/kubeconfig&gt; created &quot;/etc/kubernetes/admin.conf&quot;</div><div class="line">&lt;master/apiclient&gt; created API client configuration</div><div class="line">&lt;master/apiclient&gt; created API client, waiting for the control plane to become ready</div><div class="line">&lt;master/apiclient&gt; all control plane components are healthy after 16.290334 seconds</div><div class="line">&lt;master/apiclient&gt; waiting for at least one node to register and become ready</div><div class="line">&lt;master/apiclient&gt; first node is ready after 4.503580 seconds</div><div class="line">&lt;master/apiclient&gt; attempting a test deployment</div><div class="line">&lt;master/apiclient&gt; test deployment succeeded</div><div class="line">&lt;master/discovery&gt; created essential addon: kube-discovery, waiting for it to become ready</div><div class="line">&lt;master/discovery&gt; kube-discovery is ready after 2.003738 seconds</div><div class="line">&lt;master/addons&gt; created essential addon: kube-proxy</div><div class="line">&lt;master/addons&gt; created essential addon: kube-dns</div><div class="line">Kubernetes master initialised successfully!</div><div class="line">You can now join any number of machines by running the following on each node:</div><div class="line">kubeadm join --token=9b9b9e.1f9f452ef2a96821 10.10.220.246</div></pre></td></tr></table></figure>
-<p>此时 kubeadm 将不会在内部创建 etcd，转而使用外部我们指定的 etcd 集群，如果外部 etcd 集群配置了<br> SSL 加密，那么还需要配合 –external-etcd-cafile、–external-etcd-certfile、–external-etcd-keyfile<br> 三个参数指定 etcd 的 CA证书、CA签发的使用证书和私钥文件，命令如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kubeadm init --external-etcd-endpoints https://10.10.151.214:2379 --external-etcd-cafile /path/to/ca --external-etcd-certfile /path/to/cert --external-etcd-keyfile /path/to/privatekey</div></pre></td></tr></table></figure>
-<p>如果有多个master节点，可以使用如下命令：<br>这个选项默认就是true。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">--leader-elect                            </div><div class="line"> Start a leader election client and gain leadership before executing the main loop. </div><div class="line"> Enable this when running replicated components for high availability. (default true)</div></pre></td></tr></table></figure></p>
-<p>下面将客户端重新加入集群执行如下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">systemctl stop kubelet</div><div class="line">docker rm -f -v $(docker ps -q);</div><div class="line">find /var/lib/kubelet | xargs -n 1 findmnt -n -t tmpfs -o TARGET -T | uniq | xargs -r umount -v;</div><div class="line">rm -r -f /etc/kubernetes /var/lib/kubelet /var/lib/etcd</div><div class="line">systemctl start kubelet</div><div class="line">kubeadm join --token=9b9b9e.1f9f452ef2a96821 10.10.220.246</div></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1101,7 +1095,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-count">10</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
