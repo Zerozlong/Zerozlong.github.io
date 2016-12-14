@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="自动化的重要性," />
+  <meta name="keywords" content="kubernetes，glusterfs," />
 
 
 
@@ -84,16 +84,19 @@
 
 
 
-<meta name="description" content="背景介绍来公司的时候，公司已经使用了云提供商。接手的项目是一个经验很少的运维工程师搭建的服务器，没有使用自动化管理软件。ulb是云厂商提供的loadbalance软件，作为基础服务。由于目前国内云厂家提供的云服务不是很稳定，已经做得是梳理云端单点，能使用ulb的地方也都使用了。但是由于使用的镜像，唯独没有对dns进行统一管理，一直配置在/etc/sysconfig/network-scripts/">
+<meta name="description" content="glusterfs踩过的坑首先搭建好glusterfs，使用hosts或者域名的方式确认glusterfs是ok的。
+创建endpoint1234567891011121314151617181920212223242526272829303132333435363738394041424344454647&amp;#123;  &amp;quot;kind&amp;quot;: &amp;quot;Endpoints&amp;quot">
 <meta property="og:type" content="article">
-<meta property="og:title" content="云提供商故障引起的反思">
-<meta property="og:url" content="http://yoursite.com/2016/12/09/云提供商故障引起的反思/index.html">
+<meta property="og:title" content="glusterfs在k8s中的使用">
+<meta property="og:url" content="http://yoursite.com/2016/12/12/k8s在glusterfs中的使用/index.html">
 <meta property="og:site_name" content="Zero">
-<meta property="og:description" content="背景介绍来公司的时候，公司已经使用了云提供商。接手的项目是一个经验很少的运维工程师搭建的服务器，没有使用自动化管理软件。ulb是云厂商提供的loadbalance软件，作为基础服务。由于目前国内云厂家提供的云服务不是很稳定，已经做得是梳理云端单点，能使用ulb的地方也都使用了。但是由于使用的镜像，唯独没有对dns进行统一管理，一直配置在/etc/sysconfig/network-scripts/">
-<meta property="og:updated_time" content="2016-12-09T02:40:25.548Z">
+<meta property="og:description" content="glusterfs踩过的坑首先搭建好glusterfs，使用hosts或者域名的方式确认glusterfs是ok的。
+创建endpoint1234567891011121314151617181920212223242526272829303132333435363738394041424344454647&amp;#123;  &amp;quot;kind&amp;quot;: &amp;quot;Endpoints&amp;quot">
+<meta property="og:updated_time" content="2016-12-12T05:38:03.724Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="云提供商故障引起的反思">
-<meta name="twitter:description" content="背景介绍来公司的时候，公司已经使用了云提供商。接手的项目是一个经验很少的运维工程师搭建的服务器，没有使用自动化管理软件。ulb是云厂商提供的loadbalance软件，作为基础服务。由于目前国内云厂家提供的云服务不是很稳定，已经做得是梳理云端单点，能使用ulb的地方也都使用了。但是由于使用的镜像，唯独没有对dns进行统一管理，一直配置在/etc/sysconfig/network-scripts/">
+<meta name="twitter:title" content="glusterfs在k8s中的使用">
+<meta name="twitter:description" content="glusterfs踩过的坑首先搭建好glusterfs，使用hosts或者域名的方式确认glusterfs是ok的。
+创建endpoint1234567891011121314151617181920212223242526272829303132333435363738394041424344454647&amp;#123;  &amp;quot;kind&amp;quot;: &amp;quot;Endpoints&amp;quot">
 
 
 
@@ -121,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/12/09/云提供商故障引起的反思/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/12/12/k8s在glusterfs中的使用/"/>
 
 
 
 
 
-  <title> 云提供商故障引起的反思 | Zero </title>
+  <title> glusterfs在k8s中的使用 | Zero </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -268,7 +271,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/09/云提供商故障引起的反思/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/12/k8s在glusterfs中的使用/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Zero">
@@ -292,7 +295,7 @@
             
             
               
-                云提供商故障引起的反思
+                glusterfs在k8s中的使用
               
             
           </h1>
@@ -305,8 +308,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-09T10:26:22+08:00">
-                2016-12-09
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-12T11:25:59+08:00">
+                2016-12-12
               </time>
             
 
@@ -324,8 +327,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/saltstack/" itemprop="url" rel="index">
-                    <span itemprop="name">saltstack</span>
+                  <a href="/categories/容器管理软件/" itemprop="url" rel="index">
+                    <span itemprop="name">容器管理软件</span>
                   </a>
                 </span>
 
@@ -339,8 +342,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2016/12/09/云提供商故障引起的反思/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/09/云提供商故障引起的反思/" itemprop="commentCount"></span>
+                <a href="/2016/12/12/k8s在glusterfs中的使用/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/12/k8s在glusterfs中的使用/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -350,7 +353,7 @@
 
           
           
-             <span id="/2016/12/09/云提供商故障引起的反思/" class="leancloud_visitors" data-flag-title="云提供商故障引起的反思">
+             <span id="/2016/12/12/k8s在glusterfs中的使用/" class="leancloud_visitors" data-flag-title="glusterfs在k8s中的使用">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -375,9 +378,10 @@
       
 
       
-        <h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>来公司的时候，公司已经使用了云提供商。接手的项目是一个经验很少的运维工程师搭建的服务器，没有使用自动化管理软件。<br>ulb是云厂商提供的loadbalance软件，作为基础服务。由于目前国内云厂家提供的云服务不是很稳定，已经做得是梳理云端单点，<br>能使用ulb的地方也都使用了。但是由于使用的镜像，唯独没有对dns进行统一管理，一直配置在/etc/sysconfig/network-scripts/ifcfg-eth0里面。</p>
-<h3 id="故障"><a href="#故障" class="headerlink" title="故障"></a>故障</h3><p>12月8日凌晨两点二十多，手机开始收到zabbix服务器unreachable的告警。然后我就起床了，这也是感冒加重了。我先ping了下zabbix的域名，网络不通了。<br>于是ping ulb发现已经不通了。然后看下dns服务器，发现服务正常。已经确定是云厂商的ulb挂了。启用备份机制，将后端的dns发给各位兄弟们，让大家改配置。<br>云厂家吹得再牛逼，也不要相信了，这tm都是线上呀，不能抱着侥幸心理呀。我就是犯了这个错误。虽然云四十多分钟之后恢复了，但是这让我更加意识到统一平台的<br>重要性。手动改网络配置累死吧。</p>
-<h3 id="后续改造"><a href="#后续改造" class="headerlink" title="后续改造"></a>后续改造</h3><p>所有的能自动化做的，也不通过镜像做了，将ifcfg-eth0中的dns删除，直接配置/etc/resolv.conf配置文件。批量分发到需要使用dns服务器的客户端上，再出现故障争取<br>分钟级恢复。不要存在懒惰心里，会死得很惨的。虽然第二天你可以把责任推脱给供应商，但是我们也要做到自己心目中的唯一。闲谈不议它非，静坐常思己过。 </p>
+        <h3 id="glusterfs踩过的坑"><a href="#glusterfs踩过的坑" class="headerlink" title="glusterfs踩过的坑"></a>glusterfs踩过的坑</h3><p>首先搭建好glusterfs，使用hosts或者域名的方式确认glusterfs是ok的。</p>
+<h3 id="创建endpoint"><a href="#创建endpoint" class="headerlink" title="创建endpoint"></a>创建endpoint</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;kind&quot;: &quot;Endpoints&quot;,</div><div class="line">  &quot;apiVersion&quot;: &quot;v1&quot;,</div><div class="line">  &quot;metadata&quot;: &#123;</div><div class="line">    &quot;name&quot;: &quot;glusterfs-cluster&quot;</div><div class="line">    &quot;namespace&quot;: &quot;renmai&quot;</div><div class="line">  &#125;,</div><div class="line">  &quot;subsets&quot;: [</div><div class="line">    &#123;</div><div class="line">      &quot;addresses&quot;: [</div><div class="line">        &#123;</div><div class="line">          &quot;ip&quot;: &quot;10.10.143.63&quot;</div><div class="line">        &#125;</div><div class="line">      ],</div><div class="line">      &quot;ports&quot;: [</div><div class="line">        &#123;</div><div class="line">          &quot;port&quot;: 1</div><div class="line">        &#125;</div><div class="line">      ]</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      &quot;addresses&quot;: [</div><div class="line">        &#123;</div><div class="line">          &quot;ip&quot;: &quot;10.10.222.161&quot;</div><div class="line">        &#125;</div><div class="line">      ],</div><div class="line">      &quot;ports&quot;: [</div><div class="line">        &#123;</div><div class="line">          &quot;port&quot;: 1</div><div class="line">        &#125;</div><div class="line">      ]</div><div class="line">    &#125;,</div><div class="line">   </div><div class="line">   &#123;</div><div class="line">      &quot;addresses&quot;: [</div><div class="line">        &#123;</div><div class="line">          &quot;ip&quot;: &quot;10.10.123.29&quot;</div><div class="line">        &#125;</div><div class="line">      ],</div><div class="line">      &quot;ports&quot;: [</div><div class="line">        &#123;</div><div class="line">          &quot;port&quot;: 1</div><div class="line">        &#125;</div><div class="line">      ]</div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>各位可以把它理解为你创建的glusterfs集群的基础信息，仅仅包含ip即可。</p>
+<p>接下来创建一个deployment使用我们刚刚创建的pod：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-test-bj2c-master1 template]# cat nginx_deployment.yaml </div><div class="line">apiVersion: extensions/v1beta1</div><div class="line">kind: Deployment</div><div class="line">metadata:</div><div class="line">  name: nginx-deployment</div><div class="line">  namespace: renmai</div><div class="line">spec:</div><div class="line">  replicas: 1</div><div class="line">  template:</div><div class="line">    metadata:</div><div class="line">      labels:</div><div class="line">        app: nginx</div><div class="line">    spec:</div><div class="line">      containers:</div><div class="line">      - name: nginx</div><div class="line">        image: nginx:1.9.1</div><div class="line">        ports:</div><div class="line">        - containerPort: 80</div><div class="line">        volumeMounts:</div><div class="line">        - name: glusterfsvol</div><div class="line">          mountPath: /mnt</div><div class="line">      volumes:</div><div class="line">      - name: glusterfsvol</div><div class="line">        glusterfs:</div><div class="line">          endpoints: glusterfs-cluster</div><div class="line">          path: renmai-test</div><div class="line">          readOnly: False</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -422,7 +426,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/自动化的重要性/" rel="tag"># 自动化的重要性</a>
+            <a href="/tags/kubernetes，glusterfs/" rel="tag"># kubernetes，glusterfs</a>
           
         </div>
       
@@ -431,8 +435,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/12/07/k8s资源管理deployment/" rel="next" title="k8s deployment（六）">
-                <i class="fa fa-chevron-left"></i> k8s deployment（六）
+              <a href="/2016/12/09/云提供商故障引起的反思/" rel="next" title="云提供商故障引起的反思">
+                <i class="fa fa-chevron-left"></i> 云提供商故障引起的反思
               </a>
             
           </div>
@@ -440,10 +444,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/12/12/k8s在glusterfs中的使用/" rel="prev" title="glusterfs在k8s中的使用">
-                glusterfs在k8s中的使用 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -469,8 +469,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/12/09/云提供商故障引起的反思/"
-           data-title="云提供商故障引起的反思" data-url="http://yoursite.com/2016/12/09/云提供商故障引起的反思/">
+      <div class="ds-thread" data-thread-key="2016/12/12/k8s在glusterfs中的使用/"
+           data-title="glusterfs在k8s中的使用" data-url="http://yoursite.com/2016/12/12/k8s在glusterfs中的使用/">
       </div>
     
   </div>
@@ -587,7 +587,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景介绍"><span class="nav-number">1.</span> <span class="nav-text">背景介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#故障"><span class="nav-number">2.</span> <span class="nav-text">故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后续改造"><span class="nav-number">3.</span> <span class="nav-text">后续改造</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#glusterfs踩过的坑"><span class="nav-number">1.</span> <span class="nav-text">glusterfs踩过的坑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建endpoint"><span class="nav-number">2.</span> <span class="nav-text">创建endpoint</span></a></li></ol></div>
             
 
           </div>
