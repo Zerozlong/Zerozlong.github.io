@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="saltstack," />
+  <meta name="keywords" content="kubernetes，logs，elasticsearch," />
 
 
 
@@ -84,19 +84,22 @@
 
 
 
-<meta name="description" content="添加用户添加用户sls文件：
-1234567891011121314151617181920212223242526272829303132333435363738cat init/install.sls test:  user.present:    - fullname: test    - shell: /bin/bash    - uid: 501    - gid: 501    - p">
+<meta name="description" content="elasticsearch的概念详解下文将要介绍的是elasticsearch的几个核心概念。理解这些概念将有助于你更好的掌握elasticsearch。
+Near Realtime（NRT）elasticsearch是一个接近实时的（延迟大概是一秒）search插件，这就意味着从你将数据放入到文档中到你搜索到数据的时间。
+Cluster集群是指一个或者多个node共同工作来存储完整的数据，一块提">
 <meta property="og:type" content="article">
-<meta property="og:title" content="saltstack之初始化">
-<meta property="og:url" content="http://yoursite.com/2016/11/28/saltstack之添加用户/index.html">
+<meta property="og:title" content="k8s日志管理(二)">
+<meta property="og:url" content="http://yoursite.com/2016/12/20/k8s日志管理-二/index.html">
 <meta property="og:site_name" content="Zero">
-<meta property="og:description" content="添加用户添加用户sls文件：
-1234567891011121314151617181920212223242526272829303132333435363738cat init/install.sls test:  user.present:    - fullname: test    - shell: /bin/bash    - uid: 501    - gid: 501    - p">
-<meta property="og:updated_time" content="2016-12-03T06:37:50.163Z">
+<meta property="og:description" content="elasticsearch的概念详解下文将要介绍的是elasticsearch的几个核心概念。理解这些概念将有助于你更好的掌握elasticsearch。
+Near Realtime（NRT）elasticsearch是一个接近实时的（延迟大概是一秒）search插件，这就意味着从你将数据放入到文档中到你搜索到数据的时间。
+Cluster集群是指一个或者多个node共同工作来存储完整的数据，一块提">
+<meta property="og:updated_time" content="2016-12-20T03:47:28.999Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="saltstack之初始化">
-<meta name="twitter:description" content="添加用户添加用户sls文件：
-1234567891011121314151617181920212223242526272829303132333435363738cat init/install.sls test:  user.present:    - fullname: test    - shell: /bin/bash    - uid: 501    - gid: 501    - p">
+<meta name="twitter:title" content="k8s日志管理(二)">
+<meta name="twitter:description" content="elasticsearch的概念详解下文将要介绍的是elasticsearch的几个核心概念。理解这些概念将有助于你更好的掌握elasticsearch。
+Near Realtime（NRT）elasticsearch是一个接近实时的（延迟大概是一秒）search插件，这就意味着从你将数据放入到文档中到你搜索到数据的时间。
+Cluster集群是指一个或者多个node共同工作来存储完整的数据，一块提">
 
 
 
@@ -124,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/11/28/saltstack之添加用户/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/12/20/k8s日志管理-二/"/>
 
 
 
 
 
-  <title> saltstack之初始化 | Zero </title>
+  <title> k8s日志管理(二) | Zero </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -271,7 +274,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/28/saltstack之添加用户/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/20/k8s日志管理-二/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Zero">
@@ -295,7 +298,7 @@
             
             
               
-                saltstack之初始化
+                k8s日志管理(二)
               
             
           </h1>
@@ -308,8 +311,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-28T16:35:56+08:00">
-                2016-11-28
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-20T10:40:00+08:00">
+                2016-12-20
               </time>
             
 
@@ -327,8 +330,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/saltstack/" itemprop="url" rel="index">
-                    <span itemprop="name">saltstack</span>
+                  <a href="/categories/容器管理软件/" itemprop="url" rel="index">
+                    <span itemprop="name">容器管理软件</span>
                   </a>
                 </span>
 
@@ -342,8 +345,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2016/11/28/saltstack之添加用户/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/28/saltstack之添加用户/" itemprop="commentCount"></span>
+                <a href="/2016/12/20/k8s日志管理-二/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/20/k8s日志管理-二/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -353,7 +356,7 @@
 
           
           
-             <span id="/2016/11/28/saltstack之添加用户/" class="leancloud_visitors" data-flag-title="saltstack之初始化">
+             <span id="/2016/12/20/k8s日志管理-二/" class="leancloud_visitors" data-flag-title="k8s日志管理(二)">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -378,10 +381,18 @@
       
 
       
-        <h4 id="添加用户"><a href="#添加用户" class="headerlink" title="添加用户"></a>添加用户</h4><p>添加用户sls文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">cat init/install.sls </div><div class="line">test:</div><div class="line">  user.present:</div><div class="line">    - fullname: test</div><div class="line">    - shell: /bin/bash</div><div class="line">    - uid: 501</div><div class="line">    - gid: 501</div><div class="line">    - password: $1$nhvIqNbN$aafafafafa/</div><div class="line">    - home: /home/test</div><div class="line">    - groups:</div><div class="line">      - test</div><div class="line">    - require:</div><div class="line">      - group: test</div><div class="line">  group.present:</div><div class="line">    - gid: 501</div><div class="line">    - name: test</div><div class="line">  cmd.run:</div><div class="line">    - name: systemctl stop firewalld.service  &amp;&amp; sed -i  &apos;s/SELINUX=enforce/SELINUX=disabled/g&apos; /etc/selinux/config </div><div class="line">	</div><div class="line">#添加docker epol yum源</div><div class="line">/etc/yum.repos.d/docker.repo:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://init/files/docker.repo</div><div class="line">    - user: root</div><div class="line">    - group: root</div><div class="line">    - mode: 0644</div><div class="line">  cmd.run:</div><div class="line">    - name: yum -y install docker-engine </div><div class="line">    - unless:  docker --version |grep 1.12.3</div><div class="line">    - requrie:</div><div class="line">      - file: /etc/yum.repos.d/docker.repo</div><div class="line">#如果没有dns服务器执行如下操作</div><div class="line">/etc/hosts:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://init/files/hosts</div><div class="line">    - user: root</div><div class="line">    - group: root</div><div class="line">    - mode: 0644</div></pre></td></tr></table></figure>
-<h4 id="生成密码"><a href="#生成密码" class="headerlink" title="生成密码"></a>生成密码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">openssl passwd -1</div></pre></td></tr></table></figure>
-<h4 id="批量用户添加"><a href="#批量用户添加" class="headerlink" title="批量用户添加"></a>批量用户添加</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&#123;% set users = [&apos;jerry&apos;,&apos;tom&apos;,&apos;sunday&apos;] %&#125;</div><div class="line">&#123;% for user in users %&#125;</div><div class="line">&#123;&#123; user &#125;&#125;:</div><div class="line">user.present:</div><div class="line">   - shell: /bin/bash</div><div class="line">   - password: &apos;$1$h6niwjpG$2nAnRib36QUr2wnfYXC4u0&apos;</div><div class="line">   - unless: id &#123;&#123; user &#125;&#125;</div><div class="line">&#123;% endfor %&#125;</div></pre></td></tr></table></figure>
+        <h3 id="elasticsearch的概念详解"><a href="#elasticsearch的概念详解" class="headerlink" title="elasticsearch的概念详解"></a>elasticsearch的概念详解</h3><p>下文将要介绍的是elasticsearch的几个核心概念。理解这些概念将有助于你更好的掌握elasticsearch。</p>
+<h4 id="Near-Realtime（NRT）"><a href="#Near-Realtime（NRT）" class="headerlink" title="Near Realtime（NRT）"></a>Near Realtime（NRT）</h4><p>elasticsearch是一个接近实时的（延迟大概是一秒）search插件，这就意味着从你将数据放入到文档中到你搜索到数据的时间。</p>
+<h3 id="Cluster"><a href="#Cluster" class="headerlink" title="Cluster"></a>Cluster</h3><p>集群是指一个或者多个node共同工作来存储完整的数据，一块提供存储索引和搜索的功能。集群的区分是通过一个全局唯一的名字<br>它的名字默认是elasticsearch。这个名字非常重要，集群其它节点加入集群靠的就是这个名字。</p>
+<p>注意事项： 在不同的环境中，你必须确认使用不同的集群名字。例如你可以使用这些名字：<br>logging-dev, logging-stage, and logging-prod for the development。</p>
+<h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><p>node就是集群中的任意一台机器，存储数据。参与集群的索引和搜索功能。同集群一样，node的区分也是通过name来进行区分的。<br>node默认的名字是一个随机的uuid号码，你可以定义不同的node名字，如果你不想使用默认的名字。这个名字对管理员来说很重要<br>。node可以通过配置cluster name加入到集群里面。默认情况下，每一个node都会加入到一个叫做elasticsearch的集群中。</p>
+<h3 id="index"><a href="#index" class="headerlink" title="index"></a>index</h3><p>一个index是一类数据的集合。例如顾客信息，产品目录等。index的区分是通过名字来区分的（index必须是小写的）。</p>
+<h3 id="Type"><a href="#Type" class="headerlink" title="Type"></a>Type</h3><p>一个index中，可以定义一个或者多个types。一个type是一个逻辑的类或者部分是由用户定义的。通常情况下，type是文档中有一些共同属性的字段。<br>例如：有一个博客系统，里面存储了所有的信息在index中。在这个index中，你可以定义一个type存储用户数据，定义一个type存储博客数据，另外一个数据<br>存储评论数据。</p>
+<p>网上有人理解为index是个数据库，type是表。先这样理解吧。</p>
+<h3 id="Document"><a href="#Document" class="headerlink" title="Document"></a>Document</h3><p>document是一类信息可以被用来索引的。比如你可以有一个文档来存储顾客信息，另外一个文档来存储产品信息。这个document被通过index/type，你可以存储<br>任意多的documents。注意一个文档存储之后必须通过index和type可以取到。</p>
+<h3 id="shards-amp-replicas"><a href="#shards-amp-replicas" class="headerlink" title="shards &amp; replicas"></a>shards &amp; replicas</h3><p>一个index存储巨大的数据在一个单独的node上可能不太何时。例如一个单独的一类1t的数据存储在一个单独的盘上，我们在搜索的时候速度也会特别的慢。<br>为了解决这个问题，elasticsearch提供将index再分为多个部分称为shareds。当你创建索引的时候，可以手动制定要切割成多少份数据。每一份数据都会有一个全局<br>的index便于在任何一台机器上搜索。<br>shares有两个很重要的作用：</p>
+<h4 id="它允许你水平扩展你的容量"><a href="#它允许你水平扩展你的容量" class="headerlink" title="它允许你水平扩展你的容量"></a>它允许你水平扩展你的容量</h4><h4 id="分布式计算数据，速度快"><a href="#分布式计算数据，速度快" class="headerlink" title="分布式计算数据，速度快"></a>分布式计算数据，速度快</h4><p>由于shards之后，机器出现故障的可能性会n倍增加，所以为了解决故障率的问题，引入了replicas的概念。<br>replica的好处：</p>
+<h4 id="当shard或者节点故障的时候，提供高可用性。"><a href="#当shard或者节点故障的时候，提供高可用性。" class="headerlink" title="当shard或者节点故障的时候，提供高可用性。"></a>当shard或者节点故障的时候，提供高可用性。</h4><h4 id="提高读的性能"><a href="#提高读的性能" class="headerlink" title="提高读的性能"></a>提高读的性能</h4>
       
     </div>
 
@@ -425,7 +436,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/saltstack/" rel="tag"># saltstack</a>
+            <a href="/tags/kubernetes，logs，elasticsearch/" rel="tag"># kubernetes，logs，elasticsearch</a>
           
         </div>
       
@@ -434,8 +445,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/11/28/kubernetes组件/" rel="next" title="kubernetes入门之组件介绍（-）">
-                <i class="fa fa-chevron-left"></i> kubernetes入门之组件介绍（-）
+              <a href="/2016/12/19/k8sss日志管理/" rel="next" title="k8s日志管理（一）">
+                <i class="fa fa-chevron-left"></i> k8s日志管理（一）
               </a>
             
           </div>
@@ -443,10 +454,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/11/28/kubernetes-1.4版版本安装配配置/" rel="prev" title="kubernetes 1.4版版本安装配配置（二）">
-                kubernetes 1.4版版本安装配配置（二） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -472,8 +479,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/11/28/saltstack之添加用户/"
-           data-title="saltstack之初始化" data-url="http://yoursite.com/2016/11/28/saltstack之添加用户/">
+      <div class="ds-thread" data-thread-key="2016/12/20/k8s日志管理-二/"
+           data-title="k8s日志管理(二)" data-url="http://yoursite.com/2016/12/20/k8s日志管理-二/">
       </div>
     
   </div>
@@ -590,7 +597,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#添加用户"><span class="nav-number">1.</span> <span class="nav-text">添加用户</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成密码"><span class="nav-number">2.</span> <span class="nav-text">生成密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#批量用户添加"><span class="nav-number">3.</span> <span class="nav-text">批量用户添加</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#elasticsearch的概念详解"><span class="nav-number">1.</span> <span class="nav-text">elasticsearch的概念详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Near-Realtime（NRT）"><span class="nav-number">1.1.</span> <span class="nav-text">Near Realtime（NRT）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cluster"><span class="nav-number">2.</span> <span class="nav-text">Cluster</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Node"><span class="nav-number">3.</span> <span class="nav-text">Node</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#index"><span class="nav-number">4.</span> <span class="nav-text">index</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Type"><span class="nav-number">5.</span> <span class="nav-text">Type</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Document"><span class="nav-number">6.</span> <span class="nav-text">Document</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shards-amp-replicas"><span class="nav-number">7.</span> <span class="nav-text">shards & replicas</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#它允许你水平扩展你的容量"><span class="nav-number">7.1.</span> <span class="nav-text">它允许你水平扩展你的容量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分布式计算数据，速度快"><span class="nav-number">7.2.</span> <span class="nav-text">分布式计算数据，速度快</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#当shard或者节点故障的时候，提供高可用性。"><span class="nav-number">7.3.</span> <span class="nav-text">当shard或者节点故障的时候，提供高可用性。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#提高读的性能"><span class="nav-number">7.4.</span> <span class="nav-text">提高读的性能</span></a></li></ol></li></ol></div>
             
 
           </div>
