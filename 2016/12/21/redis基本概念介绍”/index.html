@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="kubernetes，deployment," />
+  <meta name="keywords" content="reids，系统运维," />
 
 
 
@@ -84,16 +84,16 @@
 
 
 
-<meta name="description" content="Deployment提供了pod和rc的设置，在deployment里面你只需要描述对象的最终状态。它就可以改变pod和rc的最终状态。你可以定义deployment来创建新的资源，或者替换已经存在的资源。下面将从如下几个方面来讲述deployment：1、创建一个deployment来启动rc和pods;2、查看deployment的状态，来看其是否成功；3、更新deployment重建pod;">
+<meta name="description" content="What’s RedisRedis作为一个open source key-value store，与传统的k-v存储开源方案相比，其value类型支持各种常见数据类型（如strings, hashes, lists, sets, sorted-sets, etc.），正因如此，其可被用于多种应用场景。特别需要明确的是：当需要处理的数据能被内存完全容纳时，Redis才能发挥其优异的性能，即Redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="k8s deployment（六）">
-<meta property="og:url" content="http://yoursite.com/2016/12/07/k8s资源管理deployment/index.html">
+<meta property="og:title" content="redis基本概念介绍(一)">
+<meta property="og:url" content="http://yoursite.com/2016/12/21/redis基本概念介绍”/index.html">
 <meta property="og:site_name" content="Zero">
-<meta property="og:description" content="Deployment提供了pod和rc的设置，在deployment里面你只需要描述对象的最终状态。它就可以改变pod和rc的最终状态。你可以定义deployment来创建新的资源，或者替换已经存在的资源。下面将从如下几个方面来讲述deployment：1、创建一个deployment来启动rc和pods;2、查看deployment的状态，来看其是否成功；3、更新deployment重建pod;">
-<meta property="og:updated_time" content="2016-12-09T07:13:46.058Z">
+<meta property="og:description" content="What’s RedisRedis作为一个open source key-value store，与传统的k-v存储开源方案相比，其value类型支持各种常见数据类型（如strings, hashes, lists, sets, sorted-sets, etc.），正因如此，其可被用于多种应用场景。特别需要明确的是：当需要处理的数据能被内存完全容纳时，Redis才能发挥其优异的性能，即Redis">
+<meta property="og:updated_time" content="2016-12-21T06:30:11.791Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="k8s deployment（六）">
-<meta name="twitter:description" content="Deployment提供了pod和rc的设置，在deployment里面你只需要描述对象的最终状态。它就可以改变pod和rc的最终状态。你可以定义deployment来创建新的资源，或者替换已经存在的资源。下面将从如下几个方面来讲述deployment：1、创建一个deployment来启动rc和pods;2、查看deployment的状态，来看其是否成功；3、更新deployment重建pod;">
+<meta name="twitter:title" content="redis基本概念介绍(一)">
+<meta name="twitter:description" content="What’s RedisRedis作为一个open source key-value store，与传统的k-v存储开源方案相比，其value类型支持各种常见数据类型（如strings, hashes, lists, sets, sorted-sets, etc.），正因如此，其可被用于多种应用场景。特别需要明确的是：当需要处理的数据能被内存完全容纳时，Redis才能发挥其优异的性能，即Redis">
 
 
 
@@ -121,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/12/07/k8s资源管理deployment/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/12/21/redis基本概念介绍”/"/>
 
 
 
 
 
-  <title> k8s deployment（六） | Zero </title>
+  <title> redis基本概念介绍(一) | Zero </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -268,7 +268,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/07/k8s资源管理deployment/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/21/redis基本概念介绍”/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Zero">
@@ -292,7 +292,7 @@
             
             
               
-                k8s deployment（六）
+                redis基本概念介绍(一)
               
             
           </h1>
@@ -305,8 +305,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-07T15:08:48+08:00">
-                2016-12-07
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-21T14:10:18+08:00">
+                2016-12-21
               </time>
             
 
@@ -324,8 +324,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/容器管理软件/" itemprop="url" rel="index">
-                    <span itemprop="name">容器管理软件</span>
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
                   </a>
                 </span>
 
@@ -339,8 +339,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2016/12/07/k8s资源管理deployment/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/07/k8s资源管理deployment/" itemprop="commentCount"></span>
+                <a href="/2016/12/21/redis基本概念介绍”/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/21/redis基本概念介绍”/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -350,7 +350,7 @@
 
           
           
-             <span id="/2016/12/07/k8s资源管理deployment/" class="leancloud_visitors" data-flag-title="k8s deployment（六）">
+             <span id="/2016/12/21/redis基本概念介绍”/" class="leancloud_visitors" data-flag-title="redis基本概念介绍(一)">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -375,22 +375,9 @@
       
 
       
-        <p>Deployment提供了pod和rc的设置，在deployment里面你只需要描述对象的最终状态。它就可以改变pod和rc的最终状态。<br>你可以定义deployment来创建新的资源，或者替换已经存在的资源。<br>下面将从如下几个方面来讲述deployment：<br>1、创建一个deployment来启动rc和pods;<br>2、查看deployment的状态，来看其是否成功；<br>3、更新deployment重建pod;<br>4、如果版本不稳定，deployment将如何回滚。<br>5、pause or go on一个deployment。</p>
-<h3 id="deployment创建rc"><a href="#deployment创建rc" class="headerlink" title="deployment创建rc"></a>deployment创建rc</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">apiVersion: extensions/v1beta1</div><div class="line">kind: Deployment</div><div class="line">metadata:</div><div class="line">  name: nginx-deployment</div><div class="line">spec:</div><div class="line">  replicas: 2</div><div class="line">  template:</div><div class="line">    metadata:</div><div class="line">      labels:</div><div class="line">        app: nginx</div><div class="line">    spec:</div><div class="line">      containers:</div><div class="line">      - name: nginx</div><div class="line">        image: nginx:1.7.9</div><div class="line">        ports:</div><div class="line">        - containerPort: 80</div></pre></td></tr></table></figure>
-<p>输入下面的命令，查看deployment的状态：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-test-bj2c-master1 template]# kubectl get deployments</div><div class="line">NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE</div><div class="line">nginx-deployment   2         2         2            2           10m</div><div class="line"></div><div class="line">[root@ucloud-test-bj2c-master1 template]# kubectl get pods --show-labels</div><div class="line">NAME                                READY     STATUS    RESTARTS   AGE       LABELS</div><div class="line">my-nginx-60xqb                      1/1       Running   0          6m        app=nginx,deployment=170462ea15f91a5358f9fb6c8c5e6f46-orig</div><div class="line">my-nginx-wvmmr                      1/1       Running   0          6m        app=nginx,deployment=170462ea15f91a5358f9fb6c8c5e6f46-orig</div></pre></td></tr></table></figure></p>
-<p>kubectl get rs and kubectl get pods</p>
-<h3 id="查看deployment的状态，来看其是否成功；"><a href="#查看deployment的状态，来看其是否成功；" class="headerlink" title="查看deployment的状态，来看其是否成功；"></a>查看deployment的状态，来看其是否成功；</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-test-bj2c-master1 template]# kubectl rollout status deployment/nginx-deployment</div><div class="line">deployment nginx-deployment successfully rolled out </div><div class="line">kubectl get deployments</div></pre></td></tr></table></figure>
-<h3 id="更新deployment只改变单一条件，查看其状态"><a href="#更新deployment只改变单一条件，查看其状态" class="headerlink" title="更新deployment只改变单一条件，查看其状态"></a>更新deployment只改变单一条件，查看其状态</h3><p>方法一：<br>kubectl set image deployment/nginx-deployment nginx=nginx:1.7.9</p>
-<p>方法二：<br>kubectl edit deployment/nginx-deployment</p>
-<p>通过这两个方法修改之后，可以查看当前的情况信息：<br>$ kubectl get deployments<br>NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE<br>nginx-deployment   3         3         3            3           36s</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-test-bj2c-master1 template]#  kubectl get  deployment/nginx-deployment </div><div class="line">NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE</div><div class="line">nginx-deployment   2         3         2            1           58m</div><div class="line">[root@ucloud-test-bj2c-master1 template]#  kubectl set image deployment/nginx-deployment nginx=nginx:1.9.0</div><div class="line">deployment &quot;nginx-deployment&quot; image updated</div><div class="line">[root@ucloud-test-bj2c-master1 template]#  kubectl get  deployment/nginx-deployment </div><div class="line">NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE</div><div class="line">nginx-deployment   2         2         2            1           58m</div><div class="line">[root@ucloud-test-bj2c-master1 template]#  kubectl get  deployment/nginx-deployment </div><div class="line">NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE</div><div class="line">nginx-deployment   2         2         2            2           58m</div><div class="line">[root@ucloud-test-bj2c-master1 template]#  kubectl get  deployment/nginx-deployment </div><div class="line">NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE</div><div class="line">nginx-deployment   2         2         2            2           58m</div></pre></td></tr></table></figure>
-<p>UP-TO-DATE: 表明deployment已经读取了最新的配置信息中rc的个数；<br>current：当前deployment管理的rc个数；<br>available：表明当前rc中那些副本是可用的；</p>
-<p>kubectl get rs：此命令能看出来deployment的历史版本，我们看到历史版本种数据都为0.</p>
-<p>[root@ucloud-test-bj2c-master1 template]#  kubectl get rs<br>NAME                          DESIRED   CURRENT   READY     AGE<br>nginx-deployment-3518414130   3         3         3         41m<br>nginx-deployment-3599416627   0         0         0         43m<br>nginx-deployment-3599678771   0         0         0         46m<br>nginx-deployment-4087004473   0         0         0         1h</p>
-<p>下次，我们要更新这些pod，我们只需要更新deployment的模板。</p>
-<p>deployment可以确保在更新的过程中部分pod是down的。它会确保至少有一个pod是up的状态。</p>
-<h3 id="复杂更新deployment，查看其状态"><a href="#复杂更新deployment，查看其状态" class="headerlink" title="复杂更新deployment，查看其状态"></a>复杂更新deployment，查看其状态</h3><h3 id="查看当前deployment的历史版本"><a href="#查看当前deployment的历史版本" class="headerlink" title="查看当前deployment的历史版本"></a>查看当前deployment的历史版本</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">kubectl rollout history deployment/nginx-deployment </div><div class="line">[root@ucloud-test-bj2c-master1 template]# kubectl rollout history deployment/nginx-deployment</div><div class="line">deployments &quot;nginx-deployment&quot;</div><div class="line">REVISION	CHANGE-CAUSE</div><div class="line">7		&lt;none&gt;</div><div class="line">8		&lt;none&gt;</div><div class="line">9		&lt;none&gt;</div><div class="line"></div><div class="line">版本回滚：</div><div class="line">kubectl rollout history deployment/nginx-deployment --revision=7</div></pre></td></tr></table></figure>
-<p>参考文档：<br><a href="http://kubernetes.io/docs/user-guide/deployments/" target="_blank" rel="external">http://kubernetes.io/docs/user-guide/deployments/</a></p>
+        <h3 id="What’s-Redis"><a href="#What’s-Redis" class="headerlink" title="What’s Redis"></a>What’s Redis</h3><p>Redis作为一个open source key-value store，与传统的k-v存储开源方案相比，其value类型支持各种常见数据类型（如strings, hashes, lists, sets, sorted-sets, etc.），<br>正因如此，其可被用于多种应用场景。特别需要明确的是：当需要处理的数据能被内存完全容纳时，Redis才能发挥其优异的性能，即Redis works with an in-memory dataset。<br>备注：从v2.0开始到v2.4，Redis支持vitual memory的概念，即当数据集比物理内存大时，会将冷key的value交换到磁盘上，当被请求时，再重新换回主存。不过由于VM机制弊大于利，<br>从redis v2.4之后的版本（不包括2.4）开始，VM特性已被Redis弃用，详细说明可以参考这里。<br>Redis支持数据持久化（persistence），以便Redis服务因各种原因重启后，可以load之前已有数据，从而恢复服务状态。用户可根据实际使用情况选择两种持久化策略：</p>
+<p>1) RDB方式：dump内存数据库至磁盘<br>2) AOF方式：将每个写操作记录到command log文件中，以便server重启时回放log以恢复数据状态（类似于MySQL的binlog）<br>Redis支持Master-Slave Replication，从库以全镜像方式同步主库数据，以防系统故障。<br>Redis目前还不支持集群，不过支持集群的版本已在作者开发计划中（cluster目前有alpha版本，尚未发布生产环境可用版本）。<br>虽无官方的集群实现，但业界主流做法是用Partitioning方式将数据集散列到不同的redis实例上，从而变相实现了对redis集群的支持，redis官网的这里对partitioning的实现思路<br>做了描述并推荐了twitter开源的一个支持redis的proxy - twemproxy（该proxy最初是作为memcached proxy开源的）。<br>有两个基本概念需要区分：Redis Master-Slave Replication和Redis Cluster，前者在两个库之间实现数据全镜像，后者则是将用户数据散列到不同机器上，<br>每个机器的Redis节点只hold一部分用户数据。    </p>
+<p>个人感觉，两种方法都可以起到单点故障容错作用，只是实现方式及应用场合不同而已。<br>Redis还可以被用作Message Queue，支持的指令集见这里<br>关于Redis的更多基础介绍，可直接查看其官网文档。</p>
 
       
     </div>
@@ -435,7 +422,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/kubernetes，deployment/" rel="tag"># kubernetes，deployment</a>
+            <a href="/tags/reids，系统运维/" rel="tag"># reids，系统运维</a>
           
         </div>
       
@@ -444,8 +431,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/12/07/kubernetes-secrets/" rel="next" title="kubernetes secrets（五）">
-                <i class="fa fa-chevron-left"></i> kubernetes secrets（五）
+              <a href="/2016/12/21/运维感悟（二）/" rel="next" title="运维感悟（二）">
+                <i class="fa fa-chevron-left"></i> 运维感悟（二）
               </a>
             
           </div>
@@ -453,10 +440,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/12/09/云提供商故障引起的反思/" rel="prev" title="云提供商故障引起的反思">
-                云提供商故障引起的反思 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -482,8 +465,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/12/07/k8s资源管理deployment/"
-           data-title="k8s deployment（六）" data-url="http://yoursite.com/2016/12/07/k8s资源管理deployment/">
+      <div class="ds-thread" data-thread-key="2016/12/21/redis基本概念介绍”/"
+           data-title="redis基本概念介绍(一)" data-url="http://yoursite.com/2016/12/21/redis基本概念介绍”/">
       </div>
     
   </div>
@@ -600,7 +583,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#deployment创建rc"><span class="nav-number">1.</span> <span class="nav-text">deployment创建rc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看deployment的状态，来看其是否成功；"><span class="nav-number">2.</span> <span class="nav-text">查看deployment的状态，来看其是否成功；</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更新deployment只改变单一条件，查看其状态"><span class="nav-number">3.</span> <span class="nav-text">更新deployment只改变单一条件，查看其状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复杂更新deployment，查看其状态"><span class="nav-number">4.</span> <span class="nav-text">复杂更新deployment，查看其状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看当前deployment的历史版本"><span class="nav-number">5.</span> <span class="nav-text">查看当前deployment的历史版本</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#What’s-Redis"><span class="nav-number">1.</span> <span class="nav-text">What’s Redis</span></a></li></ol></div>
             
 
           </div>
