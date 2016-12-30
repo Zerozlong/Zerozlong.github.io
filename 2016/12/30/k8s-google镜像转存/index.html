@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="reids，系统运维," />
+  <meta name="keywords" content="容器管理软件,google镜像转存," />
 
 
 
@@ -84,16 +84,33 @@
 
 
 
-<meta name="description" content="What’s RedisRedis作为一个open source key-value store，与传统的k-v存储开源方案相比，其value类型支持各种常见数据类型（如strings, hashes, lists, sets, sorted-sets, etc.），正因如此，其可被用于多种应用场景。特别需要明确的是：当需要处理的数据能被内存完全容纳时，Redis才能发挥其优异的性能，即Redis">
+<meta name="description" content="Why？一开始研究容器镜像的时候，就使用的时速云，理由速度比国外的快，大部分镜像比较新。呵呵，做个广告吧。随着研究的深入，需要用到很多管理的镜像时速云是没有的。这个时候要么你有一个美国服务器否则镜像是下不下来的。那么问题来了，哥们就是穷，怎么办？
+Answer?dockerhub+github.如果你说哥们我这两个都上不了，趁早下岗吧，没有捷径。
+How to？注册Docker Hub账号运行do">
 <meta property="og:type" content="article">
-<meta property="og:title" content="redis基本概念介绍(一)">
-<meta property="og:url" content="http://yoursite.com/2016/12/21/redis基本概念介绍/index.html">
+<meta property="og:title" content="k8s-google镜像转存">
+<meta property="og:url" content="http://yoursite.com/2016/12/30/k8s-google镜像转存/index.html">
 <meta property="og:site_name" content="Zero">
-<meta property="og:description" content="What’s RedisRedis作为一个open source key-value store，与传统的k-v存储开源方案相比，其value类型支持各种常见数据类型（如strings, hashes, lists, sets, sorted-sets, etc.），正因如此，其可被用于多种应用场景。特别需要明确的是：当需要处理的数据能被内存完全容纳时，Redis才能发挥其优异的性能，即Redis">
-<meta property="og:updated_time" content="2016-12-22T08:51:33.248Z">
+<meta property="og:description" content="Why？一开始研究容器镜像的时候，就使用的时速云，理由速度比国外的快，大部分镜像比较新。呵呵，做个广告吧。随着研究的深入，需要用到很多管理的镜像时速云是没有的。这个时候要么你有一个美国服务器否则镜像是下不下来的。那么问题来了，哥们就是穷，怎么办？
+Answer?dockerhub+github.如果你说哥们我这两个都上不了，趁早下岗吧，没有捷径。
+How to？注册Docker Hub账号运行do">
+<meta property="og:image" content="http://yoursite.com/images/14.png">
+<meta property="og:image" content="http://yoursite.com/images/15.png">
+<meta property="og:image" content="http://yoursite.com/images/16.png">
+<meta property="og:image" content="http://yoursite.com/images/17.png">
+<meta property="og:image" content="http://yoursite.com/images/18.png">
+<meta property="og:image" content="http://yoursite.com/images/21.png">
+<meta property="og:image" content="http://yoursite.com/images/22.png">
+<meta property="og:image" content="http://yoursite.com/images/23.png">
+<meta property="og:image" content="http://yoursite.com/images/24.png">
+<meta property="og:image" content="http://yoursite.com/images/25.png">
+<meta property="og:updated_time" content="2016-12-30T16:12:39.069Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="redis基本概念介绍(一)">
-<meta name="twitter:description" content="What’s RedisRedis作为一个open source key-value store，与传统的k-v存储开源方案相比，其value类型支持各种常见数据类型（如strings, hashes, lists, sets, sorted-sets, etc.），正因如此，其可被用于多种应用场景。特别需要明确的是：当需要处理的数据能被内存完全容纳时，Redis才能发挥其优异的性能，即Redis">
+<meta name="twitter:title" content="k8s-google镜像转存">
+<meta name="twitter:description" content="Why？一开始研究容器镜像的时候，就使用的时速云，理由速度比国外的快，大部分镜像比较新。呵呵，做个广告吧。随着研究的深入，需要用到很多管理的镜像时速云是没有的。这个时候要么你有一个美国服务器否则镜像是下不下来的。那么问题来了，哥们就是穷，怎么办？
+Answer?dockerhub+github.如果你说哥们我这两个都上不了，趁早下岗吧，没有捷径。
+How to？注册Docker Hub账号运行do">
+<meta name="twitter:image" content="http://yoursite.com/images/14.png">
 
 
 
@@ -121,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/12/21/redis基本概念介绍/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/12/30/k8s-google镜像转存/"/>
 
 
 
 
 
-  <title> redis基本概念介绍(一) | Zero </title>
+  <title> k8s-google镜像转存 | Zero </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -268,7 +285,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/21/redis基本概念介绍/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/30/k8s-google镜像转存/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Zero">
@@ -292,7 +309,7 @@
             
             
               
-                redis基本概念介绍(一)
+                k8s-google镜像转存
               
             
           </h1>
@@ -305,8 +322,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-21T14:10:18+08:00">
-                2016-12-21
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-30T23:51:13+08:00">
+                2016-12-30
               </time>
             
 
@@ -324,8 +341,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/redis/" itemprop="url" rel="index">
-                    <span itemprop="name">redis</span>
+                  <a href="/categories/容器管理软件/" itemprop="url" rel="index">
+                    <span itemprop="name">容器管理软件</span>
                   </a>
                 </span>
 
@@ -339,8 +356,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2016/12/21/redis基本概念介绍/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/21/redis基本概念介绍/" itemprop="commentCount"></span>
+                <a href="/2016/12/30/k8s-google镜像转存/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/30/k8s-google镜像转存/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -350,7 +367,7 @@
 
           
           
-             <span id="/2016/12/21/redis基本概念介绍/" class="leancloud_visitors" data-flag-title="redis基本概念介绍(一)">
+             <span id="/2016/12/30/k8s-google镜像转存/" class="leancloud_visitors" data-flag-title="k8s-google镜像转存">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -375,9 +392,17 @@
       
 
       
-        <h3 id="What’s-Redis"><a href="#What’s-Redis" class="headerlink" title="What’s Redis"></a>What’s Redis</h3><p>Redis作为一个open source key-value store，与传统的k-v存储开源方案相比，其value类型支持各种常见数据类型（如strings, hashes, lists, sets, sorted-sets, etc.），<br>正因如此，其可被用于多种应用场景。特别需要明确的是：当需要处理的数据能被内存完全容纳时，Redis才能发挥其优异的性能，即Redis works with an in-memory dataset。<br>备注：从v2.0开始到v2.4，Redis支持vitual memory的概念，即当数据集比物理内存大时，会将冷key的value交换到磁盘上，当被请求时，再重新换回主存。不过由于VM机制弊大于利，<br>从redis v2.4之后的版本（不包括2.4）开始，VM特性已被Redis弃用，详细说明可以参考这里。<br>Redis支持数据持久化（persistence），以便Redis服务因各种原因重启后，可以load之前已有数据，从而恢复服务状态。用户可根据实际使用情况选择两种持久化策略：</p>
-<p>1) RDB方式：dump内存数据库至磁盘<br>2) AOF方式：将每个写操作记录到command log文件中，以便server重启时回放log以恢复数据状态（类似于MySQL的binlog）<br>Redis支持Master-Slave Replication，从库以全镜像方式同步主库数据，以防系统故障。<br>Redis目前还不支持集群，不过支持集群的版本已在作者开发计划中（cluster目前有alpha版本，尚未发布生产环境可用版本）。<br>虽无官方的集群实现，但业界主流做法是用Partitioning方式将数据集散列到不同的redis实例上，从而变相实现了对redis集群的支持，redis官网的这里对partitioning的实现思路<br>做了描述并推荐了twitter开源的一个支持redis的proxy - twemproxy（该proxy最初是作为memcached proxy开源的）。<br>有两个基本概念需要区分：Redis Master-Slave Replication和Redis Cluster，前者在两个库之间实现数据全镜像，后者则是将用户数据散列到不同机器上，<br>每个机器的Redis节点只hold一部分用户数据。    </p>
-<p>个人感觉，两种方法都可以起到单点故障容错作用，只是实现方式及应用场合不同而已。<br>Redis还可以被用作Message Queue，支持的指令集见这里<br>关于Redis的更多基础介绍，可直接查看其官网文档。</p>
+        <h3 id="Why？"><a href="#Why？" class="headerlink" title="Why？"></a>Why？</h3><p>一开始研究容器镜像的时候，就使用的时速云，理由速度比国外的快，大部分镜像比较新。呵呵，做个广告吧。<br>随着研究的深入，需要用到很多管理的镜像时速云是没有的。这个时候要么你有一个美国服务器否则镜像是下不下来的。那么问题来了，<br>哥们就是穷，怎么办？</p>
+<h3 id="Answer"><a href="#Answer" class="headerlink" title="Answer?"></a>Answer?</h3><p>dockerhub+github.如果你说哥们我这两个都上不了，趁早下岗吧，没有捷径。</p>
+<h3 id="How-to？"><a href="#How-to？" class="headerlink" title="How to？"></a>How to？</h3><p>注册Docker Hub账号<br>运行docker login输入用户名和密码（登录信息保存在~/.docker/config.json 中。PS：我的环境是centos7）<br>使用push命令上传镜像，不指定镜像tag的话，会将仓库中本地的所有镜像都长传到dockerhub<br>命令如：<br>docker zerosre/test:v1<br>我们的镜像就上传完毕可以在dockerhub的仓库管理页面查看。</p>
+<h4 id="link"><a href="#link" class="headerlink" title="link."></a>link.</h4><p>我们除了可以在本地创建镜像push到dockerhub上，也可以利用dockerhub提供的自动化构建技术在服务端直接构建镜像。提供dockerhub连接一个包含Dockerfile文件的github的仓库，这样dockerhub的构建集群服务器就会自动构建镜像，这种方式构建出来的镜像会被标记为Automated Build。<br>以下是具体流程： </p>
+<h5 id="登录dockerhub，点击下图中按钮"><a href="#登录dockerhub，点击下图中按钮" class="headerlink" title="登录dockerhub，点击下图中按钮"></a>登录dockerhub，点击下图中按钮</h5><p><img src="/images/14.png" alt="image"></p>
+<h5 id="如果你是第一次构建就会看到以下内容，点击linkAccount"><a href="#如果你是第一次构建就会看到以下内容，点击linkAccount" class="headerlink" title="如果你是第一次构建就会看到以下内容，点击linkAccount"></a>如果你是第一次构建就会看到以下内容，点击linkAccount</h5><p><img src="/images/15.png" alt="image"></p>
+<h5 id="会进入下图页面，由于我们在这里演示连接github，所以点击link-Github。"><a href="#会进入下图页面，由于我们在这里演示连接github，所以点击link-Github。" class="headerlink" title="会进入下图页面，由于我们在这里演示连接github，所以点击link Github。"></a>会进入下图页面，由于我们在这里演示连接github，所以点击link Github。</h5><p><img src="/images/16.png" alt="image"></p>
+<h5 id="出现下图页面推荐选择上面的"><a href="#出现下图页面推荐选择上面的" class="headerlink" title="出现下图页面推荐选择上面的"></a>出现下图页面推荐选择上面的</h5><p><img src="/images/17.png" alt="image"></p>
+<h5 id="进入下图页面选择授权"><a href="#进入下图页面选择授权" class="headerlink" title="进入下图页面选择授权"></a>进入下图页面选择授权</h5><p><img src="/images/18.png" alt="image"><br>认证通过之后，两边的连接建立完毕。</p>
+<h4 id="Auto-building"><a href="#Auto-building" class="headerlink" title="Auto building"></a>Auto building</h4><p><img src="/images/21.png" alt="image"><br>选中你要的项目</p>
+<h5 id="选择项目"><a href="#选择项目" class="headerlink" title="选择项目"></a>选择项目</h5><p><img src="/images/22.png" alt="image"><br>在这里可以填写一些Docker镜像的基本信息<br><img src="/images/23.png" alt="image"><br>点击触发生成镜像<br><img src="/images/24.png" alt="image"><br>在build details中查看镜像生成过程中的具体信息，包括错误信息。<br><img src="/images/25.png" alt="image"></p>
 
       
     </div>
@@ -422,7 +447,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/reids，系统运维/" rel="tag"># reids，系统运维</a>
+            <a href="/tags/容器管理软件-google镜像转存/" rel="tag"># 容器管理软件,google镜像转存</a>
           
         </div>
       
@@ -431,8 +456,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/12/21/运维感悟（二）/" rel="next" title="运维感悟（二）">
-                <i class="fa fa-chevron-left"></i> 运维感悟（二）
+              <a href="/2016/12/22/redis高可用方案之主从及哨兵配置/" rel="next" title="redis高可用方案之主从及哨兵配置(三)">
+                <i class="fa fa-chevron-left"></i> redis高可用方案之主从及哨兵配置(三)
               </a>
             
           </div>
@@ -440,10 +465,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/12/22/saltstack双主配置/" rel="prev" title="saltstack双主配置">
-                saltstack双主配置 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -469,8 +490,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/12/21/redis基本概念介绍/"
-           data-title="redis基本概念介绍(一)" data-url="http://yoursite.com/2016/12/21/redis基本概念介绍/">
+      <div class="ds-thread" data-thread-key="2016/12/30/k8s-google镜像转存/"
+           data-title="k8s-google镜像转存" data-url="http://yoursite.com/2016/12/30/k8s-google镜像转存/">
       </div>
     
   </div>
@@ -587,7 +608,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#What’s-Redis"><span class="nav-number">1.</span> <span class="nav-text">What’s Redis</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Why？"><span class="nav-number">1.</span> <span class="nav-text">Why？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Answer"><span class="nav-number">2.</span> <span class="nav-text">Answer?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#How-to？"><span class="nav-number">3.</span> <span class="nav-text">How to？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#link"><span class="nav-number">3.1.</span> <span class="nav-text">link.</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#登录dockerhub，点击下图中按钮"><span class="nav-number">3.1.1.</span> <span class="nav-text">登录dockerhub，点击下图中按钮</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#如果你是第一次构建就会看到以下内容，点击linkAccount"><span class="nav-number">3.1.2.</span> <span class="nav-text">如果你是第一次构建就会看到以下内容，点击linkAccount</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#会进入下图页面，由于我们在这里演示连接github，所以点击link-Github。"><span class="nav-number">3.1.3.</span> <span class="nav-text">会进入下图页面，由于我们在这里演示连接github，所以点击link Github。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#出现下图页面推荐选择上面的"><span class="nav-number">3.1.4.</span> <span class="nav-text">出现下图页面推荐选择上面的</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#进入下图页面选择授权"><span class="nav-number">3.1.5.</span> <span class="nav-text">进入下图页面选择授权</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Auto-building"><span class="nav-number">3.2.</span> <span class="nav-text">Auto building</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#选择项目"><span class="nav-number">3.2.1.</span> <span class="nav-text">选择项目</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
