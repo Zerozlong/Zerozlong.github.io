@@ -97,7 +97,7 @@ etcd集群搭建默认 kubeadm 创建的集群会在内部启动一个单点的 
 
 etcd集群搭建默认 kubeadm 创建的集群会在内部启动一个单点的 etcd，当然大部分情况下 etcd 还是很稳定的，但是一但 etcd 由于某种原因挂掉，这个问题会非常严重，会导致整个集群不可用。具体原因是 etcd 存储着 kubernete">
 <meta property="og:image" content="http://yoursite.com/images/6.jpg">
-<meta property="og:updated_time" content="2016-12-07T12:43:59.096Z">
+<meta property="og:updated_time" content="2016-12-31T16:03:01.778Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="k8s搭建之高可用方案(三)">
 <meta name="twitter:description" content="生活在于折腾，前几天搭建的kubernetes是单机模式，服务挂掉之后，容易影响到其它服务，故这次主要做服务的高可用。
@@ -401,7 +401,7 @@ etcd集群搭建默认 kubeadm 创建的集群会在内部启动一个单点的 
 <p>此时 kubeadm 将不会在内部创建 etcd，转而使用外部我们指定的 etcd 集群，如果外部 etcd 集群配置了<br> SSL 加密，那么还需要配合 –external-etcd-cafile、–external-etcd-certfile、–external-etcd-keyfile<br> 三个参数指定 etcd 的 CA证书、CA签发的使用证书和私钥文件，命令如下:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kubeadm init --external-etcd-endpoints https://10.10.151.214:2379 --external-etcd-cafile /path/to/ca --external-etcd-certfile /path/to/cert --external-etcd-keyfile /path/to/privatekey</div></pre></td></tr></table></figure>
 <p>如果有多个master节点，可以使用如下命令：<br>这个选项默认就是true。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">--leader-elect                            </div><div class="line"> Start a leader election client and gain leadership before executing the main loop. </div><div class="line"> Enable this when running replicated components for high availability. (default true)</div></pre></td></tr></table></figure></p>
-<p>下面将客户端重新加入集群执行如下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">systemctl stop kubelet</div><div class="line">docker rm -f -v $(docker ps -q);</div><div class="line">find /var/lib/kubelet | xargs -n 1 findmnt -n -t tmpfs -o TARGET -T | uniq | xargs -r umount -v;</div><div class="line">rm -r -f /etc/kubernetes /var/lib/kubelet /var/lib/etcd</div><div class="line">systemctl start kubelet</div><div class="line">kubeadm join --token=9b9b9e.1f9f452ef2a96821 10.10.220.246</div></pre></td></tr></table></figure></p>
+<p>下面将客户端重新加入集群执行如下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">systemctl stop kubelet</div><div class="line">docker rm -f -v $(docker ps -q);</div><div class="line">find /var/lib/kubelet | xargs -n 1 findmnt -n -t tmpfs -o TARGET -T | uniq | xargs -r umount -v;</div><div class="line">rm -r -f /etc/kubernetes /var/lib/kubelet /var/lib/etcd</div><div class="line">systemctl start kubelet</div><div class="line">kubeadm join --token=9b9b9e.1f9f452ef2a96821 10.10.220.246</div><div class="line">kubeadm join --token=49e6cb.2d2842b2422ea10f 10.10.220.246</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -539,7 +539,7 @@ etcd集群搭建默认 kubeadm 创建的集群会在内部启动一个单点的 
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-count">25</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -547,7 +547,7 @@ etcd集群搭建默认 kubeadm 创建的集群会在内部启动一个单点的 
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -556,7 +556,7 @@ etcd集群搭建默认 kubeadm 创建的集群会在内部启动一个单点的 
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -632,7 +632,7 @@ etcd集群搭建默认 kubeadm 创建的集群会在内部启动一个单点的 
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
