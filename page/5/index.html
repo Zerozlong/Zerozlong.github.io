@@ -616,7 +616,9 @@
 <h3 id="node节点如何使用master的命令"><a href="#node节点如何使用master的命令" class="headerlink" title="node节点如何使用master的命令"></a>node节点如何使用master的命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">scp root@10.10.220.246:/etc/kubernetes/admin.conf  .</div><div class="line">kubectl  --kubeconfig ./admin.conf get nodes</div></pre></td></tr></table></figure>
 <p>修改启动参数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat /etc/kubernetes/manifests/kube-apiserver.json</div></pre></td></tr></table></figure></p>
 <p>可以通过修改启动参数来重启kubelet服务，etcd的启动参数需要慎重。</p>
-<h4 id="补充下："><a href="#补充下：" class="headerlink" title="补充下："></a>补充下：</h4>
+<h4 id="补充下："><a href="#补充下：" class="headerlink" title="补充下："></a>补充下：</h4><p>kube-dns正常启动之后，请查看下dns是否启动正常。<br>还有一些其他的坑等着大家去摸索，其中有一个是 DNS 解析错误，<br>表现形式为 POD 内的程序通过域名访问解析不了，cat 一下容器的 /etc/resolv.conf发现指向的 dns 服务器与<br>kubectl get svc –namespace=kube-system 中的 kube-dsn 地址不符；<br>解决办法就是 编辑节点的 /etc/systemd/system/kubelet.service.d/10-kubeadm.conf 文件，更改 KUBELET_DNS_ARGS 地址为 get svc 中的 kube-dns 地址，然后重启 kubelet 服务，<br>重新杀掉 POD 让 kubernetes 重建即可。</p>
+<p>当 kubeadm 创建好集群以后如果有需要增加新节点，那么在 kubeadm join 之后务必检查 kube-dns 组件，dns 在某些(weave 启动不完整或不正常)情况下，<br>会由于新节点加入而挂掉，此时整个集群 dns 失效，所以最好 join 完观察一会 dns 状态，如果发现不正常马上杀掉 dns pod，让 kubernetes 自动重建；<br>如果情况允许最好全部 join 完成后直接干掉 dns 让 kubernetes 重建一下。</p>
+
           
         
       
