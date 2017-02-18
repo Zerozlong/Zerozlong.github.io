@@ -382,9 +382,12 @@
         
           
             <p>有时间再把存储更新下，这里就近两年基础知识进行复习。</p>
-<h3 id="类和对象"><a href="#类和对象" class="headerlink" title="类和对象"></a>类和对象</h3><p>‘’’<br>class MyClass(object):<br>    message=”hello world”<br>    def show(self):<br>        print self.message<br>‘’’</p>
-<p>代码解析如下<br>‘’’<br>类名定义为Myclass<br>该类中定义了一个成员变量message，并对其赋了初始值；<br>类中定义了一个成员函数show(self),注意类中的成员函数必须要带参数self。<br>参数self是对象本身的引用，在成员函数中可以引用self参数获得对象的信息。<br>‘’’</p>
-<p>print MyClass.message</p>
+<h3 id="类和对象"><a href="#类和对象" class="headerlink" title="类和对象"></a>类和对象</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">class MyClass(object):</div><div class="line">    message=&quot;hello world&quot;</div><div class="line">    def show(self):</div><div class="line">        print self.message</div></pre></td></tr></table></figure>
+<p>代码解析如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">类名定义为Myclass</div><div class="line">该类中定义了一个成员变量message，并对其赋了初始值；</div><div class="line">类中定义了一个成员函数show(self),注意类中的成员函数必须要带参数self。</div><div class="line">参数self是对象本身的引用，在成员函数中可以引用self参数获得对象的信息。</div></pre></td></tr></table></figure></p>
+<p>读取成员变量：print MyClass.message<br>实例化对象：init=Myclass()<br>调用成员函数：init.show()<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">### 构造函数</div><div class="line">构造函数是一种特殊的类成员方法，主要用来在创建对象时初始化对象，即为对象成员赋初值。python中类的构造函数用__init__命名，为Myclass添加构造函数，</div><div class="line">并实例化一个对象。</div></pre></td></tr></table></figure></p>
+<p>#!/usr/bin/python</p>
+<p>#auth: zero</p>
+<p>#-<em>- coding: utf-8 -</em>-<br>class MyClass(object):<br>    message=”hello world”<br>    def <strong>init</strong>(self):<br>        print “Constructor is called”<br>    def show(self):<br>        print self.message<br>print “hehe”<br>inst=MyClass()<br>```</p>
 
           
         
