@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="数据库及orm," />
+  <meta name="keywords" content="python orm," />
 
 
 
@@ -84,16 +84,22 @@
 
 
 
-<meta name="description" content="数据库编程数据库编程遵循标准：引入python引擎包连接数据库获取游标执行sql命令提交或者回滚事务关闭游标关闭数据库连接12345678910111213141516171819202122232425#引入sqlite3包import sqlite3conn = sqlite3.connect(&amp;apos;testdb&amp;apos;)#获取游标对象cur = conn.cursor()#执行一系">
+<meta name="description" content="python中提供orm支持的组件有很多，每个组件的应用领域稍有区别，但是数据操作的理论原理是相同的。下面对比较著名的python数据库的orm框架介绍如下。
+SQLALchemypython中最成熟的ORM框架，资源和文档都很丰富。大多数Python web框架都有很好的支持。能够胜任大多数python开发的场合；
+Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
 <meta property="og:type" content="article">
-<meta property="og:title" content="数据库及ORM">
-<meta property="og:url" content="http://yoursite.com/2017/02/24/数据库及oorm/index.html">
+<meta property="og:title" content="python ORM库介绍">
+<meta property="og:url" content="http://yoursite.com/2017/02/24/python-ORM库介绍/index.html">
 <meta property="og:site_name" content="Zero">
-<meta property="og:description" content="数据库编程数据库编程遵循标准：引入python引擎包连接数据库获取游标执行sql命令提交或者回滚事务关闭游标关闭数据库连接12345678910111213141516171819202122232425#引入sqlite3包import sqlite3conn = sqlite3.connect(&amp;apos;testdb&amp;apos;)#获取游标对象cur = conn.cursor()#执行一系">
-<meta property="og:updated_time" content="2017-02-24T06:31:22.052Z">
+<meta property="og:description" content="python中提供orm支持的组件有很多，每个组件的应用领域稍有区别，但是数据操作的理论原理是相同的。下面对比较著名的python数据库的orm框架介绍如下。
+SQLALchemypython中最成熟的ORM框架，资源和文档都很丰富。大多数Python web框架都有很好的支持。能够胜任大多数python开发的场合；
+Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
+<meta property="og:updated_time" content="2017-02-24T06:38:14.136Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="数据库及ORM">
-<meta name="twitter:description" content="数据库编程数据库编程遵循标准：引入python引擎包连接数据库获取游标执行sql命令提交或者回滚事务关闭游标关闭数据库连接12345678910111213141516171819202122232425#引入sqlite3包import sqlite3conn = sqlite3.connect(&amp;apos;testdb&amp;apos;)#获取游标对象cur = conn.cursor()#执行一系">
+<meta name="twitter:title" content="python ORM库介绍">
+<meta name="twitter:description" content="python中提供orm支持的组件有很多，每个组件的应用领域稍有区别，但是数据操作的理论原理是相同的。下面对比较著名的python数据库的orm框架介绍如下。
+SQLALchemypython中最成熟的ORM框架，资源和文档都很丰富。大多数Python web框架都有很好的支持。能够胜任大多数python开发的场合；
+Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
 
 
 
@@ -121,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/02/24/数据库及oorm/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/02/24/python-ORM库介绍/"/>
 
 
 
 
 
-  <title> 数据库及ORM | Zero </title>
+  <title> python ORM库介绍 | Zero </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -268,7 +274,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/24/数据库及oorm/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/24/python-ORM库介绍/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Zero">
@@ -292,7 +298,7 @@
             
             
               
-                数据库及ORM
+                python ORM库介绍
               
             
           </h1>
@@ -339,8 +345,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2017/02/24/数据库及oorm/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/24/数据库及oorm/" itemprop="commentCount"></span>
+                <a href="/2017/02/24/python-ORM库介绍/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/24/python-ORM库介绍/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -350,7 +356,7 @@
 
           
           
-             <span id="/2017/02/24/数据库及oorm/" class="leancloud_visitors" data-flag-title="数据库及ORM">
+             <span id="/2017/02/24/python-ORM库介绍/" class="leancloud_visitors" data-flag-title="python ORM库介绍">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -375,13 +381,9 @@
       
 
       
-        <h3 id="数据库编程"><a href="#数据库编程" class="headerlink" title="数据库编程"></a>数据库编程</h3><p>数据库编程遵循标准：<br>引入python引擎包<br>连接数据库<br>获取游标<br>执行sql命令<br>提交或者回滚事务<br>关闭游标<br>关闭数据库连接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">#引入sqlite3包</div><div class="line">import sqlite3</div><div class="line">conn = sqlite3.connect(&apos;testdb&apos;)</div><div class="line">#获取游标对象</div><div class="line">cur = conn.cursor()</div><div class="line">#执行一系列sql语句</div><div class="line">#建立一个表</div><div class="line">cur.excute(&quot;create table demo(num int,str varchar(20))&quot;)</div><div class="line">#插入一些记录</div><div class="line">cur.excute(&quot;insert into demo values(&apos;%d&apos;,&apos;%s&apos;)&quot; %(1,&apos;aaa&apos;))</div><div class="line">cur.excute(&quot;insert into demo values(&apos;%d&apos;,&apos;%s&apos;)&quot; %(2,&apos;bbb&apos;))</div><div class="line">### 更新一条记录</div><div class="line">cur.excute(&quot;update demo set str=&apos;%s&apos; where num = %d&quot; %(&apos;ddd&apos;,3))</div><div class="line">## 查询语句</div><div class="line">cur.excute(&apos;select * from demo&apos;)</div><div class="line">rows=cur.fetchall()</div><div class="line">print &quot;number of records:&quot;,len(rows)</div><div class="line">for i in rows:</div><div class="line">    print i</div><div class="line">#提交事务</div><div class="line">conn.commit()</div><div class="line">#关闭游标对象</div><div class="line">cur.close()</div><div class="line">#关闭数据库链接</div><div class="line">conn.close()</div></pre></td></tr></table></figure></p>
-<p>由于所有数据库都遵循DB-API的开发接口，不再演示其他数据库编程代码。</p>
-<h3 id="ORM编程"><a href="#ORM编程" class="headerlink" title="ORM编程"></a>ORM编程</h3><p>除了直接引用sql语句操作关系数据库，python中的另一种与关系数据库进行交互的技术是ORM。<br>ORM（object-relatioal mapping，对象关系映射）的作用是在关系数据库和业务实体对象之间做一个映射，这样开发者在操作数据库<br>的数据时，就不需要再去和复杂的sql语句打交道了，只需简单地操作对象的属性和方法。所有的orm必须具备3方面的基本能力：映射技术/CRUD操作和缓存优化。</p>
-<h4 id="映射技术："><a href="#映射技术：" class="headerlink" title="映射技术："></a>映射技术：</h4><p>面向对象是从软件工程的基本原则（如耦合/聚合/封装）的基础上发展而来的。而关系数据库是从数学理论的基础上发展而来的，两套理论存在显著的区别，ORM通过<br>映射机制将两种技术联系起来。每种语言都有自己的ORM。比如java的hibernat/IBATIS；c#的Crove/Linq；python的sqlchemy等；所有这些都满足如下3个映射问题：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">数据类型映射：将数据库的类型映射为编程语言自身的类型。数据类型映射解决了由数据表列类型向编程语言类型转换的问题。</div><div class="line">类映射：将数据表定义映射为编程语言自身的类，这样数据表中的每一条记录就可以映射为一个编程语言自身的对象。</div><div class="line">关系映射: 将数据库中基于外键的关系连接转换为编程语言中基于对象引用的关系连接。例如：sqlchemy中制定relationship（）字段，使开发者能够指定数据表之间的连接关系。</div></pre></td></tr></table></figure></p>
-<h4 id="CRUD操作"><a href="#CRUD操作" class="headerlink" title="CRUD操作"></a>CRUD操作</h4><p>crud操作是数据库处理时增加、读取、更新和删除几个单词的首字母简写。<br>当开发者调用这些函数时，orm自动执行下列操作。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">将这些调用转换为sql语句；</div><div class="line">通过数据库引擎发送给数据库执行；</div><div class="line">将数据库返回的结果记录用orm映射技术转换为类对象。</div></pre></td></tr></table></figure></p>
-<h4 id="缓存优化"><a href="#缓存优化" class="headerlink" title="缓存优化"></a>缓存优化</h4><p>由于数据库操作比较耗时，所以大多数orm提供数据缓存优化的功能。最基本的缓存优化能力如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">将从数据库中查询到的数据以类对象的形式保存在内存中，以便之后再随时提取；</div><div class="line">在真正需要读取查询结果时才执行数据库select操作，而不是在ORM查询命令执行时查询数据库。</div></pre></td></tr></table></figure></p>
-<h4 id="为什么要用ORM"><a href="#为什么要用ORM" class="headerlink" title="为什么要用ORM"></a>为什么要用ORM</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">向开发者屏蔽了数据库细节，使开发者无须与sql语句打交道，提高开发效率；</div><div class="line">便于数据库迁移。优于每种数据库的sql有细微差别，所以基于sql的数据访问层在更换数据库时通常需要花费大量时间调试sql语句；</div><div class="line">应用缓存优化等技术有时可以提高数据库操作的频率。</div></pre></td></tr></table></figure>
+        <p>python中提供orm支持的组件有很多，每个组件的应用领域稍有区别，但是数据操作的理论原理是相同的。下面对比较著名的<br>python数据库的orm框架介绍如下。</p>
+<h3 id="SQLALchemy"><a href="#SQLALchemy" class="headerlink" title="SQLALchemy"></a>SQLALchemy</h3><p>python中最成熟的ORM框架，资源和文档都很丰富。大多数Python web框架都有很好的支持。能够胜任大多数python开发的场合；</p>
+<h3 id="Django-ORM"><a href="#Django-ORM" class="headerlink" title="Django ORM"></a>Django ORM</h3><p>python世界中大名鼎鼎的Django web框架独用的ORM技术。DJANGO是一个大而全的框架，这使得其灵活性大大降低。其他python框架<br>可以随意更换orm，但django不能这样做，因为django内置的model是用django内置orm实现的。</p>
 
       
     </div>
@@ -426,7 +428,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/数据库及orm/" rel="tag"># 数据库及orm</a>
+            <a href="/tags/python-orm/" rel="tag"># python orm</a>
           
         </div>
       
@@ -435,8 +437,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/02/24/python-ORM库介绍/" rel="next" title="python ORM库介绍">
-                <i class="fa fa-chevron-left"></i> python ORM库介绍
+              <a href="/2017/02/18/python类和对象/" rel="next" title="python类和对象复习">
+                <i class="fa fa-chevron-left"></i> python类和对象复习
               </a>
             
           </div>
@@ -444,6 +446,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/24/数据库及oorm/" rel="prev" title="数据库及ORM">
+                数据库及ORM <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -469,8 +475,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/02/24/数据库及oorm/"
-           data-title="数据库及ORM" data-url="http://yoursite.com/2017/02/24/数据库及oorm/">
+      <div class="ds-thread" data-thread-key="2017/02/24/python-ORM库介绍/"
+           data-title="python ORM库介绍" data-url="http://yoursite.com/2017/02/24/python-ORM库介绍/">
       </div>
     
   </div>
@@ -587,7 +593,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库编程"><span class="nav-number">1.</span> <span class="nav-text">数据库编程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ORM编程"><span class="nav-number">2.</span> <span class="nav-text">ORM编程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#映射技术："><span class="nav-number">2.1.</span> <span class="nav-text">映射技术：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CRUD操作"><span class="nav-number">2.2.</span> <span class="nav-text">CRUD操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缓存优化"><span class="nav-number">2.3.</span> <span class="nav-text">缓存优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么要用ORM"><span class="nav-number">2.4.</span> <span class="nav-text">为什么要用ORM</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#SQLALchemy"><span class="nav-number">1.</span> <span class="nav-text">SQLALchemy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Django-ORM"><span class="nav-number">2.</span> <span class="nav-text">Django ORM</span></a></li></ol></div>
             
 
           </div>
