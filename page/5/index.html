@@ -269,6 +269,325 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/09/云提供商故障引起的反思/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/09/云提供商故障引起的反思/" itemprop="url">
+                  云提供商故障引起的反思
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-09T10:26:22+08:00">
+                2016-12-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/saltstack/" itemprop="url" rel="index">
+                    <span itemprop="name">saltstack</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/12/09/云提供商故障引起的反思/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/09/云提供商故障引起的反思/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/12/09/云提供商故障引起的反思/" class="leancloud_visitors" data-flag-title="云提供商故障引起的反思">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>来公司的时候，公司已经使用了云提供商。接手的项目是一个经验很少的运维工程师搭建的服务器，没有使用自动化管理软件。<br>ulb是云厂商提供的loadbalance软件，作为基础服务。由于目前国内云厂家提供的云服务不是很稳定，已经做得是梳理云端单点，<br>能使用ulb的地方也都使用了。但是由于使用的镜像，唯独没有对dns进行统一管理，一直配置在/etc/sysconfig/network-scripts/ifcfg-eth0里面。</p>
+<h3 id="故障"><a href="#故障" class="headerlink" title="故障"></a>故障</h3><p>12月8日凌晨两点二十多，手机开始收到zabbix服务器unreachable的告警。然后我就起床了，这也是感冒加重了。我先ping了下zabbix的域名，网络不通了。<br>于是ping ulb发现已经不通了。然后看下dns服务器，发现服务正常。已经确定是云厂商的ulb挂了。启用备份机制，将后端的dns发给各位兄弟们，让大家改配置。<br>云厂家吹得再牛逼，也不要相信了，这tm都是线上呀，不能抱着侥幸心理呀。我就是犯了这个错误。虽然云四十多分钟之后恢复了，但是这让我更加意识到统一平台的<br>重要性。手动改网络配置累死吧。</p>
+<h3 id="后续改造"><a href="#后续改造" class="headerlink" title="后续改造"></a>后续改造</h3><p>所有的能自动化做的，也不通过镜像做了，将ifcfg-eth0中的dns删除，直接配置/etc/resolv.conf配置文件。批量分发到需要使用dns服务器的客户端上，再出现故障争取<br>分钟级恢复。不要存在懒惰心里，会死得很惨的。虽然第二天你可以把责任推脱给供应商，但是我们也要做到自己心目中的唯一。闲谈不议它非，静坐常思己过。 </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/07/k8s资源管理deployment/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/07/k8s资源管理deployment/" itemprop="url">
+                  k8s deployment（六）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-07T15:08:48+08:00">
+                2016-12-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/容器管理软件/" itemprop="url" rel="index">
+                    <span itemprop="name">容器管理软件</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/12/07/k8s资源管理deployment/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/07/k8s资源管理deployment/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/12/07/k8s资源管理deployment/" class="leancloud_visitors" data-flag-title="k8s deployment（六）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Deployment提供了pod和rc的设置，在deployment里面你只需要描述对象的最终状态。它就可以改变pod和rc的最终状态。<br>你可以定义deployment来创建新的资源，或者替换已经存在的资源。<br>下面将从如下几个方面来讲述deployment：<br>1、创建一个deployment来启动rc和pods;<br>2、查看deployment的状态，来看其是否成功；<br>3、更新deployment重建pod;<br>4、如果版本不稳定，deployment将如何回滚。<br>5、pause or go on一个deployment。</p>
+<h3 id="deployment创建rc"><a href="#deployment创建rc" class="headerlink" title="deployment创建rc"></a>deployment创建rc</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">apiVersion: extensions/v1beta1</div><div class="line">kind: Deployment</div><div class="line">metadata:</div><div class="line">  name: nginx-deployment</div><div class="line">spec:</div><div class="line">  replicas: 2</div><div class="line">  template:</div><div class="line">    metadata:</div><div class="line">      labels:</div><div class="line">        app: nginx</div><div class="line">    spec:</div><div class="line">      containers:</div><div class="line">      - name: nginx</div><div class="line">        image: nginx:1.7.9</div><div class="line">        ports:</div><div class="line">        - containerPort: 80</div></pre></td></tr></table></figure>
+<p>输入下面的命令，查看deployment的状态：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-test-bj2c-master1 template]# kubectl get deployments</div><div class="line">NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE</div><div class="line">nginx-deployment   2         2         2            2           10m</div><div class="line"></div><div class="line">[root@ucloud-test-bj2c-master1 template]# kubectl get pods --show-labels</div><div class="line">NAME                                READY     STATUS    RESTARTS   AGE       LABELS</div><div class="line">my-nginx-60xqb                      1/1       Running   0          6m        app=nginx,deployment=170462ea15f91a5358f9fb6c8c5e6f46-orig</div><div class="line">my-nginx-wvmmr                      1/1       Running   0          6m        app=nginx,deployment=170462ea15f91a5358f9fb6c8c5e6f46-orig</div></pre></td></tr></table></figure></p>
+<p>kubectl get rs and kubectl get pods</p>
+<h3 id="查看deployment的状态，来看其是否成功；"><a href="#查看deployment的状态，来看其是否成功；" class="headerlink" title="查看deployment的状态，来看其是否成功；"></a>查看deployment的状态，来看其是否成功；</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-test-bj2c-master1 template]# kubectl rollout status deployment/nginx-deployment</div><div class="line">deployment nginx-deployment successfully rolled out </div><div class="line">kubectl get deployments</div></pre></td></tr></table></figure>
+<h3 id="更新deployment只改变单一条件，查看其状态"><a href="#更新deployment只改变单一条件，查看其状态" class="headerlink" title="更新deployment只改变单一条件，查看其状态"></a>更新deployment只改变单一条件，查看其状态</h3><p>方法一：<br>kubectl set image deployment/nginx-deployment nginx=nginx:1.7.9</p>
+<p>方法二：<br>kubectl edit deployment/nginx-deployment</p>
+<p>通过这两个方法修改之后，可以查看当前的情况信息：<br>$ kubectl get deployments<br>NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE<br>nginx-deployment   3         3         3            3           36s</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-test-bj2c-master1 template]#  kubectl get  deployment/nginx-deployment </div><div class="line">NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE</div><div class="line">nginx-deployment   2         3         2            1           58m</div><div class="line">[root@ucloud-test-bj2c-master1 template]#  kubectl set image deployment/nginx-deployment nginx=nginx:1.9.0</div><div class="line">deployment &quot;nginx-deployment&quot; image updated</div><div class="line">[root@ucloud-test-bj2c-master1 template]#  kubectl get  deployment/nginx-deployment </div><div class="line">NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE</div><div class="line">nginx-deployment   2         2         2            1           58m</div><div class="line">[root@ucloud-test-bj2c-master1 template]#  kubectl get  deployment/nginx-deployment </div><div class="line">NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE</div><div class="line">nginx-deployment   2         2         2            2           58m</div><div class="line">[root@ucloud-test-bj2c-master1 template]#  kubectl get  deployment/nginx-deployment </div><div class="line">NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE</div><div class="line">nginx-deployment   2         2         2            2           58m</div></pre></td></tr></table></figure>
+<p>UP-TO-DATE: 表明deployment已经读取了最新的配置信息中rc的个数；<br>current：当前deployment管理的rc个数；<br>available：表明当前rc中那些副本是可用的；</p>
+<p>kubectl get rs：此命令能看出来deployment的历史版本，我们看到历史版本种数据都为0.</p>
+<p>[root@ucloud-test-bj2c-master1 template]#  kubectl get rs<br>NAME                          DESIRED   CURRENT   READY     AGE<br>nginx-deployment-3518414130   3         3         3         41m<br>nginx-deployment-3599416627   0         0         0         43m<br>nginx-deployment-3599678771   0         0         0         46m<br>nginx-deployment-4087004473   0         0         0         1h</p>
+<p>下次，我们要更新这些pod，我们只需要更新deployment的模板。</p>
+<p>deployment可以确保在更新的过程中部分pod是down的。它会确保至少有一个pod是up的状态。</p>
+<h3 id="复杂更新deployment，查看其状态"><a href="#复杂更新deployment，查看其状态" class="headerlink" title="复杂更新deployment，查看其状态"></a>复杂更新deployment，查看其状态</h3><h3 id="查看当前deployment的历史版本"><a href="#查看当前deployment的历史版本" class="headerlink" title="查看当前deployment的历史版本"></a>查看当前deployment的历史版本</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">kubectl rollout history deployment/nginx-deployment </div><div class="line">[root@ucloud-test-bj2c-master1 template]# kubectl rollout history deployment/nginx-deployment</div><div class="line">deployments &quot;nginx-deployment&quot;</div><div class="line">REVISION	CHANGE-CAUSE</div><div class="line">7		&lt;none&gt;</div><div class="line">8		&lt;none&gt;</div><div class="line">9		&lt;none&gt;</div><div class="line"></div><div class="line">版本回滚：</div><div class="line">kubectl rollout history deployment/nginx-deployment --revision=7</div></pre></td></tr></table></figure>
+<p>参考文档：<br><a href="http://kubernetes.io/docs/user-guide/deployments/" target="_blank" rel="external">http://kubernetes.io/docs/user-guide/deployments/</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/07/kubernetes-secrets/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -743,338 +1062,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/03/jenkins安装配置/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/03/jenkins安装配置/" itemprop="url">
-                  jenkins安装配置(二)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-03T14:47:37+08:00">
-                2016-12-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/jenkins/" itemprop="url" rel="index">
-                    <span itemprop="name">jenkins</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2016/12/03/jenkins安装配置/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/03/jenkins安装配置/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/12/03/jenkins安装配置/" class="leancloud_visitors" data-flag-title="jenkins安装配置(二)">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="安装jdk"><a href="#安装jdk" class="headerlink" title="安装jdk"></a>安装jdk</h3><p>jdk的安装用saltstack进行安装；</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">jdk-file:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://java/files/jdk1.8.0_73.tar.gz</div><div class="line">    - name: /usr/local/src/jdk1.8.0_73.tar.gz</div><div class="line">jdk-install:</div><div class="line">  cmd.run: </div><div class="line">    - name: cd /usr/local/src  &amp;&amp; tar -xvf jdk1.8.0_73.tar.gz -C /usr/local/ &amp;&amp; ln -s /usr/local/jdk1.8.0_73 /usr/local/jdk</div><div class="line">    - cwd: /usr/local</div><div class="line">    - unless: test -e jdk1.8.0_73</div><div class="line">    - require:</div><div class="line">      - file: jdk-file</div><div class="line">jdk-config:</div><div class="line">  file.append:</div><div class="line">    - name: /etc/profile</div><div class="line">    - text:</div><div class="line">      - export JAVA_HOME=/usr/local/jdk</div><div class="line">      - export PATH=$JAVA_HOME/bin:$PATH</div><div class="line">      - export CLASSPATH=.$CLASSPATH:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/dt.jar:,</div><div class="line">    - unless: java --version</div></pre></td></tr></table></figure>
-<h3 id="安装tomcat"><a href="#安装tomcat" class="headerlink" title="安装tomcat"></a>安装tomcat</h3><p><a href="http://tomcat.apache.org/" target="_blank" rel="external">http://tomcat.apache.org/</a><br>tomcat官网下载tomcat安装包。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">tomcat-file:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://tomcat/files/apache-tomcat-8.0.39.tar.gz </div><div class="line">    - name: /usr/local/src/apache-tomcat-8.0.39.tar.gz </div><div class="line">tomcat-install:</div><div class="line">  cmd.run: </div><div class="line">    - name: cd /usr/local/src  &amp;&amp; tar -xvf apache-tomcat-8.0.39.tar.gz -C /usr/local/ &amp;&amp; ln -s /usr/local/apache-tomcat-8.0.39  /usr/local/tomcat</div><div class="line">    - cwd: /usr/local</div><div class="line">    - unless: test -e apache-tomcat-8.0.39</div><div class="line">    - require:</div><div class="line">      - file: tomcat-file</div></pre></td></tr></table></figure>
-<p>catalina.sh 修改启动文件加入如下参数调整优化：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">JAVA_OPTS=&apos;-server -Xms3g -Xmx3g -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+DisableExplicitGC -XX:CMSFullGCsBeforeCompaction=0 -Xnoclassgc  -XX:+UseBiasedLocking     </div><div class="line"> -XX:SoftRefLRUPolicyMSPerMB=0 -XX:+CMSParallelRemarkEnabled -XX:+CMSClassUnloadingEnabled -XX:+UseFastAccessorMethods -XX:+UseCMSCompactAtFullCollection -XX:+PrintG    </div><div class="line">CDetails -Xloggc:/data/server/tomcat-jenkins-8080/logs/tomcat_gc.log&apos;</div></pre></td></tr></table></figure></p>
-<h3 id="安装jenkins"><a href="#安装jenkins" class="headerlink" title="安装jenkins"></a>安装jenkins</h3><p>下载jenkins.war包。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/02/jenkins搭建/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/02/jenkins搭建/" itemprop="url">
-                  jenkins是什么（-）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-02T18:25:12+08:00">
-                2016-12-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/jenkins/" itemprop="url" rel="index">
-                    <span itemprop="name">jenkins</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2016/12/02/jenkins搭建/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/02/jenkins搭建/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/12/02/jenkins搭建/" class="leancloud_visitors" data-flag-title="jenkins是什么（-）">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="说明文章来源于互联网，服务于互联网，zero整理之后用以发表，做知识备用。"><a href="#说明文章来源于互联网，服务于互联网，zero整理之后用以发表，做知识备用。" class="headerlink" title="说明文章来源于互联网，服务于互联网，zero整理之后用以发表，做知识备用。"></a>说明文章来源于互联网，服务于互联网，zero整理之后用以发表，做知识备用。</h1><p>Jenkins 是一个可扩展的持续集成引擎。<br>主要用于：</p>
-<p>l 持续、自动地构建/测试软件项目。<br>l 监控一些定时执行的任务。<br>Jenkins拥有的特性包括：</p>
-<p>l 易于安装-只要把jenkins.war部署到servlet容器，不需要数据库支持。<br>l 易于配置-所有配置都是通过其提供的web界面实现。<br>l 集成RSS/E-mail通过RSS发布构建结果或当构建完成时通过e-mail通知。<br>l 生成JUnit/TestNG测试报告。<br>l 分布式构建支持Jenkins能够让多台计算机一起构建/测试。<br>l 文件识别:Jenkins能够跟踪哪次构建生成哪些jar，哪次构建使用哪个版本的jar等。<br>l 插件支持:支持扩展插件，你可以开发适合自己团队使用的工具。</p>
-<h2 id="jenkins的由来"><a href="#jenkins的由来" class="headerlink" title="jenkins的由来"></a>jenkins的由来</h2><p>目前持续集成(CI)已成为当前许多软件开发团队在整个软件开发生命周期内侧重于保证代码质量的常见做法。它是一种实践，旨在缓和和稳固软件的构建过程。并且能够帮助您的开发团队应对如下挑战：</p>
-<p>l 软件构建自动化 ：配置完成后，CI系统会依照预先制定的时间表，或者针对某一特定事件，对目标软件进行构建。<br>l 构建可持续的自动化检查 ：CI系统能持续地获取新增或修改后签入的源代码，也就是说，当软件开发团队需要周期性的检查新增或修改后的代码时，CI系统会不断确认这些新代码是否破坏了原有软件的成功构建。这减少了开发者们在检查彼此相互依存的代码中变化情况需要花费的时间和精力(说直接一点也是钱啊，呵呵)。<br>l 构建可持续的自动化测试 ：构建检查的扩展部分，构建后执行预先制定的一套测试规则，完成后触发通知(Email,RSS等等)给相关的当事人。<br>l 生成后后续过程的自动化 :当自动化检查和测试成功完成，软件构建的周期中可能也需要一些额外的任务，诸如生成文档、打包软件、部署构件到一个运行环境或者软件仓库。这样，构件才能更迅速地提供给用户使用。<br>部署一个CI系统需要的最低要求是，一个可获取的源代码的仓库，一个包含构建脚本的项目。</p>
-<p>下图概括了CI系统的基本结构：</p>
-<p><img src="/images/20161203.jpg" alt="image"></p>
-<p>该系统的各个组成部分是按如下顺序来发挥作用的：</p>
-<ol>
-<li><p>开发者检入代码到源代码仓库。</p>
-</li>
-<li><p>CI系统会为每一个项目创建了一个单独的工作区。当预设或请求一次新的构建时，它将把源代码仓库的源码存放到对应的工作区。</p>
-</li>
-<li><p>CI系统会在对应的工作区内执行构建过程。</p>
-</li>
-<li><p>（配置如果存在）构建完成后，CI系统会在一个新的构件中执行定义的一套测试。完成后触发通知(Email,RSS等等)给相关的当事人。</p>
-</li>
-<li><p>（配置如果存在）如果构建成功，这个构件会被打包并转移到一个部署目标(如应用服务器)或存储为软件仓库中的一个新版本。软件仓库可以是CI系统的一部分，也可以是一个外部的仓库，诸如一个文件服务器或者像Java.net、 SourceForge之类的网站。</p>
-</li>
-<li><p>CI系统通常会根据请求发起相应的操作，诸如即时构建、生成报告，或者检索一些构建好的构件。</p>
-</li>
-</ol>
-<p>Jenkins就是这么一个CI系统。之前叫做Hudson。</p>
-<p>以下是使用Jenkins的一些理由：</p>
-<p>l 是所有CI产品中在安装和配置上最简单的。<br>l 基于Web访问，用户界面非常友好、直观和灵活，在许多情况下，还提供了AJAX的即时反馈。<br>l Jenkins是基于Java开发的(如果你是一个Java开发人员，这是非常有用的)，但它不仅限于构建基于Java的软件。<br>l Jenkins拥有大量的插件。这些插件极大的扩展了Jenkins的功能；它们都是开源的，而且它们可以直接通过web界面来进行安装与管理。</p>
-<p><a href="http://10.10.132.89:8080/env-vars.html/" target="_blank" rel="external">http://10.10.132.89:8080/env-vars.html/</a><br>这个页面里面的值都可以直接get到。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1120,7 +1107,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1128,7 +1115,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1137,7 +1124,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
