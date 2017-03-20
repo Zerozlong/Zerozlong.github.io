@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="python 网络框架," />
+  <meta name="keywords" content="glusterfs  调优," />
 
 
 
@@ -84,22 +84,19 @@
 
 
 
-<meta name="description" content="Python网络框架的概念目前Python编程的网络框架已经多达几十个，逐个学习他们显然不现实。如下文章只介绍框架的常用知识。
-网络框架及MVC架构网络框架是指这样的一组python包，它能够使开发者专注于网站应用业务逻辑的开发，而无需处理网络应用底层的协议/线程/进程等方面。好处：能够大大提高开发者开发的效率，同时提高网络应用程序的质量。
-在目前python的几十个开发框架中，几乎所有的全栈网络">
+<meta name="description" content="write-behind（默认on）luster volume set test write-behind on
+Write Behind Translator （后写）通常情况下，写操作会比读要慢。通过使用”aggregated background write”技术，write-behind translator 相当显著地改善了写的性能。更确切地说，大量小的写操作被集中起来，形成少量的、大一">
 <meta property="og:type" content="article">
-<meta property="og:title" content="python 网络框架介绍">
-<meta property="og:url" content="http://yoursite.com/2017/02/24/python-网络框架介绍/index.html">
+<meta property="og:title" content="glusterfs中继器调优">
+<meta property="og:url" content="http://yoursite.com/2017/03/20/glusterfs中继器调优/index.html">
 <meta property="og:site_name" content="Zero">
-<meta property="og:description" content="Python网络框架的概念目前Python编程的网络框架已经多达几十个，逐个学习他们显然不现实。如下文章只介绍框架的常用知识。
-网络框架及MVC架构网络框架是指这样的一组python包，它能够使开发者专注于网站应用业务逻辑的开发，而无需处理网络应用底层的协议/线程/进程等方面。好处：能够大大提高开发者开发的效率，同时提高网络应用程序的质量。
-在目前python的几十个开发框架中，几乎所有的全栈网络">
-<meta property="og:updated_time" content="2017-02-27T09:31:13.783Z">
+<meta property="og:description" content="write-behind（默认on）luster volume set test write-behind on
+Write Behind Translator （后写）通常情况下，写操作会比读要慢。通过使用”aggregated background write”技术，write-behind translator 相当显著地改善了写的性能。更确切地说，大量小的写操作被集中起来，形成少量的、大一">
+<meta property="og:updated_time" content="2017-03-20T07:01:02.155Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="python 网络框架介绍">
-<meta name="twitter:description" content="Python网络框架的概念目前Python编程的网络框架已经多达几十个，逐个学习他们显然不现实。如下文章只介绍框架的常用知识。
-网络框架及MVC架构网络框架是指这样的一组python包，它能够使开发者专注于网站应用业务逻辑的开发，而无需处理网络应用底层的协议/线程/进程等方面。好处：能够大大提高开发者开发的效率，同时提高网络应用程序的质量。
-在目前python的几十个开发框架中，几乎所有的全栈网络">
+<meta name="twitter:title" content="glusterfs中继器调优">
+<meta name="twitter:description" content="write-behind（默认on）luster volume set test write-behind on
+Write Behind Translator （后写）通常情况下，写操作会比读要慢。通过使用”aggregated background write”技术，write-behind translator 相当显著地改善了写的性能。更确切地说，大量小的写操作被集中起来，形成少量的、大一">
 
 
 
@@ -127,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/02/24/python-网络框架介绍/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/03/20/glusterfs中继器调优/"/>
 
 
 
 
 
-  <title> python 网络框架介绍 | Zero </title>
+  <title> glusterfs中继器调优 | Zero </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -274,7 +271,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/24/python-网络框架介绍/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/20/glusterfs中继器调优/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Zero">
@@ -298,7 +295,7 @@
             
             
               
-                python 网络框架介绍
+                glusterfs中继器调优
               
             
           </h1>
@@ -311,8 +308,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-24T15:37:38+08:00">
-                2017-02-24
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-20T14:45:42+08:00">
+                2017-03-20
               </time>
             
 
@@ -330,8 +327,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python开发/" itemprop="url" rel="index">
-                    <span itemprop="name">python开发</span>
+                  <a href="/categories/分布式存储/" itemprop="url" rel="index">
+                    <span itemprop="name">分布式存储</span>
                   </a>
                 </span>
 
@@ -345,8 +342,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2017/02/24/python-网络框架介绍/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/24/python-网络框架介绍/" itemprop="commentCount"></span>
+                <a href="/2017/03/20/glusterfs中继器调优/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/20/glusterfs中继器调优/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -356,7 +353,7 @@
 
           
           
-             <span id="/2017/02/24/python-网络框架介绍/" class="leancloud_visitors" data-flag-title="python 网络框架介绍">
+             <span id="/2017/03/20/glusterfs中继器调优/" class="leancloud_visitors" data-flag-title="glusterfs中继器调优">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -381,13 +378,30 @@
       
 
       
-        <h3 id="Python网络框架的概念"><a href="#Python网络框架的概念" class="headerlink" title="Python网络框架的概念"></a>Python网络框架的概念</h3><p>目前Python编程的网络框架已经多达几十个，逐个学习他们显然不现实。如下文章只介绍框架的常用知识。</p>
-<h4 id="网络框架及MVC架构"><a href="#网络框架及MVC架构" class="headerlink" title="网络框架及MVC架构"></a>网络框架及MVC架构</h4><p>网络框架是指这样的一组python包，它能够使开发者专注于网站应用业务逻辑的开发，而无需处理网络应用底层的协议/线程/进程等方面。<br>好处：能够大大提高开发者开发的效率，同时提高网络应用程序的质量。</p>
-<p>在目前python的几十个开发框架中，几乎所有的全栈网络框架都强制或引导开发者使用MVC架构开发WEB应用。所谓全栈网络框架，是指除了封装网络和<br>线程操作，还提供http栈，数据库读写管理、html模板引擎等一系列功能的网络框架。如django、flask、tornado。而twisted更专注于网络底层的高性能<br>封装而不提供渲染html模板引擎等界面功能，所以不能称之为全栈框架。</p>
-<p>网络上有许多关于MVC的说法，MVC大概把应用系统分为3层。</p>
-<h4 id="模型（model）"><a href="#模型（model）" class="headerlink" title="模型（model）"></a>模型（model）</h4><p>用于封装与应用程序的业务逻辑相关的数据及对数据处理的方法，是web应用程序中用于处理应用程序的数据逻辑部分，model只提供功能性的接口，通过这些接口<br>可以获取model的所有功能。model不依赖于view和controller，它们可以在任何时候调用model访问数据。有些model还提供了事件通知机制，为在其上的注册过的view<br>或者controller提供实时数据更新。</p>
-<h4 id="视图（view）"><a href="#视图（view）" class="headerlink" title="视图（view）"></a>视图（view）</h4><p>负责数据的展示和呈现，view是对用户的直接输出，mvc中的一个modle通常为多个view提供服务。为了获取model的实时更新数据，view应该尽早注册到model中。</p>
-<h4 id="控制器（controller）"><a href="#控制器（controller）" class="headerlink" title="控制器（controller）"></a>控制器（controller）</h4><p>负责从用户端收集用户的输入，可以看成提供View的反向功能。当用户的输入导致view发生变化时，这种变化必须是通过model反映给view的。在mvc架构下，controller一般<br>不能与view直接通信，这样提高了业务数据的一致性，即以model作为数据中心。</p>
+        <h3 id="write-behind（默认on）"><a href="#write-behind（默认on）" class="headerlink" title="write-behind（默认on）"></a>write-behind（默认on）</h3><p>luster volume set test write-behind on</p>
+<p>Write Behind Translator （后写）<br>通常情况下，写操作会比读要慢。通过使用”aggregated background write”技术，write-behind translator 相当显著地改善了写的性能。更确切地说，<br>大量小的写操作被集中起来，形成少量的、大一些的写操作，并且进行后台写处理(non-blocking)。后写方式在client端上聚合了写操作，减小了必须传递的网络包数量。<br>在server端，它帮助服务器优化写的磁盘寻道时间。</p>
+<p>aggregate-size<br>该选项决定了在汇聚写操作之前块的大小。参照你的连接速度、RAM的大小，以及工作负载情况，你可以调整这个值。默认的，该值为128KB，能够比较好的满足大多数应用情况。<br>无限制的增加和减小这个值可能会带来性能上的降低。你可以逐渐调整和分析，慢慢找出一个最优化的结果。</p>
+<p>flush-behind<br>该选项可以直接通过命令 gluster volume set test flush-behind 的形式进行设置，但实际上，该参数是write-behind的一个选项，<br>如果write-behind为off，只设置flush-behind应该是没有意义的。该选项也同样是为了提升处理大量小文件的性能。<br>在这个选项里close()/flush()能够被堆到后台，允许客户端去处理下一个请求。默认值是on。</p>
+<p>注意:<br>通常情况下，protocol translator对于一个请求或者转发的数据包有一个4MB的上限。因此，如果你在client端用了上面的write-behind(大多数会如此)，<br>并且aggregate-size大于4MB，他也不会发出大的数据包。</p>
+<h3 id="read-ahead（默认on）"><a href="#read-ahead（默认on）" class="headerlink" title="read-ahead（默认on）"></a>read-ahead（默认on）</h3><p>gluster volume set test read-ahead on<br>Read Ahead Translator （预读）<br>基于预设值，read-ahead会顺序地预取一些块。当你的应用忙于处理一些数据的时候，GlusterFS能够预读下一批等待处理的数据。<br>这样能够使得读取操作更加流畅和迅速。而且，工作起来像一个读的集合器一样（read-aggregator），也就是说，将大量的、零散的读取操作集合成少量的、<br>大一些的读操作，这样，减小了网络和磁盘的负载。page-size 描述了块的大小。page-count 描述了预读块的总数量。</p>
+<p>注意:<br>这个translator比较适合于应用在IB-verbs transport环境里。在百兆和千兆以太网接口、没有read-ahead的环境下，能够达到这种连接的最高速度。</p>
+<p>gluster volume set test quick-read on</p>
+<p>从描述上看，该选项只对fuse有用，同时，如果文件的大小大于默认的64k，则该选项也不起作用。<br>Translator performance/quick-read</p>
+<p>该中继器用来提高小文件读性能。<br>通过网络对文件系统进行操作开销很大，因此，quick-read使用glusterfs内部get接口来一次执行多个posix系统调用open/read/close，一次get调用包含：一个open调用 + 多个read调用 + 一个close调用。<br>This translator improves performance of read on small files. Over a posix interface, files are read using the apis open, read and close. For a filesystem implemented over a network, the round trip overhead of these calls can be significant. Hence quick-read uses the glusterfs internal get interface to implement posix abstraction of using open/read/close for reading of files there by reducing the number of calls over network from n to 1 where n = no of read calls + 1 (open) + 1 (close).<br>Example:<br>volume quick-read<br>  type performance/quick-read<br>  option cache-timeout nsecs (1 second)<br>  option max-file-size nbytes (64Kb)<br>  subvolumes client<br>end-volume</p>
+<p>cache-timeout<br>缓存失效验证时间，默认值1秒。<br>Timeout for validation of cached file. On timeout stats of the file is compared with that of cached copy. If the file is found to be changed after it is cached, the cache is flushed. The default timeout value is 1 second.<br>max-file-size</p>
+<p>可以使用get接口读取的文件最大值，默认值是64KB。当文件大于该值，则使用标准的open/read/close调用。</p>
+<p>Maximum size of the file that can be fetched using get interface. Files bigger than this are read using the normal open/read/close. Note that this option controls only how quick-read behaves. Irrespective of the value this option, the applications running on glusterfs continue to use the normal open/read/close interface. Default value of this option is 64 kilo bytes.</p>
+<p>glusterfs3.4把quick-read（3.3就这一个translaotr）分解为open-behind和quick-read。原来设计不管操作文件的目的是什么，都要获取真正的fd。重构后，可以根据文件操作目的，如果是修改文件内容，就在后台打开文件并进行操作。如果仅仅是fstat等类似操作，就利用匿名fd来进行，不会等待真正的fd。这样根据操作目的，优化了性能。在lookup时，根据需要设置xdata key，在posix translator层就抓取文件内容。read操作执行到quick-read层时就返回文件内容。</p>
+<h3 id="open-behind（默认on）"><a href="#open-behind（默认on）" class="headerlink" title="open-behind（默认on）"></a>open-behind（默认on）</h3><p>gluster volume set test open-behind on<br>Perform open in the backend only when a necessary FOP arrives (e.g writev on the FD, unlink of the file). When option is disabled, perform backend open right after unwinding open().</p>
+<h3 id="stat-prefetch（默认on）"><a href="#stat-prefetch（默认on）" class="headerlink" title="stat-prefetch（默认on）"></a>stat-prefetch（默认on）</h3><p>即：performance/md-cache<br>gluster volume set test stat-prefetch on<br>meta-data caching translator in the volume。<br>网上有说法：<br>为规避客户端元数据不一致，把客户端的metadata cache禁用，即配置performance.md-cache-timeout 0。<br>有可能正确，待深入分析，暂用默认值。</p>
+<p>force-readdirp参数：<br>Convert all readdir requests to readdirplus to collect stat info on each entry.</p>
+<h3 id="io-threads（默认on，16线程）"><a href="#io-threads（默认on，16线程）" class="headerlink" title="io-threads（默认on，16线程）"></a>io-threads（默认on，16线程）</h3><p>gluster volume set test io-thread-count 16</p>
+<p>IO线程中继(performance/io-threads）属于性能调整中继的一种，作用是增加IO的并发线程，以提高IO性能。<br>IO线程中继试图增加服务器后台进程对文件元数据读写I/O的处理能力。由于GlusterFS服务是单线程的，使用IO线程转换器可以较大的提高性能。这个转换器最好是被用于服务器端，而且是在服务器协议转换器后面被加载。<br>IO线程操作会将读和写操作分成不同的线程。同一时刻存在的总线程是恒定的并且是可以配置的。</p>
+<p>之前GlusterFS Translators v1.3手册对io-threads描述，和当前实现相比可能有出入：<br>AIO增加了异步（后台）读写的功能。通过加载这个translator，你可以利用server的空闲时间去处理新的任务。当server在 DMA方式处理读或者写操作的时候，CPU、内存或者网络并没有被使用。这个translator可以将资源更好的利用起来去处理和增加当前的I/O性能。<br>注意:</p>
+<ol>
+<li>io-threads translator 只有在unify之上或者在Server protocol之下才会有效果。如果在unify和namespace brick之间，因为没有文件io的处理，所以不会有效果。</li>
+<li>‘thread-count’小于或等于你的CPU数量。</li>
+</ol>
 
       
     </div>
@@ -432,7 +446,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/python-网络框架/" rel="tag"># python 网络框架</a>
+            <a href="/tags/glusterfs-调优/" rel="tag"># glusterfs  调优</a>
           
         </div>
       
@@ -441,8 +455,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/02/24/数据库及oorm/" rel="next" title="数据库及ORM">
-                <i class="fa fa-chevron-left"></i> 数据库及ORM
+              <a href="/2017/03/20/glusterfs中继器/" rel="next" title="glusterfs中继器">
+                <i class="fa fa-chevron-left"></i> glusterfs中继器
               </a>
             
           </div>
@@ -450,10 +464,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/02/27/tornado/" rel="prev" title="tornado">
-                tornado <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -479,8 +489,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/02/24/python-网络框架介绍/"
-           data-title="python 网络框架介绍" data-url="http://yoursite.com/2017/02/24/python-网络框架介绍/">
+      <div class="ds-thread" data-thread-key="2017/03/20/glusterfs中继器调优/"
+           data-title="glusterfs中继器调优" data-url="http://yoursite.com/2017/03/20/glusterfs中继器调优/">
       </div>
     
   </div>
@@ -597,7 +607,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Python网络框架的概念"><span class="nav-number">1.</span> <span class="nav-text">Python网络框架的概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#网络框架及MVC架构"><span class="nav-number">1.1.</span> <span class="nav-text">网络框架及MVC架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模型（model）"><span class="nav-number">1.2.</span> <span class="nav-text">模型（model）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#视图（view）"><span class="nav-number">1.3.</span> <span class="nav-text">视图（view）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#控制器（controller）"><span class="nav-number">1.4.</span> <span class="nav-text">控制器（controller）</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#write-behind（默认on）"><span class="nav-number">1.</span> <span class="nav-text">write-behind（默认on）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#read-ahead（默认on）"><span class="nav-number">2.</span> <span class="nav-text">read-ahead（默认on）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#open-behind（默认on）"><span class="nav-number">3.</span> <span class="nav-text">open-behind（默认on）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stat-prefetch（默认on）"><span class="nav-number">4.</span> <span class="nav-text">stat-prefetch（默认on）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#io-threads（默认on，16线程）"><span class="nav-number">5.</span> <span class="nav-text">io-threads（默认on，16线程）</span></a></li></ol></div>
             
 
           </div>
