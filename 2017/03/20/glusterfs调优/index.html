@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="python orm," />
+  <meta name="keywords" content="glusterfs  调优," />
 
 
 
@@ -84,22 +84,28 @@
 
 
 
-<meta name="description" content="python中提供orm支持的组件有很多，每个组件的应用领域稍有区别，但是数据操作的理论原理是相同的。下面对比较著名的python数据库的orm框架介绍如下。
-SQLALchemypython中最成熟的ORM框架，资源和文档都很丰富。大多数Python web框架都有很好的支持。能够胜任大多数python开发的场合；
-Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
+<meta name="description" content="概述GlusterFS性能调优基本思路主要包括三个部分，分别是硬件调优、操作系统调优和GlusterFS自身参数调优。
+
+正常情况下，当硬件购买之后，已经没有什么可调的空间，最多就是更换一些性能更高的磁盘，当然这对glusterfs来说对性能帮助已经非常大了，
+gluster对cpu本身要求并不是很高，性能瓶颈往往会出现在网络和磁盘这两块。
+操作系统性能调优空间也不是很大，主要还是配合特定的应用场">
 <meta property="og:type" content="article">
-<meta property="og:title" content="python ORM库介绍">
-<meta property="og:url" content="http://yoursite.com/2017/02/24/python-ORM库介绍/index.html">
+<meta property="og:title" content="glusterfs基础调优（一）">
+<meta property="og:url" content="http://yoursite.com/2017/03/20/glusterfs调优/index.html">
 <meta property="og:site_name" content="Zero">
-<meta property="og:description" content="python中提供orm支持的组件有很多，每个组件的应用领域稍有区别，但是数据操作的理论原理是相同的。下面对比较著名的python数据库的orm框架介绍如下。
-SQLALchemypython中最成熟的ORM框架，资源和文档都很丰富。大多数Python web框架都有很好的支持。能够胜任大多数python开发的场合；
-Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
-<meta property="og:updated_time" content="2017-02-24T07:32:41.569Z">
+<meta property="og:description" content="概述GlusterFS性能调优基本思路主要包括三个部分，分别是硬件调优、操作系统调优和GlusterFS自身参数调优。
+
+正常情况下，当硬件购买之后，已经没有什么可调的空间，最多就是更换一些性能更高的磁盘，当然这对glusterfs来说对性能帮助已经非常大了，
+gluster对cpu本身要求并不是很高，性能瓶颈往往会出现在网络和磁盘这两块。
+操作系统性能调优空间也不是很大，主要还是配合特定的应用场">
+<meta property="og:updated_time" content="2017-03-20T06:19:55.751Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="python ORM库介绍">
-<meta name="twitter:description" content="python中提供orm支持的组件有很多，每个组件的应用领域稍有区别，但是数据操作的理论原理是相同的。下面对比较著名的python数据库的orm框架介绍如下。
-SQLALchemypython中最成熟的ORM框架，资源和文档都很丰富。大多数Python web框架都有很好的支持。能够胜任大多数python开发的场合；
-Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
+<meta name="twitter:title" content="glusterfs基础调优（一）">
+<meta name="twitter:description" content="概述GlusterFS性能调优基本思路主要包括三个部分，分别是硬件调优、操作系统调优和GlusterFS自身参数调优。
+
+正常情况下，当硬件购买之后，已经没有什么可调的空间，最多就是更换一些性能更高的磁盘，当然这对glusterfs来说对性能帮助已经非常大了，
+gluster对cpu本身要求并不是很高，性能瓶颈往往会出现在网络和磁盘这两块。
+操作系统性能调优空间也不是很大，主要还是配合特定的应用场">
 
 
 
@@ -127,13 +133,13 @@ Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/02/24/python-ORM库介绍/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/03/20/glusterfs调优/"/>
 
 
 
 
 
-  <title> python ORM库介绍 | Zero </title>
+  <title> glusterfs基础调优（一） | Zero </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -274,7 +280,7 @@ Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/24/python-ORM库介绍/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/20/glusterfs调优/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Zero">
@@ -298,7 +304,7 @@ Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
             
             
               
-                python ORM库介绍
+                glusterfs基础调优（一）
               
             
           </h1>
@@ -311,8 +317,8 @@ Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-24T10:53:51+08:00">
-                2017-02-24
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-20T11:48:15+08:00">
+                2017-03-20
               </time>
             
 
@@ -330,8 +336,8 @@ Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python开发/" itemprop="url" rel="index">
-                    <span itemprop="name">python开发</span>
+                  <a href="/categories/分布式存储/" itemprop="url" rel="index">
+                    <span itemprop="name">分布式存储</span>
                   </a>
                 </span>
 
@@ -345,8 +351,8 @@ Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2017/02/24/python-ORM库介绍/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/24/python-ORM库介绍/" itemprop="commentCount"></span>
+                <a href="/2017/03/20/glusterfs调优/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/20/glusterfs调优/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -356,7 +362,7 @@ Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
 
           
           
-             <span id="/2017/02/24/python-ORM库介绍/" class="leancloud_visitors" data-flag-title="python ORM库介绍">
+             <span id="/2017/03/20/glusterfs调优/" class="leancloud_visitors" data-flag-title="glusterfs基础调优（一）">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -381,12 +387,19 @@ Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
       
 
       
-        <p>python中提供orm支持的组件有很多，每个组件的应用领域稍有区别，但是数据操作的理论原理是相同的。下面对比较著名的<br>python数据库的orm框架介绍如下。</p>
-<h3 id="SQLALchemy"><a href="#SQLALchemy" class="headerlink" title="SQLALchemy"></a>SQLALchemy</h3><p>python中最成熟的ORM框架，资源和文档都很丰富。大多数Python web框架都有很好的支持。能够胜任大多数python开发的场合；</p>
-<h3 id="Django-ORM"><a href="#Django-ORM" class="headerlink" title="Django ORM"></a>Django ORM</h3><p>python世界中大名鼎鼎的Django web框架独用的ORM技术。DJANGO是一个大而全的框架，这使得其灵活性大大降低。其他python框架<br>可以随意更换orm，但django不能这样做，因为django内置的model是用django内置orm实现的。</p>
-<h3 id="peewee"><a href="#peewee" class="headerlink" title="peewee"></a>peewee</h3><p>小强灵活，是一个轻量级的ORM。peewee是基于sqlchemy内核开发的，整个框架只有一个文件构成。peewee提供了对多种数据库访问方式，<br>如sqllite/mysql/postsql，适用于功能简单的小型网站。</p>
-<h3 id="storm"><a href="#storm" class="headerlink" title="storm"></a>storm</h3><p>中型的ORM库，比sqlalchem和django等轻量，比peewee更丰富。storm要求开发者编写数据表的DDL代码，而不能直接从数据表定义中自生成表定义。</p>
-<h3 id="sqlobject"><a href="#sqlobject" class="headerlink" title="sqlobject"></a>sqlobject</h3><p>与sqlalchemy相似，也是一套大而全的ORM。sqlobject的特点是其设计借鉴了ruby on rails的ActiveRecord模型，使得熟悉RUBY的开发者能够快速上手。</p>
+        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><pre><code>GlusterFS性能调优基本思路主要包括三个部分，分别是硬件调优、操作系统调优和GlusterFS自身参数调优。
+
+正常情况下，当硬件购买之后，已经没有什么可调的空间，最多就是更换一些性能更高的磁盘，当然这对glusterfs来说对性能帮助已经非常大了，
+</code></pre><p>gluster对cpu本身要求并不是很高，性能瓶颈往往会出现在网络和磁盘这两块。</p>
+<pre><code>操作系统性能调优空间也不是很大，主要还是配合特定的应用场景，如果gluster和其他应用分享计算资源的话，还需要考虑操作系统配置对其他应用的性能影响，从方便运维的角度看，不推荐gluster和其他应用共享计算资源。
+
+glusterfs自身性能调优对性能影响较大，好在默认情况下，gluster性能相关中继器都是打开的，默认都会提供比较高的性能，但是还是会有一些调优的空间，其中一个最主要的原因是gluster默认配置应对的是普通服务器，
+</code></pre><p>对于部署在高性能服务器上的gluster来说，可调的空间就更大，原因是高性能服务器会提供更多内存和CPU。</p>
+<h3 id="调优说明"><a href="#调优说明" class="headerlink" title="调优说明"></a>调优说明</h3><pre><code>对gluster进行性能调优，主要调的是性能相关的中继器，默认情况下，所有的性能中继器都是打开的，给人的感觉就是没法调了，已经是最优了，
+</code></pre><p>但实际情况往往不是这样的，还是要根据具体的应用场景，有些性能中继器在特定场合下反而会降低性能，其实对gluster性能影响很大的是gluster集群的部署方案，如果部署比较合理，性能原生就比较好，不需要做过多的配置，这也印证了gluster的简单好用和高性能。<br>gluster非常适合大文件读写的带宽型应用，诸如视频存储、HPC高性能计算、容器镜像存储、冷数据存储、日志存储、数据备份等应用场景。<br>但gluster并不擅长小文件读写的IOPS型应用，需要综合硬件、软件和系统进行优化。</p>
+<p>参考调优配置说明：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">单个集群规模          64节点   受集群管理模式限制，大规模集群有压力</div><div class="line">每卷最大客户端数量    &lt;= 1000个    Brick并发连接数量不能太大</div><div class="line">每节点brick数量      4－8个        Brick进程太多占用系统资源，并且启动时会出现部分brick进程启动失败现象</div><div class="line">单个brick容量       &lt;= 100 TB       平衡容量与性能，本地文件系统限制</div><div class="line">RAID/LVM           多盘组成RAID      单个Brick容量和性能，控制brick数量</div><div class="line">Brick文件系统       XFS           稳定，16TB以上大容量，格式化快</div><div class="line">卷类型            哈希复制卷          高可用，条带卷不成熟</div><div class="line">数据网络           10GbE           内部通信不能有瓶颈，尤其是NAS协议</div><div class="line">访问协议          POSIX            原生高可用，性能</div></pre></td></tr></table></figure></p>
+<p>其它可以调整参数说明：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">auth.allow / auth.reject  IP访问授权  *(allow all)   IP地址</div><div class="line">cluster.min-free-disk   剩余磁盘空间阈值，超出将进行数据均衡并记录日志  10%  百分比</div><div class="line">network.frame-timeout  请求等待时间    1800s   0-1800</div><div class="line">network.ping-timeout   客户端等待时间   42s    0-42</div><div class="line">nfs.disabled        关闭NFS服务    off    off|on</div><div class="line">performance.io-thread-count  IO线程数   16     0-65 </div><div class="line">performance.cache-refresh-timeout  缓存校验周期     1s       0-61</div><div class="line">performance.cache-size       全局读缓存大小  io-cahce: 32MB        </div><div class="line">quick-read: 128MB  </div><div class="line">performance.io-thread-count      I/O并发数量  16   非零整数</div><div class="line">cluster.stripe-block-size    条带大小          128KB</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -431,7 +444,7 @@ Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
       
         <div class="post-tags">
           
-            <a href="/tags/python-orm/" rel="tag"># python orm</a>
+            <a href="/tags/glusterfs-调优/" rel="tag"># glusterfs  调优</a>
           
         </div>
       
@@ -440,8 +453,8 @@ Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/02/24/数据库及oorm/" rel="next" title="数据库及ORM">
-                <i class="fa fa-chevron-left"></i> 数据库及ORM
+              <a href="/2017/03/16/glusterfs压测/" rel="next" title="glusterfs压测">
+                <i class="fa fa-chevron-left"></i> glusterfs压测
               </a>
             
           </div>
@@ -449,10 +462,6 @@ Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/02/24/python-网络框架介绍/" rel="prev" title="python 网络框架介绍">
-                python 网络框架介绍 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -478,8 +487,8 @@ Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/02/24/python-ORM库介绍/"
-           data-title="python ORM库介绍" data-url="http://yoursite.com/2017/02/24/python-ORM库介绍/">
+      <div class="ds-thread" data-thread-key="2017/03/20/glusterfs调优/"
+           data-title="glusterfs基础调优（一）" data-url="http://yoursite.com/2017/03/20/glusterfs调优/">
       </div>
     
   </div>
@@ -596,7 +605,7 @@ Django ORMpython世界中大名鼎鼎的Django web框架独用的O">
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#SQLALchemy"><span class="nav-number">1.</span> <span class="nav-text">SQLALchemy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Django-ORM"><span class="nav-number">2.</span> <span class="nav-text">Django ORM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#peewee"><span class="nav-number">3.</span> <span class="nav-text">peewee</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#storm"><span class="nav-number">4.</span> <span class="nav-text">storm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sqlobject"><span class="nav-number">5.</span> <span class="nav-text">sqlobject</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调优说明"><span class="nav-number">2.</span> <span class="nav-text">调优说明</span></a></li></ol></div>
             
 
           </div>
