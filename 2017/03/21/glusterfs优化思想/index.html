@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/03/21/glusterfs优化思想/index.html">
 <meta property="og:site_name" content="Zero">
 <meta property="og:description" content="背景互联网的触角已融入到生活细节，人们习惯将越来越多的照片、短视频等上传至服务器存储、调用。在互联网(尤其是移动互联网)、物联网、云计算、大数据等高速发展的大背景下，数据呈现爆炸式地增长。“小文件”，特别是海量小文件的存储越来越被人们所需要。业界也有很多文件系统专门针对小文件进行优化的分布式文件系统。例如国外的Facebook专门推出的Haystack，国内淘宝的开源TFS等。针对GlusterF">
-<meta property="og:updated_time" content="2017-03-21T07:13:20.411Z">
+<meta property="og:updated_time" content="2017-03-21T07:15:04.969Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="glusterfs优化思想">
 <meta name="twitter:description" content="背景互联网的触角已融入到生活细节，人们习惯将越来越多的照片、短视频等上传至服务器存储、调用。在互联网(尤其是移动互联网)、物联网、云计算、大数据等高速发展的大背景下，数据呈现爆炸式地增长。“小文件”，特别是海量小文件的存储越来越被人们所需要。业界也有很多文件系统专门针对小文件进行优化的分布式文件系统。例如国外的Facebook专门推出的Haystack，国内淘宝的开源TFS等。针对GlusterF">
@@ -388,7 +388,8 @@
 <h4 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h4><p>目录层级设计<br>目录层级每多一级，对于一次文件的Open行为很可能会多查找一次磁盘。但是目录层级太少，会导致一个目录底下过多的文件，使得同一个目录下面查找相应文件的时间变长。<br>这里建议使用256*256方式，即在底下ab/cd/file。其中ab和cd是指两个两位16进制的数。<br>这里可以在创建好volume以后预先创建好目录结构。<br>另外，在这种情况下，如果要改代码，可以在brick进程即（glusterfsd）上缓存这个目录结构的信息，使得对这个目录结构的查找时候不需要对硬盘过多的操作。</p>
 <h4 id="不使用遍历操作"><a href="#不使用遍历操作" class="headerlink" title="不使用遍历操作"></a>不使用遍历操作</h4><p>理由前文已经说过，对于gluster目前版本的架构来说ls这种遍历操作会对整个文件系统造成很大的开销，以及本身性能很慢。看社区的planning，可以期待在4.0版本上这个有所改善。但是目前情况上还是避免这类型操作。</p>
 <h4 id="小文件聚合"><a href="#小文件聚合" class="headerlink" title="小文件聚合"></a>小文件聚合</h4><p>存储业界对于海量小文件性能调优上，还是将小文件聚合这种方案更为有效。这里需要注意几个限制：这里小文件聚合后上层需要记录好聚合后所在的file和offset等信息，以及这里小文件聚合场景中文件是一次写，后面不做变更，要不然实现起来会有很多劣势。<br>由于gluster尚未实现这种Feature，需要上层应用来实现，或者自己修改gluster代码。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">cluster.lookup-unhashed: off</div><div class="line">performance.io-thread-count: 24</div><div class="line">auth.allow:10.10.10.10</div><div class="line">transport.address-family: inet</div><div class="line">performance.readdir-ahead: on</div><div class="line">nfs.disable: on</div></pre></td></tr></table></figure>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>少brick；<br>少目录结构；<br>少进行find这种操作，进行key/value操作规避小文件过多；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">cluster.lookup-unhashed: off</div><div class="line">performance.io-thread-count: 24</div><div class="line">auth.allow:10.10.10.10</div><div class="line">transport.address-family: inet</div><div class="line">performance.readdir-ahead: on</div><div class="line">nfs.disable: on</div></pre></td></tr></table></figure>
       
     </div>
 
@@ -450,6 +451,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/27/cgroup/" rel="prev" title="cgroup">
+                cgroup <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -521,7 +526,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-count">45</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -529,7 +534,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -538,7 +543,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-count">29</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
