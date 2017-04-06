@@ -568,15 +568,7 @@
 <h3 id="processData"><a href="#processData" class="headerlink" title="processData"></a>processData</h3><p>要求为Boolean类型的参数，默认为true。默认情况下，发送的数据将被转换为对象（从技术角度来讲并非字符串）以配合默认内容类型”application/x-www-form-urlencoded”。如果要发送DOM树信息或者其他不希望转换的信息，请设置为false。</p>
 <h3 id="scriptCharset"><a href="#scriptCharset" class="headerlink" title="scriptCharset"></a>scriptCharset</h3><p>要求为String类型的参数，只有当请求时dataType为”jsonp”或者”script”，并且type是GET时才会用于强制修改字符集(charset)。通常在本地和远程的内容编码不同时使用。</p>
 <p>案例代码</p>
-<p>复制代码<br>$(function(){<br>    $(‘#send’).click(function(){<br>         $.ajax({<br>             type: “GET”,<br>             url: “test.json”,<br>             data: {username:$(“#username”).val(), content:$(“#content”).val()},<br>             dataType: “json”,<br>             success: function(data){<br>                         $(‘#resText’).empty();   //清空resText里面的所有内容<br>                         var html = ‘’;<br>                         $.each(data, function(commentIndex, comment){<br>                               html += ‘<div class="comment"><h6>‘ + comment[‘username’]</h6></div></p>
-<pre><code>                                     + &apos;:&lt;/h6&gt;&lt;p class=&quot;para&quot;&apos; + comment[&apos;content&apos;]
-                                     + &apos;&lt;/p&gt;&lt;/div&gt;&apos;;
-                     });
-                     $(&apos;#resText&apos;).html(html);
-                  }
-     });
-});
-</code></pre><p>});</p>
+<p>复制代码<br>$(function(){<br>    $(‘#send’).click(function(){<br>         $.ajax({<br>             type: “GET”,<br>             url: “test.json”,<br>             data: {username:$(“#username”).val(), content:$(“#content”).val()},<br>             dataType: “json”,<br>             success: function(data){<br>                         $(‘#resText’).empty();<br>                         var html = ‘’;<br>                         $.each(data, function(commentIndex, comment){<br>                               comment[‘username’]<br>                               comment[‘content’]<br>                         });<br>                         $(‘#resText’).html(html);<br>                      }<br>         });<br>    });<br>});</p>
 
           
         
