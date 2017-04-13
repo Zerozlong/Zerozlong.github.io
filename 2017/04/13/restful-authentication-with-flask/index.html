@@ -1,0 +1,880 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python flask token," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本篇是一个单独的篇幅，讲解flask中的token使用，这些代码都可以在github找到。
+表结构设计表结构设计的非常简单，仅仅使用了用户名和密码。12345class User(db.Model):    __tablename__ = &amp;apos;users&amp;apos;    id = db.Column(db.Integer, primary_key = True)    username">
+<meta property="og:type" content="article">
+<meta property="og:title" content="restful authentication with flask">
+<meta property="og:url" content="http://yoursite.com/2017/04/13/restful-authentication-with-flask/index.html">
+<meta property="og:site_name" content="Zero">
+<meta property="og:description" content="本篇是一个单独的篇幅，讲解flask中的token使用，这些代码都可以在github找到。
+表结构设计表结构设计的非常简单，仅仅使用了用户名和密码。12345class User(db.Model):    __tablename__ = &amp;apos;users&amp;apos;    id = db.Column(db.Integer, primary_key = True)    username">
+<meta property="og:updated_time" content="2017-04-13T11:26:03.827Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="restful authentication with flask">
+<meta name="twitter:description" content="本篇是一个单独的篇幅，讲解flask中的token使用，这些代码都可以在github找到。
+表结构设计表结构设计的非常简单，仅仅使用了用户名和密码。12345class User(db.Model):    __tablename__ = &amp;apos;users&amp;apos;    id = db.Column(db.Integer, primary_key = True)    username">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/13/restful-authentication-with-flask/"/>
+
+
+
+
+
+  <title> restful authentication with flask | Zero </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Zero</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/13/restful-authentication-with-flask/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                restful authentication with flask
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-13T16:34:04+08:00">
+                2017-04-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python开发/" itemprop="url" rel="index">
+                    <span itemprop="name">python开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/04/13/restful-authentication-with-flask/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/13/restful-authentication-with-flask/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/04/13/restful-authentication-with-flask/" class="leancloud_visitors" data-flag-title="restful authentication with flask">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本篇是一个单独的篇幅，讲解flask中的token使用，这些代码都可以在github找到。</p>
+<h3 id="表结构设计"><a href="#表结构设计" class="headerlink" title="表结构设计"></a>表结构设计</h3><p>表结构设计的非常简单，仅仅使用了用户名和密码。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">class User(db.Model):</div><div class="line">    __tablename__ = &apos;users&apos;</div><div class="line">    id = db.Column(db.Integer, primary_key = True)</div><div class="line">    username = db.Column(db.String(32), index = True)</div><div class="line">    password_hash = db.Column(db.String(128))</div></pre></td></tr></table></figure></p>
+<p>出于安全原因，原始密码不会被存储，在注册过程中计算散列后将被丢弃。</p>
+<h3 id="PasswordHaishing"><a href="#PasswordHaishing" class="headerlink" title="PasswordHaishing"></a>PasswordHaishing</h3><p>为了使用password hashs我将使用passlib库，比较容易使用的库。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">from passlib.apps import custom_app_context as pwd_context</div><div class="line">class User(db.Model):</div><div class="line">	__tablename__ = &apos;users&apos;</div><div class="line">    id = db.Column(db.Integer, primary_key = True)</div><div class="line">    username = db.Column(db.String(32), index = True)</div><div class="line">    password_hash = db.Column(db.String(128))</div><div class="line">    </div><div class="line">    def hash_password(self, password):</div><div class="line">        self.password_hash = pwd_context.encrypt(password)</div><div class="line"></div><div class="line">    def verify_password(self, password):</div><div class="line">        return pwd_context.verify(password, self.password_hash)</div></pre></td></tr></table></figure></p>
+<h3 id="用户注册页面"><a href="#用户注册页面" class="headerlink" title="用户注册页面"></a>用户注册页面</h3><p>在下面的例子中，客户端可以注册一个新的用户通过post请求。请求对象需要使用json对象里面有用户名和密码。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">@app.route(&apos;/api/users&apos;, methods = [&apos;POST&apos;])</div><div class="line">def new_user():</div><div class="line">    username = request.json.get(&apos;username&apos;)</div><div class="line">    password = request.json.get(&apos;password&apos;)</div><div class="line">    if username is None or password is None:</div><div class="line">        abort(400) # missing arguments</div><div class="line">    if User.query.filter_by(username = username).first() is not None:</div><div class="line">        abort(400) # existing user</div><div class="line">    user = User(username = username)</div><div class="line">    user.hash_password(password)</div><div class="line">    db.session.add(user)</div><div class="line">    db.session.commit()</div><div class="line">    return jsonify(&#123; &apos;username&apos;: user.username &#125;), 201, &#123;&apos;Location&apos;: url_for(&apos;get_user&apos;, id = user.id, _external = True)&#125;</div></pre></td></tr></table></figure></p>
+<p>当你创建完成之后，你可以使用下面的例子进行用户的创建：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ curl -i -X POST -H &quot;Content-Type: application/json&quot; -d &apos;&#123;&quot;username&quot;:&quot;zero,&quot;password&quot;:&quot;python&quot;&#125;&apos; http://127.0.0.1:5000/api/users</div><div class="line">HTTP/1.0 201 CREATED</div><div class="line">Content-Type: application/json</div><div class="line">Content-Length: 27</div><div class="line">Location: http://127.0.0.1:5000/api/users/1</div><div class="line">Server: Werkzeug/0.9.4 Python/2.7.3</div><div class="line">Date: Thu, 28 Nov 2013 19:56:39 GMT</div><div class="line"></div><div class="line">&#123;</div><div class="line">  &quot;username&quot;: &quot;zero&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="passwd基本认证"><a href="#passwd基本认证" class="headerlink" title="passwd基本认证"></a>passwd基本认证</h3><p>现在假如有一个api资源，只允许注册用户使用，为了保护这些资源我们通常使用http基本认证，为了实现这些协议我将使用Flask-HTTPAuth扩展模块帮我实现。<br>使用Flask-HTTPAuth端点保护，通过添加一个login_required装饰器即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">from flask.ext.httpauth import HTTPBasicAuth</div><div class="line">auth = HTTPBasicAuth()</div><div class="line">@app.route(&apos;/api/resource&apos;)</div><div class="line">@auth.login_required</div><div class="line">def get_resource():</div><div class="line">    return jsonify(&#123; &apos;data&apos;: &apos;Hello, %s!&apos; % g.user.username &#125;)</div></pre></td></tr></table></figure>
+<p>当然，要使用Flask-HTTPAuth需要给予更多的验证信息，为了达到这些效果，应用程序还需要做如下几个方面。Flask-HTTPAuth通过返回true和false来帮你认证用户名。<br>实现代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">@auth.verify_password</div><div class="line">def verify_password(username, password):</div><div class="line">    user = User.query.filter_by(username = username).first()</div><div class="line">    if not user or not user.verify_password(password):</div><div class="line">        return False</div><div class="line">    g.user = user</div><div class="line">    return True</div></pre></td></tr></table></figure></p>
+<p>这个方法，通过使用username找到user对象，然后通过verifies的verify_password()方法来验证password。</p>
+<p>###token基本认证：<br>每次请求api的时候使用用户名和密码是非常不方便的，同时也会有一定的安全风险，即便传输使用https。<br>那么有什么好的办法吗？答案是使用令牌来进行验证。令牌通常都要设计一个到期时间，这样即便令牌泄露了，由于其具有过期时间，造成的潜在危害要小很多。<br>flask使用了一个安全的方法来写cookie。这个方法基于一个叫做itsdangerous的包。我也会在下文中使用。<br>令牌的生成和使用可以在用户模型中作为附加方法使用。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">from itsdangerous import (TimedJSONWebSignatureSerializer</div><div class="line">                          as Serializer, BadSignature, SignatureExpired)</div><div class="line"></div><div class="line">class User(db.Model):</div><div class="line"></div><div class="line">    def generate_auth_token(self, expiration = 600):</div><div class="line">        s = Serializer(app.config[&apos;SECRET_KEY&apos;], expires_in = expiration)</div><div class="line">        return s.dumps(&#123; &apos;id&apos;: self.id &#125;)</div><div class="line"></div><div class="line">    @staticmethod</div><div class="line">    def verify_auth_token(token):</div><div class="line">        s = Serializer(app.config[&apos;SECRET_KEY&apos;])</div><div class="line">        try:</div><div class="line">            data = s.loads(token)</div><div class="line">        except SignatureExpired:</div><div class="line">            return None # valid token, but expired</div><div class="line">        except BadSignature:</div><div class="line">            return None # invalid token</div><div class="line">        user = User.query.get(data[&apos;id&apos;])</div><div class="line">        return user</div></pre></td></tr></table></figure></p>
+<p>在generate_auth_token()方法用来生成token，包括过期时间(默认是60s),用户id以及密钥文件中存放的salt。解密函数则使用一个静态方法,一个静态方法因为用户只需要使用<br>token进行认证就好，如果token正确，则直接返回该用户。下面写一个api用来响应生成token请求。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">@app.route(&apos;/api/token&apos;)</div><div class="line">@auth.login_required</div><div class="line">def get_auth_token():</div><div class="line">    token = g.user.generate_auth_token()</div><div class="line">    return jsonify(&#123; &apos;token&apos;: token.decode(&apos;ascii&apos;) &#125;)</div><div class="line">```	</div><div class="line">注意：这个api受装饰器auth.login_required保护，这就需要用户输入用户名和密码来获得token。</div><div class="line">接下来就需要处理用户在请求中加入token，server端如何做的问题。server端就需要验证一次token，又需要验证一次用户名和密码。代码如下：</div><div class="line">```	</div><div class="line">@auth.verify_password</div><div class="line">def verify_password(username_or_token, password):</div><div class="line">    # first try to authenticate by token</div><div class="line">    user = User.verify_auth_token(username_or_token)</div><div class="line">    if not user:</div><div class="line">        # try to authenticate with username/password</div><div class="line">        user = User.query.filter_by(username = username_or_token).first()</div><div class="line">        if not user or not user.verify_password(password):</div><div class="line">            return False</div><div class="line">    g.user=user</div><div class="line">    return True</div><div class="line">```	</div><div class="line">此次新版本的用户认证需要认证两次，第一次认证用户的token，第二次认证用户名和密码。</div><div class="line">下面这个命令可以获取到认证的token。</div></pre></td></tr></table></figure></p>
+<p>curl  -u  zero:zero123!@#  -i   -X    GET  <a href="http://127.0.0.1:9998/api/token" target="_blank" rel="external">http://127.0.0.1:9998/api/token</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">结果如下所示：</div></pre></td></tr></table></figure></p>
+<p>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current<br>                                 Dload  Upload   Total   Spent    Left  Speed<br>100   140  100   140    0     0   8750      0 –:–:– –:–:– –:–:–  136kHTTP/1.0 200 OK<br>Content-Type: application/json<br>Content-Length: 140<br>Server: Werkzeug/0.11.10 Python/2.7.8<br>Date: Thu, 13 Apr 2017 11:08:44 GMT</p>
+<p>{<br>  “token”: “eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ5MjA4MjMyNCwiaWF0IjoxNDkyMDgxNzI0fQ.eyJpZCI6MX0.tf8bNmlgUvC8aVJjoBKdbRhQX3jdWLWA4KCFcWgFsBg”<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">拿这个token走一遍url的访问流程：</div></pre></td></tr></table></figure></p>
+<p>$ curl  -u  eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ5MjA4MjMyNCwiaWF0IjoxNDkyMDgxNzI0fQ.eyJpZCI6MX0.tf8bNmlgUvC8aVJjoBKdbRhQX3jdWLWA4KCFcWgFsBg:unset  -i -X GET <a href="http://127.0.0.1:9998/api/resource" target="_blank" rel="external">http://127.0.0.1:9998/api/resource</a><br>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current<br>                                 Dload  Upload   Total   Spent    Left  Speed<br>100    23  100    23    0     0   1437      0 –:–:– –:–:– –:–:–  1437HTTP/1.0 200 OK<br>Content-Type: application/json<br>Content-Length: 23<br>Server: Werkzeug/0.11.10 Python/2.7.8<br>Date: Thu, 13 Apr 2017 11:13:13 GMT</p>
+<p>{<br>  “data”: “Hello!”<br>}<br>```<br>注意这次请求过程中,请求中的passsword使用了unset。注意这个地方password在这个请求过程中是无效的。</p>
+<p>总结：说白了token和用户名密码访问是一样的，只是token比较安全而已。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wx.png" alt="Zero WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/zhifu.png" alt="Zero Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python-flask-token/" rel="tag"># python flask token</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/13/http-auth在flask中的使用/" rel="next" title="httpauth在flask中的使用-">
+                <i class="fa fa-chevron-left"></i> httpauth在flask中的使用-
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/04/13/restful-authentication-with-flask/"
+           data-title="restful authentication with flask" data-url="http://yoursite.com/2017/04/13/restful-authentication-with-flask/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Zero" />
+          <p class="site-author-name" itemprop="name">Zero</p>
+          <p class="site-description motion-element" itemprop="description">走过山山水水,脚下高高低低,人生难得糊涂！</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">52</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="392572435" target="_blank" title="QQ">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  QQ
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="392572435@qq.com" target="_blank" title="Mail">
+                  
+                    <i class="fa fa-fw fa-mail"></i>
+                  
+                  Mail
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#表结构设计"><span class="nav-number">1.</span> <span class="nav-text">表结构设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PasswordHaishing"><span class="nav-number">2.</span> <span class="nav-text">PasswordHaishing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用户注册页面"><span class="nav-number">3.</span> <span class="nav-text">用户注册页面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#passwd基本认证"><span class="nav-number">4.</span> <span class="nav-text">passwd基本认证</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zero</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zerosre"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("DoxG0uQxF81TSYnLX2XSmf3s-gzGzoHsz", "Q4wLV6Vdxd4YnCWesJ0qk9cO");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>
