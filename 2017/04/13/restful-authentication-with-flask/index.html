@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="Zero">
 <meta property="og:description" content="本篇是一个单独的篇幅，讲解flask中的token使用，这些代码都可以在github找到。
 表结构设计表结构设计的非常简单，仅仅使用了用户名和密码。12345class User(db.Model):    __tablename__ = &amp;apos;users&amp;apos;    id = db.Column(db.Integer, primary_key = True)    username">
-<meta property="og:updated_time" content="2017-04-17T03:39:54.635Z">
+<meta property="og:updated_time" content="2017-04-17T03:42:41.506Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="restful authentication with flask">
 <meta name="twitter:description" content="本篇是一个单独的篇幅，讲解flask中的token使用，这些代码都可以在github找到。
@@ -391,15 +391,48 @@
 <p>###token基本认证：<br>每次请求api的时候使用用户名和密码是非常不方便的，同时也会有一定的安全风险，即便传输使用https。<br>那么有什么好的办法吗？答案是使用令牌来进行验证。令牌通常都要设计一个到期时间，这样即便令牌泄露了，由于其具有过期时间，造成的潜在危害要小很多。<br>flask使用了一个安全的方法来写cookie。这个方法基于一个叫做itsdangerous的包。我也会在下文中使用。<br>令牌的生成和使用可以在用户模型中作为附加方法使用。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">from itsdangerous import (TimedJSONWebSignatureSerializer</div><div class="line">                          as Serializer, BadSignature, SignatureExpired)</div><div class="line"></div><div class="line">class User(db.Model):</div><div class="line"></div><div class="line">    def generate_auth_token(self, expiration = 600):</div><div class="line">        s = Serializer(app.config[&apos;SECRET_KEY&apos;], expires_in = expiration)</div><div class="line">        return s.dumps(&#123; &apos;id&apos;: self.id &#125;)</div><div class="line"></div><div class="line">    @staticmethod</div><div class="line">    def verify_auth_token(token):</div><div class="line">        s = Serializer(app.config[&apos;SECRET_KEY&apos;])</div><div class="line">        try:</div><div class="line">            data = s.loads(token)</div><div class="line">        except SignatureExpired:</div><div class="line">            return None # valid token, but expired</div><div class="line">        except BadSignature:</div><div class="line">            return None # invalid token</div><div class="line">        user = User.query.get(data[&apos;id&apos;])</div><div class="line">        return user</div></pre></td></tr></table></figure></p>
 <p>在generate_auth_token()方法用来生成token，包括过期时间(默认是60s),用户id以及密钥文件中存放的salt。解密函数则使用一个静态方法,一个静态方法因为用户只需要使用<br>token进行认证就好，如果token正确，则直接返回该用户。下面写一个api用来响应生成token请求。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@app.route(&apos;/api/token&apos;)</div><div class="line">@auth.login_required</div><div class="line">def get_auth_token():</div><div class="line">    token = g.user.generate_auth_token()</div><div class="line">    return jsonify(&#123; &apos;token&apos;: token.decode(&apos;ascii&apos;) &#125;)</div></pre></td></tr></table></figure></p>
 <p>注意：这个api受装饰器auth.login_required保护，这就需要用户输入用户名和密码来获得token。<br>接下来就需要处理用户在请求中加入token，server端如何做的问题。server端就需要验证一次token，又需要验证一次用户名和密码。代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">@auth.verify_password</div><div class="line">def verify_password(username_or_token, password):</div><div class="line">    # first try to authenticate by token</div><div class="line">    user = User.verify_auth_token(username_or_token)</div><div class="line">    if not user:</div><div class="line">        # try to authenticate with username/password</div><div class="line">        user = User.query.filter_by(username = username_or_token).first()</div><div class="line">        if not user or not user.verify_password(password):</div><div class="line">            return False</div><div class="line">    g.user=user</div><div class="line">    return True</div><div class="line">```	</div><div class="line"></div><div class="line">此次新版本的用户认证需要认证两次，第一次认证用户的token，第二次认证用户名和密码。</div><div class="line">下面这个命令可以获取到认证的token。</div></pre></td></tr></table></figure>
-<p>curl  -u  zero:zero123!@#  -i   -X    GET  <a href="http://127.0.0.1:9998/api/token" target="_blank" rel="external">http://127.0.0.1:9998/api/token</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">结果如下所示：</div></pre></td></tr></table></figure></p>
-<p>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current<br>                                 Dload  Upload   Total   Spent    Left  Speed<br>100   140  100   140    0     0   8750      0 –:–:– –:–:– –:–:–  136kHTTP/1.0 200 OK<br>Content-Type: application/json<br>Content-Length: 140<br>Server: Werkzeug/0.11.10 Python/2.7.8<br>Date: Thu, 13 Apr 2017 11:08:44 GMT</p>
-<p>{<br>  “token”: “eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ5MjA4MjMyNCwiaWF0IjoxNDkyMDgxNzI0fQ.eyJpZCI6MX0.tf8bNmlgUvC8aVJjoBKdbRhQX3jdWLWA4KCFcWgFsBg”<br>}</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">拿这个token走一遍url的访问流程：</div></pre></td></tr></table></figure>
-<p>$ curl  -u  eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ5MjA4MjMyNCwiaWF0IjoxNDkyMDgxNzI0fQ.eyJpZCI6MX0.tf8bNmlgUvC8aVJjoBKdbRhQX3jdWLWA4KCFcWgFsBg:unset  -i -X GET <a href="http://127.0.0.1:9998/api/resource" target="_blank" rel="external">http://127.0.0.1:9998/api/resource</a><br>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current<br>                                 Dload  Upload   Total   Spent    Left  Speed<br>100    23  100    23    0     0   1437      0 –:–:– –:–:– –:–:–  1437HTTP/1.0 200 OK<br>Content-Type: application/json<br>Content-Length: 23<br>Server: Werkzeug/0.11.10 Python/2.7.8<br>Date: Thu, 13 Apr 2017 11:13:13 GMT</p>
-<p>{<br>  “data”: “Hello!”<br>}<br>```</p>
-<p>注意这次请求过程中,请求中的passsword使用了unset。注意这个地方password在这个请求过程中是无效的。</p>
-<p>总结：说白了token和用户名密码访问是一样的，只是token比较安全而已。</p>
+<pre><code>@auth.verify_password
+def verify_password(username_or_token, password):
+    # first try to authenticate by token
+    user = User.verify_auth_token(username_or_token)
+    if not user:
+        # try to authenticate with username/password
+        user = User.query.filter_by(username = username_or_token).first()
+        if not user or not user.verify_password(password):
+            return False
+    g.user=user
+    return True
+</code></pre><p>此次新版本的用户认证需要认证两次，第一次认证用户的token，第二次认证用户名和密码。<br>下面这个命令可以获取到认证的token。</p>
+<pre><code>
+curl  -u  zero:zero123\!@#  -i   -X    GET  http://127.0.0.1:9998/api/token
+</code></pre><p>结果如下所示：</p>
+<pre><code>
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   140  100   140    0     0   8750      0 --:--:-- --:--:-- --:--:--  136kHTTP/1.0 200 OK
+Content-Type: application/json
+Content-Length: 140
+Server: Werkzeug/0.11.10 Python/2.7.8
+Date: Thu, 13 Apr 2017 11:08:44 GMT
+
+{
+  &quot;token&quot;: &quot;eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ5MjA4MjMyNCwiaWF0IjoxNDkyMDgxNzI0fQ.eyJpZCI6MX0.tf8bNmlgUvC8aVJjoBKdbRhQX3jdWLWA4KCFcWgFsBg&quot;
+}
+</code></pre><p>拿这个token走一遍url的访问流程：</p>
+<pre><code>
+$ curl  -u  eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ5MjA4MjMyNCwiaWF0IjoxNDkyMDgxNzI0fQ.eyJpZCI6MX0.tf8bNmlgUvC8aVJjoBKdbRhQX3jdWLWA4KCFcWgFsBg:unset  -i -X GET http://127.0.0.1:9998/api/resource
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    23  100    23    0     0   1437      0 --:--:-- --:--:-- --:--:--  1437HTTP/1.0 200 OK
+Content-Type: application/json
+Content-Length: 23
+Server: Werkzeug/0.11.10 Python/2.7.8
+Date: Thu, 13 Apr 2017 11:13:13 GMT
+
+{
+  &quot;data&quot;: &quot;Hello!&quot;
+}
+</code></pre><p>注意这次请求过程中,请求中的passsword使用了unset。注意这个地方password在这个请求过程中是无效的。</p>
 
       
     </div>
