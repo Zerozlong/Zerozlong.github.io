@@ -269,6 +269,480 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/06/javascript中的三种消息弹出框alert,confirm,prompt/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/06/javascript中的三种消息弹出框alert,confirm,prompt/" itemprop="url">
+                  javascript中的三种消息弹出框alert,confirm,prompt
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-06T17:51:24+08:00">
+                2017-04-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/04/06/javascript中的三种消息弹出框alert,confirm,prompt/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/06/javascript中的三种消息弹出框alert,confirm,prompt/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/04/06/javascript中的三种消息弹出框alert,confirm,prompt/" class="leancloud_visitors" data-flag-title="javascript中的三种消息弹出框alert,confirm,prompt">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="alert"><a href="#alert" class="headerlink" title="alert"></a>alert</h3><p>alert 是弹出警告框，在文本里面加入\n就可以换行。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;script type=&quot;text/javascript&quot;&gt;  </div><div class="line">function show_alert()&#123;  </div><div class="line">    alert(&apos;第一行\n第二行&apos;);  </div><div class="line">&#125;  </div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<h3 id="confirm"><a href="#confirm" class="headerlink" title="confirm"></a>confirm</h3><p>confirm弹出确认框，会返回布尔值，通过这个值可以判断点击时确认还是取消。true表示点击了确认，false表示点击了取消。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;script type=&quot;text/javascript&quot;&gt; </div><div class="line">function show_confirm()&#123;  </div><div class="line">    var result = confirm(&apos;是否删除！&apos;);  </div><div class="line">    if(result)&#123;  </div><div class="line">        alert(&apos;删除成功！&apos;);  </div><div class="line">    &#125;else&#123;  </div><div class="line">        alert(&apos;不删除！&apos;);  </div><div class="line">    &#125;  </div><div class="line">&#125;</div><div class="line">&lt;script type=&quot;text/javascript&quot;&gt;</div></pre></td></tr></table></figure></p>
+<h3 id="prompt"><a href="#prompt" class="headerlink" title="prompt"></a>prompt</h3><p>prompt弹出输入框，点击确认返回输入框中的值，点击取消返回null。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&lt;script type=&quot;text/javascript&quot;&gt; </div><div class="line">function show_prompt()&#123;  </div><div class="line">    var value = prompt(&apos;输入你的名字：&apos;, &apos;默认名字&apos;);  </div><div class="line">    if(value == null)&#123;  </div><div class="line">        alert(&apos;你取消了输入！&apos;);  </div><div class="line">    &#125;else if(value == &apos;&apos;)&#123;  </div><div class="line">        alert(&apos;姓名输入为空，请重新输入！&apos;);  </div><div class="line">        show_prompt();  </div><div class="line">    &#125;else&#123;  </div><div class="line">        alert(&apos;你好，&apos;+value);  </div><div class="line">    &#125;  </div><div class="line">&#125;</div><div class="line">&lt;script type=&quot;text/javascript&quot;&gt;</div></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/06/ajax在什么情况下会走success和error/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/06/ajax在什么情况下会走success和error/" itemprop="url">
+                  ajax在什么情况下会走success和error
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-06T16:34:21+08:00">
+                2017-04-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/04/06/ajax在什么情况下会走success和error/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/06/ajax在什么情况下会走success和error/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/04/06/ajax在什么情况下会走success和error/" class="leancloud_visitors" data-flag-title="ajax在什么情况下会走success和error">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="上代码"><a href="#上代码" class="headerlink" title="上代码"></a>上代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;script type=&quot;text/javascript&quot;&gt;  </div><div class="line">$(&apos;button&apos;).click(function()&#123;</div><div class="line">var name = $(this).attr(&apos;name&apos;);</div><div class="line">$.ajax(&#123;</div><div class="line">url:&quot;test.py&quot;,</div><div class="line">type:&quot;POST&quot;,</div><div class="line">data:&#123;&apos;search&apos;:name&#125;,</div><div class="line">success:function(data)</div><div class="line">&#123;</div><div class="line">alert(&apos;success&apos;);</div><div class="line">&#125;,</div><div class="line">error: function()&#123;</div><div class="line">alert(&apos;error&apos;);</div><div class="line">&#125;</div><div class="line">&#125;);</div><div class="line">&#125;);</div><div class="line">&#125;);</div><div class="line">&lt;script type=&quot;text/javascript&quot;&gt;</div></pre></td></tr></table></figure>
+<p>这段代码，在现在基于Restful API架构，前后端严格分离的WEB程序中，是很常见的。现在有一个问题，那就是调用后，在什么情况下走success方法，在什么情况走error方法？<br>我们先简单介绍下ajax：<br>简单的说Ajax请求通过XMLHttpRequest对象发送请求，<br>该对象有四个状态（readyState）：<br>0-未初始化、1-正在初始化、2-发送数据、3-正在发送数据、4-完成。<br>当XMLHttpRequest.readyState为4时，表示ajax请求已经完成可以得到响应结果。<br>ajax的success和error方法根据响应状态码来触发。当XMLHttpRequest.status为200的时候，表示响应成功，此时触发success().其他状态码则触发error()。<br>除了根据响应状态码外，ajax还会在下列情况下走error方法：</p>
+<ol>
+<li>返回数据类型不是JSON</li>
+<li>网络中断</li>
+<li>后台响应中断<br>知道这个知识点有什么用呢？我觉得这个在restful API中定义返回的JSON消息格式是很有用的。</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/31/python命名规范/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/31/python命名规范/" itemprop="url">
+                  python命名规范
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-31T14:37:23+08:00">
+                2017-03-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python开发/" itemprop="url" rel="index">
+                    <span itemprop="name">python开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/03/31/python命名规范/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/31/python命名规范/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/03/31/python命名规范/" class="leancloud_visitors" data-flag-title="python命名规范">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="命名规范"><a href="#命名规范" class="headerlink" title="命名规范"></a>命名规范</h3><h4 id="文件名"><a href="#文件名" class="headerlink" title="文件名"></a>文件名</h4><p>全小写,可使用下划线</p>
+<p>####包<br>应该是简短的、小写的名字。如果下划线可以改善可读性可以加入。如mypackage。</p>
+<h4 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h4><p>与包的规范同。如mymodule。</p>
+<h4 id="类"><a href="#类" class="headerlink" title="类"></a>类</h4><p>总是使用首字母大写单词串。如MyClass。内部类可以使用额外的前导下划线。</p>
+<h4 id="函数-amp-方法"><a href="#函数-amp-方法" class="headerlink" title="函数&amp;方法"></a>函数&amp;方法</h4><p>函数名应该为小写，可以用下划线风格单词以增加可读性。如：myfunction，my_example_function。<br><em>注意</em>：混合大小写仅被允许用于这种风格已经占据优势的时候，以便保持向后兼容。</p>
+<h4 id="函数和方法的参数"><a href="#函数和方法的参数" class="headerlink" title="函数和方法的参数"></a>函数和方法的参数</h4><p>总使用“self”作为实例方法的第一个参数。总使用“cls”作为类方法的第一个参数。<br>如果一个函数的参数名称和保留的关键字冲突，通常使用一个后缀下划线好于使用缩写或奇怪的拼写。</p>
+<h4 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h4><p>对于from M import <em>导入语句，如果想阻止导入模块内的全局变量可以使用旧有的规范，在全局变量上加一个前导的下划线。
+</em>注意*:应避免使用全局变量</p>
+<h4 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h4><p>变量名全部小写，由下划线连接各个单词。如color = WHITE，this_is_a_variable = 1<br><em>注意</em>：<br>1.不论是类成员变量还是全局变量，均不使用 m 或 g 前缀。<br>2.私有类成员使用单一下划线前缀标识，多定义公开成员，少定义私有成员。<br>3.变量名不应带有类型信息，因为Python是动态类型语言。如 iValue、names_list、dict_obj 等都是不好的命名。</p>
+<h4 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h4><p>常量名所有字母大写，由下划线连接各个单词如MAX_OVERFLOW，TOTAL。</p>
+<h4 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h4><p>以“Error”作为后缀。</p>
+<h4 id="缩写"><a href="#缩写" class="headerlink" title="缩写"></a>缩写</h4><p>命名应当尽量使用全拼写的单词，缩写的情况有如下两种：<br>1.常用的缩写，如XML、ID等，在命名时也应只大写首字母，如XmlParser。<br>2.命名中含有长单词，对某个单词进行缩写。这时应使用约定成俗的缩写方式。<br>例如：<br>function 缩写为 fn<br>text 缩写为 txt<br>object 缩写为 obj<br>count 缩写为 cnt<br>number 缩写为 num，等。</p>
+<h4 id="前导后缀下划线"><a href="#前导后缀下划线" class="headerlink" title="前导后缀下划线"></a>前导后缀下划线</h4><p>一个前导下划线：表示非公有。<br>一个后缀下划线：避免关键字冲突。<br>两个前导下划线：当命名一个类属性引起名称冲突时使用。<br>两个前导和后缀下划线：“魔”（有特殊用图）对象或者属性，例如<strong>init</strong>或者<strong>file</strong>。绝对不要创造这样的名字，而只是使用它们。<br><em>注意</em>：关于下划线的使用存在一些争议。</p>
+<p>####特定命名方式<br>主要是指 <strong>xxx</strong> 形式的系统保留字命名法。项目中也可以使用这种命名，它的意义在于这种形式的变量是只读的，这种形式的类成员函数尽量不要重载。如<br>class Base(object):<br>def <strong>init</strong>(self, id, parent = None):<br>self.<strong>id</strong> = id<br>self.<strong>parent</strong> = parent<br>def <strong>message</strong>(self, msgid):</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/30/写点前端/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -586,510 +1060,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/21/glusterfs优化思想/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/21/glusterfs优化思想/" itemprop="url">
-                  glusterfs优化思想
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-21T11:50:25+08:00">
-                2017-03-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/分布式存储/" itemprop="url" rel="index">
-                    <span itemprop="name">分布式存储</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/03/21/glusterfs优化思想/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/21/glusterfs优化思想/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/03/21/glusterfs优化思想/" class="leancloud_visitors" data-flag-title="glusterfs优化思想">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>互联网的触角已融入到生活细节，人们习惯将越来越多的照片、短视频等上传至服务器存储、调用。在互联网(尤其是移动互联网)、物联网、云计算、大数据等高速发展的大背景下，数据呈现爆炸式地增长。“小文件”，特别是海量小文件的存储越来越被人们所需要。<br>业界也有很多文件系统专门针对小文件进行优化的分布式文件系统。例如国外的Facebook专门推出的Haystack，国内淘宝的开源TFS等。针对GlusterFS，作者谈谈如何在Gluster上对海量小文件场景进行优化。<br>问题概述<br>海量小文件，当文件数量达到千万级、亿级、十亿级甚至百亿等，在元数据读写、存储效率等要求越来越高，海量小文件通常是业界的一大难题。<br>通常我们认为文件大小小于1MB的文件为小文件，GlusterFS文件系统他的设计在海量小文件场景有他的优劣，后面将细致分析GlusterFS在这种用户场景下的优劣势，<br>已经如何扬长避短，对小文件进行优化。</p>
-<h3 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h3><p>衡量存储性能主要用两个关键指标，即IOPS和吞吐量（bandwidth）。IOPS（Input/Output per Second）即每秒读写次数，是随机读写主要需要关注的指标；吞吐量指每秒读写的数据<br>量，是顺序大文件读写主要关注的指标。</p>
-<p>一般文件系统对文件的读写操作分成几个阶段，查询（lookup），打开/创建（open/create），读写（read/write），关闭（close）。<br>查询，创建和读写基本上是对磁盘操作，其他操作基本上在内核就OK。而小文件读写，在磁盘表现上基本上是随机读写。</p>
-<h3 id="GlusterFS在小文件操作上的优劣势"><a href="#GlusterFS在小文件操作上的优劣势" class="headerlink" title="GlusterFS在小文件操作上的优劣势"></a>GlusterFS在小文件操作上的优劣势</h3><p>主要是针对GlusterFS本身特点分析在小文件操作上的优劣势。<br>GlusterFS在架构设计上，有一个特色就是metadata跟数据在一起，没有集中式的metadata服务。这个跟业界其他分布式存储上有很大的差别。其他分布式存储，<br>像ceph、hdfs等，都是有独立的metadata服务，管理整个集群中的metadata。这个特点造成GlusterFS有自己的优势，也有劣势。</p>
-<p>（1） 优势<br>·在查找工作时候，在server端会有entry（关于最后落盘文件的元数据和分布）的缓存，这样在open操作时候不需要再操作一次磁盘。而metadata分离的文件系统，<br>查询工作是在metadata服务上进行，要实际open或者读写时候，需要额外去读取一次disk查找落盘文件的元数据和分布情况。<br>·由于metadata和数据结合紧密，理论上，scale out更为线性。添加节点，该节点的所有metadata都在那个节点上。</p>
-<p>（2） 劣势<br>·在进行目录遍历相关操作时候，由于没有集中式的metadata服务，遍历目录，需要遍历所有brick服务相应的目前取出相关的文件列表。<br>并且，由于Gluster默认会使用readdirp操作（readdirp是对readdir扩展操作，在返回时候，会将文件的相关的metadata同时返回，readdir与readdirp区别类似ls与ls -l），<br>这样每次可以返回的entry数量少，交互次数相应更多，导致ls或者find等遍历操作会变成非常慢（这个问题在gluster brick数量多或者文件数量多时候回比较严重）。<br>·Gluster在每一个brick节点都有隐藏目录.glusterfs，这个目录是含本机所有的一般文件的硬链接，和目录等文件的软连接。使得对于后端文件系统的inode数量翻倍。</p>
-<h3 id="优化建议"><a href="#优化建议" class="headerlink" title="优化建议"></a>优化建议</h3><p>从Gluster本身，以及使用方式上来描述如何针对GlusterFS的海量小文件场景进行性能优化。</p>
-<h4 id="Gluster方面"><a href="#Gluster方面" class="headerlink" title="Gluster方面"></a>Gluster方面</h4><p>Gluster Feature<br>Gluster在3.7planning中计划实现对小文件的优化Feature.但是，这个是要DHT 4.0实现，这里DHT 4.0在设计实现阶段。需要在gluster v4上实现的Feature。期待Gluster官方实现这个Feature。<br>撤销lookup-unhash<br>Lookup-unhash配置是在dht上生效的，是指在查找时候，如果在hash所在节点上没有找到相应文件的话，去所有节点上查找一遍。<br>撤销这个配置项，通过如下命令：<br>gluster volume set lookup-unhashed off<br>开启write-behind和flush-behind<br>这两个配置可以开启异步写模式，对于io来说，上层不需要等待太多时间。<br>关闭io-cache，readahead等xlator<br>这些xlator主要是为了大文件设计的，在小文件场景上会有一些性能损耗，需要关闭。</p>
-<h4 id="Brick数量设置"><a href="#Brick数量设置" class="headerlink" title="Brick数量设置"></a>Brick数量设置</h4><p>这一块对于Gluster来说是很重要的事情。Gluster客户端会跟所有brick进程建立链接，当brick数量多了以后，对于客户端连接上会变慢，需要等所有brick连接回应后采用响应。<br>另外，brick数量太少的话，每个brick数据太多，io延时会相应变长。这里需要平衡一下。笔者没有细测，这里需要有一定测试。</p>
-<h4 id="底层文件系统"><a href="#底层文件系统" class="headerlink" title="底层文件系统"></a>底层文件系统</h4><p>底层文件系统推荐使用xfs，这里红帽的测试基本上是基于xfs上测试。另外，xfs的特性更适合小文件系统。<br>另外，如果热数据不多的场景，关闭文件系统的cache，使用cache在海量文件时候，在内存满时候，查找内存是否命中，以及内存的释放上对io性能造成额外的开销。<br>这里，底层文件系统上，可以做一些加速。<br>例如，在明显有热流量的场景下，可以使用flashcache方式，指定合适的策略，对底层文件系统进行加速。</p>
-<h4 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h4><p>目录层级设计<br>目录层级每多一级，对于一次文件的Open行为很可能会多查找一次磁盘。但是目录层级太少，会导致一个目录底下过多的文件，使得同一个目录下面查找相应文件的时间变长。<br>这里建议使用256*256方式，即在底下ab/cd/file。其中ab和cd是指两个两位16进制的数。<br>这里可以在创建好volume以后预先创建好目录结构。<br>另外，在这种情况下，如果要改代码，可以在brick进程即（glusterfsd）上缓存这个目录结构的信息，使得对这个目录结构的查找时候不需要对硬盘过多的操作。</p>
-<h4 id="不使用遍历操作"><a href="#不使用遍历操作" class="headerlink" title="不使用遍历操作"></a>不使用遍历操作</h4><p>理由前文已经说过，对于gluster目前版本的架构来说ls这种遍历操作会对整个文件系统造成很大的开销，以及本身性能很慢。看社区的planning，可以期待在4.0版本上这个有所改善。但是目前情况上还是避免这类型操作。</p>
-<h4 id="小文件聚合"><a href="#小文件聚合" class="headerlink" title="小文件聚合"></a>小文件聚合</h4><p>存储业界对于海量小文件性能调优上，还是将小文件聚合这种方案更为有效。这里需要注意几个限制：这里小文件聚合后上层需要记录好聚合后所在的file和offset等信息，以及这里小文件聚合场景中文件是一次写，后面不做变更，要不然实现起来会有很多劣势。<br>由于gluster尚未实现这种Feature，需要上层应用来实现，或者自己修改gluster代码。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>少brick；<br>少目录结构；<br>少进行find这种操作，进行key/value操作规避小文件过多；</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">cluster.lookup-unhashed: off</div><div class="line">performance.io-thread-count: 24</div><div class="line">auth.allow:10.10.10.10</div><div class="line">transport.address-family: inet</div><div class="line">performance.readdir-ahead: on</div><div class="line">nfs.disable: on</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/20/glusterfs中继器调优/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/20/glusterfs中继器调优/" itemprop="url">
-                  glusterfs中继器调优
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-20T14:45:42+08:00">
-                2017-03-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/分布式存储/" itemprop="url" rel="index">
-                    <span itemprop="name">分布式存储</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/03/20/glusterfs中继器调优/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/20/glusterfs中继器调优/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/03/20/glusterfs中继器调优/" class="leancloud_visitors" data-flag-title="glusterfs中继器调优">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="write-behind（默认on）"><a href="#write-behind（默认on）" class="headerlink" title="write-behind（默认on）"></a>write-behind（默认on）</h3><p>luster volume set test write-behind on</p>
-<p>Write Behind Translator （后写）<br>通常情况下，写操作会比读要慢。通过使用”aggregated background write”技术，write-behind translator 相当显著地改善了写的性能。更确切地说，<br>大量小的写操作被集中起来，形成少量的、大一些的写操作，并且进行后台写处理(non-blocking)。后写方式在client端上聚合了写操作，减小了必须传递的网络包数量。<br>在server端，它帮助服务器优化写的磁盘寻道时间。</p>
-<p>aggregate-size<br>该选项决定了在汇聚写操作之前块的大小。参照你的连接速度、RAM的大小，以及工作负载情况，你可以调整这个值。默认的，该值为128KB，能够比较好的满足大多数应用情况。<br>无限制的增加和减小这个值可能会带来性能上的降低。你可以逐渐调整和分析，慢慢找出一个最优化的结果。</p>
-<p>flush-behind<br>该选项可以直接通过命令 gluster volume set test flush-behind 的形式进行设置，但实际上，该参数是write-behind的一个选项，<br>如果write-behind为off，只设置flush-behind应该是没有意义的。该选项也同样是为了提升处理大量小文件的性能。<br>在这个选项里close()/flush()能够被堆到后台，允许客户端去处理下一个请求。默认值是on。</p>
-<p>注意:<br>通常情况下，protocol translator对于一个请求或者转发的数据包有一个4MB的上限。因此，如果你在client端用了上面的write-behind(大多数会如此)，<br>并且aggregate-size大于4MB，他也不会发出大的数据包。</p>
-<h3 id="read-ahead（默认on）"><a href="#read-ahead（默认on）" class="headerlink" title="read-ahead（默认on）"></a>read-ahead（默认on）</h3><p>gluster volume set test read-ahead on<br>Read Ahead Translator （预读）<br>基于预设值，read-ahead会顺序地预取一些块。当你的应用忙于处理一些数据的时候，GlusterFS能够预读下一批等待处理的数据。<br>这样能够使得读取操作更加流畅和迅速。而且，工作起来像一个读的集合器一样（read-aggregator），也就是说，将大量的、零散的读取操作集合成少量的、<br>大一些的读操作，这样，减小了网络和磁盘的负载。page-size 描述了块的大小。page-count 描述了预读块的总数量。</p>
-<p>注意:<br>这个translator比较适合于应用在IB-verbs transport环境里。在百兆和千兆以太网接口、没有read-ahead的环境下，能够达到这种连接的最高速度。</p>
-<p>gluster volume set test quick-read on</p>
-<p>从描述上看，该选项只对fuse有用，同时，如果文件的大小大于默认的64k，则该选项也不起作用。<br>Translator performance/quick-read</p>
-<p>该中继器用来提高小文件读性能。<br>通过网络对文件系统进行操作开销很大，因此，quick-read使用glusterfs内部get接口来一次执行多个posix系统调用open/read/close，一次get调用包含：一个open调用 + 多个read调用 + 一个close调用。<br>This translator improves performance of read on small files. Over a posix interface, files are read using the apis open, read and close. For a filesystem implemented over a network, the round trip overhead of these calls can be significant. Hence quick-read uses the glusterfs internal get interface to implement posix abstraction of using open/read/close for reading of files there by reducing the number of calls over network from n to 1 where n = no of read calls + 1 (open) + 1 (close).<br>Example:<br>volume quick-read<br>  type performance/quick-read<br>  option cache-timeout nsecs (1 second)<br>  option max-file-size nbytes (64Kb)<br>  subvolumes client<br>end-volume</p>
-<p>cache-timeout<br>缓存失效验证时间，默认值1秒。<br>Timeout for validation of cached file. On timeout stats of the file is compared with that of cached copy. If the file is found to be changed after it is cached, the cache is flushed. The default timeout value is 1 second.<br>max-file-size</p>
-<p>可以使用get接口读取的文件最大值，默认值是64KB。当文件大于该值，则使用标准的open/read/close调用。</p>
-<p>Maximum size of the file that can be fetched using get interface. Files bigger than this are read using the normal open/read/close. Note that this option controls only how quick-read behaves. Irrespective of the value this option, the applications running on glusterfs continue to use the normal open/read/close interface. Default value of this option is 64 kilo bytes.</p>
-<p>glusterfs3.4把quick-read（3.3就这一个translaotr）分解为open-behind和quick-read。原来设计不管操作文件的目的是什么，都要获取真正的fd。重构后，可以根据文件操作目的，如果是修改文件内容，就在后台打开文件并进行操作。如果仅仅是fstat等类似操作，就利用匿名fd来进行，不会等待真正的fd。这样根据操作目的，优化了性能。在lookup时，根据需要设置xdata key，在posix translator层就抓取文件内容。read操作执行到quick-read层时就返回文件内容。</p>
-<h3 id="open-behind（默认on）"><a href="#open-behind（默认on）" class="headerlink" title="open-behind（默认on）"></a>open-behind（默认on）</h3><p>gluster volume set test open-behind on<br>Perform open in the backend only when a necessary FOP arrives (e.g writev on the FD, unlink of the file). When option is disabled, perform backend open right after unwinding open().</p>
-<h3 id="stat-prefetch（默认on）"><a href="#stat-prefetch（默认on）" class="headerlink" title="stat-prefetch（默认on）"></a>stat-prefetch（默认on）</h3><p>即：performance/md-cache<br>gluster volume set test stat-prefetch on<br>meta-data caching translator in the volume。<br>网上有说法：<br>为规避客户端元数据不一致，把客户端的metadata cache禁用，即配置performance.md-cache-timeout 0。<br>有可能正确，待深入分析，暂用默认值。</p>
-<p>force-readdirp参数：<br>Convert all readdir requests to readdirplus to collect stat info on each entry.</p>
-<h3 id="io-threads（默认on，16线程）"><a href="#io-threads（默认on，16线程）" class="headerlink" title="io-threads（默认on，16线程）"></a>io-threads（默认on，16线程）</h3><p>gluster volume set test io-thread-count 16</p>
-<p>IO线程中继(performance/io-threads）属于性能调整中继的一种，作用是增加IO的并发线程，以提高IO性能。<br>IO线程中继试图增加服务器后台进程对文件元数据读写I/O的处理能力。由于GlusterFS服务是单线程的，使用IO线程转换器可以较大的提高性能。这个转换器最好是被用于服务器端，而且是在服务器协议转换器后面被加载。<br>IO线程操作会将读和写操作分成不同的线程。同一时刻存在的总线程是恒定的并且是可以配置的。</p>
-<p>之前GlusterFS Translators v1.3手册对io-threads描述，和当前实现相比可能有出入：<br>AIO增加了异步（后台）读写的功能。通过加载这个translator，你可以利用server的空闲时间去处理新的任务。当server在 DMA方式处理读或者写操作的时候，CPU、内存或者网络并没有被使用。这个translator可以将资源更好的利用起来去处理和增加当前的I/O性能。<br>注意:</p>
-<ol>
-<li>io-threads translator 只有在unify之上或者在Server protocol之下才会有效果。如果在unify和namespace brick之间，因为没有文件io的处理，所以不会有效果。</li>
-<li>‘thread-count’小于或等于你的CPU数量。</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/20/glusterfs中继器/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/20/glusterfs中继器/" itemprop="url">
-                  glusterfs中继器
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-20T14:30:49+08:00">
-                2017-03-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/分布式存储/" itemprop="url" rel="index">
-                    <span itemprop="name">分布式存储</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/03/20/glusterfs中继器/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/20/glusterfs中继器/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/03/20/glusterfs中继器/" class="leancloud_visitors" data-flag-title="glusterfs中继器">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="性能相关中继器"><a href="#性能相关中继器" class="headerlink" title="性能相关中继器"></a>性能相关中继器</h3><p>write-behind, read-ahead, io-cache, quick-read, open-behind, stat-prefetch(md-cache), io-threads(默认server端)<br>以上中继器默认全部开启，symlink-cache默认关闭。<br>NFS相关性能优化中继器<br>默认开启：<br>performance.nfs.write-behind<br>默认关闭：<br>performance.nfs.read-ahead<br>performance.nfs.io-cache<br>performance.nfs.quick-read<br>performance.nfs.stat-prefetch<br>performance.nfs.io-threads<br>performance.force-readdirp</p>
-<p>默认配置中继<br>在./vols/test/test-fuse.vol（客户端）文件中，默认会配置如下中继器：<br>dht和性能相关的write-behind, read-ahead, io-cache, quick-read, open-behind, stat-prefetch(md-cache).</p>
-<p>在./vols/test/test.node1.data-disk3.vol同类（服务器端）文件中，默认会设置如下中继器参数：<br>posix、access-control、locks、io-threads、index、maker</p>
-<h3 id="默认配置信息"><a href="#默认配置信息" class="headerlink" title="默认配置信息"></a>默认配置信息</h3><p>默认配置项值<br>cache-size<br>io-cahce：cache-size：默认32MB<br>Size of the read cache<br>quick-read：cache-size：默认128MB<br>Size of the read cache</p>
-<p>gluster volume set test cache-size 32MB</p>
-<p>该命令导致的cache-size更新包含两个部分，一个是io-cache里对应的cache大小，一个是quick-read里的cache大小。<br>从源代码上看，这两个cache-size对应同一个key，所以会出现一改全改的现象，应该是一个bug。<br>read-ahead：page-count：默认值4<br>key为performance.read-ahead-page-count，可以通过该选项进行设置。<br>gluster volume set test read-ahead-page-count 4<br>Number of pages that will be pre-fetched</p>
-<p>write-behind：”cache-size”或者”window-size”：默认值1MB<br>key为performance.write-behind-window-size，可以通过该选项进行设置。</p>
-<p>gluster volume set test write-behind-window-size 1MB<br>Size of the write-behind buffer for a single file (inode).</p>
-<p>io-threads：thread-count：默认16<br>key：performance.io-thread-count<br>gluster volume set test io-thread-count 16</p>
-<p>Number of threads in IO threads translator which perform concurrent IO operations at a given time</p>
-<p>该配置保存在/vols/test/test.node1.data-disk3.vol同类文件中。<br>md-cache：md-cache-timeout：默认值1（亦stat-prefetch）<br>gluster volume set test md-cache-timeout 1<br>该操作会更改md-cache中继器md-cache-timeout选项的默认值<br>Time period after which cache has to be refreshed<br>io-cache：cache-timeout：默认值1<br>key：performance.cache-refresh-timeout<br>gluster volume set test cache-refresh-timeout 1<br>cache-timeout：The cached data for a file will be retained till ‘cache-refresh-timeout’ seconds, after which data re-validation is performed.</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1130,7 +1105,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">54</span>
+              <span class="site-state-item-count">57</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1138,7 +1113,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1147,7 +1122,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

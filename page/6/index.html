@@ -269,6 +269,476 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/24/python-网络框架介绍/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/24/python-网络框架介绍/" itemprop="url">
+                  python 网络框架介绍
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-24T15:37:38+08:00">
+                2017-02-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python开发/" itemprop="url" rel="index">
+                    <span itemprop="name">python开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/02/24/python-网络框架介绍/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/24/python-网络框架介绍/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/02/24/python-网络框架介绍/" class="leancloud_visitors" data-flag-title="python 网络框架介绍">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Python网络框架的概念"><a href="#Python网络框架的概念" class="headerlink" title="Python网络框架的概念"></a>Python网络框架的概念</h3><p>目前Python编程的网络框架已经多达几十个，逐个学习他们显然不现实。如下文章只介绍框架的常用知识。</p>
+<h4 id="网络框架及MVC架构"><a href="#网络框架及MVC架构" class="headerlink" title="网络框架及MVC架构"></a>网络框架及MVC架构</h4><p>网络框架是指这样的一组python包，它能够使开发者专注于网站应用业务逻辑的开发，而无需处理网络应用底层的协议/线程/进程等方面。<br>好处：能够大大提高开发者开发的效率，同时提高网络应用程序的质量。</p>
+<p>在目前python的几十个开发框架中，几乎所有的全栈网络框架都强制或引导开发者使用MVC架构开发WEB应用。所谓全栈网络框架，是指除了封装网络和<br>线程操作，还提供http栈，数据库读写管理、html模板引擎等一系列功能的网络框架。如django、flask、tornado。而twisted更专注于网络底层的高性能<br>封装而不提供渲染html模板引擎等界面功能，所以不能称之为全栈框架。</p>
+<p>网络上有许多关于MVC的说法，MVC大概把应用系统分为3层。</p>
+<h4 id="模型（model）"><a href="#模型（model）" class="headerlink" title="模型（model）"></a>模型（model）</h4><p>用于封装与应用程序的业务逻辑相关的数据及对数据处理的方法，是web应用程序中用于处理应用程序的数据逻辑部分，model只提供功能性的接口，通过这些接口<br>可以获取model的所有功能。model不依赖于view和controller，它们可以在任何时候调用model访问数据。有些model还提供了事件通知机制，为在其上的注册过的view<br>或者controller提供实时数据更新。</p>
+<h4 id="视图（view）"><a href="#视图（view）" class="headerlink" title="视图（view）"></a>视图（view）</h4><p>负责数据的展示和呈现，view是对用户的直接输出，mvc中的一个modle通常为多个view提供服务。为了获取model的实时更新数据，view应该尽早注册到model中。</p>
+<h4 id="控制器（controller）"><a href="#控制器（controller）" class="headerlink" title="控制器（controller）"></a>控制器（controller）</h4><p>负责从用户端收集用户的输入，可以看成提供View的反向功能。当用户的输入导致view发生变化时，这种变化必须是通过model反映给view的。在mvc架构下，controller一般<br>不能与view直接通信，这样提高了业务数据的一致性，即以model作为数据中心。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/24/python-ORM库介绍/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/24/python-ORM库介绍/" itemprop="url">
+                  python ORM库介绍
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-24T10:53:51+08:00">
+                2017-02-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python开发/" itemprop="url" rel="index">
+                    <span itemprop="name">python开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/02/24/python-ORM库介绍/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/24/python-ORM库介绍/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/02/24/python-ORM库介绍/" class="leancloud_visitors" data-flag-title="python ORM库介绍">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>python中提供orm支持的组件有很多，每个组件的应用领域稍有区别，但是数据操作的理论原理是相同的。下面对比较著名的<br>python数据库的orm框架介绍如下。</p>
+<h3 id="SQLALchemy"><a href="#SQLALchemy" class="headerlink" title="SQLALchemy"></a>SQLALchemy</h3><p>python中最成熟的ORM框架，资源和文档都很丰富。大多数Python web框架都有很好的支持。能够胜任大多数python开发的场合；</p>
+<h3 id="Django-ORM"><a href="#Django-ORM" class="headerlink" title="Django ORM"></a>Django ORM</h3><p>python世界中大名鼎鼎的Django web框架独用的ORM技术。DJANGO是一个大而全的框架，这使得其灵活性大大降低。其他python框架<br>可以随意更换orm，但django不能这样做，因为django内置的model是用django内置orm实现的。</p>
+<h3 id="peewee"><a href="#peewee" class="headerlink" title="peewee"></a>peewee</h3><p>小强灵活，是一个轻量级的ORM。peewee是基于sqlchemy内核开发的，整个框架只有一个文件构成。peewee提供了对多种数据库访问方式，<br>如sqllite/mysql/postsql，适用于功能简单的小型网站。</p>
+<h3 id="storm"><a href="#storm" class="headerlink" title="storm"></a>storm</h3><p>中型的ORM库，比sqlalchem和django等轻量，比peewee更丰富。storm要求开发者编写数据表的DDL代码，而不能直接从数据表定义中自生成表定义。</p>
+<h3 id="sqlobject"><a href="#sqlobject" class="headerlink" title="sqlobject"></a>sqlobject</h3><p>与sqlalchemy相似，也是一套大而全的ORM。sqlobject的特点是其设计借鉴了ruby on rails的ActiveRecord模型，使得熟悉RUBY的开发者能够快速上手。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/24/数据库及oorm/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/24/数据库及oorm/" itemprop="url">
+                  数据库及ORM
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-24T10:53:51+08:00">
+                2017-02-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python开发/" itemprop="url" rel="index">
+                    <span itemprop="name">python开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/02/24/数据库及oorm/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/24/数据库及oorm/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/02/24/数据库及oorm/" class="leancloud_visitors" data-flag-title="数据库及ORM">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="数据库编程"><a href="#数据库编程" class="headerlink" title="数据库编程"></a>数据库编程</h3><p>数据库编程遵循标准：<br>引入python引擎包<br>连接数据库<br>获取游标<br>执行sql命令<br>提交或者回滚事务<br>关闭游标<br>关闭数据库连接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">#引入sqlite3包</div><div class="line">import sqlite3</div><div class="line">conn = sqlite3.connect(&apos;testdb&apos;)</div><div class="line">#获取游标对象</div><div class="line">cur = conn.cursor()</div><div class="line">#执行一系列sql语句</div><div class="line">#建立一个表</div><div class="line">cur.excute(&quot;create table demo(num int,str varchar(20))&quot;)</div><div class="line">#插入一些记录</div><div class="line">cur.excute(&quot;insert into demo values(&apos;%d&apos;,&apos;%s&apos;)&quot; %(1,&apos;aaa&apos;))</div><div class="line">cur.excute(&quot;insert into demo values(&apos;%d&apos;,&apos;%s&apos;)&quot; %(2,&apos;bbb&apos;))</div><div class="line">### 更新一条记录</div><div class="line">cur.excute(&quot;update demo set str=&apos;%s&apos; where num = %d&quot; %(&apos;ddd&apos;,3))</div><div class="line">## 查询语句</div><div class="line">cur.excute(&apos;select * from demo&apos;)</div><div class="line">rows=cur.fetchall()</div><div class="line">print &quot;number of records:&quot;,len(rows)</div><div class="line">for i in rows:</div><div class="line">    print i</div><div class="line">#提交事务</div><div class="line">conn.commit()</div><div class="line">#关闭游标对象</div><div class="line">cur.close()</div><div class="line">#关闭数据库链接</div><div class="line">conn.close()</div></pre></td></tr></table></figure></p>
+<p>由于所有数据库都遵循DB-API的开发接口，不再演示其他数据库编程代码。</p>
+<h3 id="ORM编程"><a href="#ORM编程" class="headerlink" title="ORM编程"></a>ORM编程</h3><p>除了直接引用sql语句操作关系数据库，python中的另一种与关系数据库进行交互的技术是ORM。<br>ORM（object-relatioal mapping，对象关系映射）的作用是在关系数据库和业务实体对象之间做一个映射，这样开发者在操作数据库<br>的数据时，就不需要再去和复杂的sql语句打交道了，只需简单地操作对象的属性和方法。所有的orm必须具备3方面的基本能力：映射技术/CRUD操作和缓存优化。</p>
+<h4 id="映射技术："><a href="#映射技术：" class="headerlink" title="映射技术："></a>映射技术：</h4><p>面向对象是从软件工程的基本原则（如耦合/聚合/封装）的基础上发展而来的。而关系数据库是从数学理论的基础上发展而来的，两套理论存在显著的区别，ORM通过<br>映射机制将两种技术联系起来。每种语言都有自己的ORM。比如java的hibernat/IBATIS；c#的Crove/Linq；python的sqlchemy等；所有这些都满足如下3个映射问题：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">数据类型映射：将数据库的类型映射为编程语言自身的类型。数据类型映射解决了由数据表列类型向编程语言类型转换的问题。</div><div class="line">类映射：将数据表定义映射为编程语言自身的类，这样数据表中的每一条记录就可以映射为一个编程语言自身的对象。</div><div class="line">关系映射: 将数据库中基于外键的关系连接转换为编程语言中基于对象引用的关系连接。例如：sqlchemy中制定relationship（）字段，使开发者能够指定数据表之间的连接关系。</div></pre></td></tr></table></figure></p>
+<h4 id="CRUD操作"><a href="#CRUD操作" class="headerlink" title="CRUD操作"></a>CRUD操作</h4><p>crud操作是数据库处理时增加、读取、更新和删除几个单词的首字母简写。<br>当开发者调用这些函数时，orm自动执行下列操作。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">将这些调用转换为sql语句；</div><div class="line">通过数据库引擎发送给数据库执行；</div><div class="line">将数据库返回的结果记录用orm映射技术转换为类对象。</div></pre></td></tr></table></figure></p>
+<h4 id="缓存优化"><a href="#缓存优化" class="headerlink" title="缓存优化"></a>缓存优化</h4><p>由于数据库操作比较耗时，所以大多数orm提供数据缓存优化的功能。最基本的缓存优化能力如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">将从数据库中查询到的数据以类对象的形式保存在内存中，以便之后再随时提取；</div><div class="line">在真正需要读取查询结果时才执行数据库select操作，而不是在ORM查询命令执行时查询数据库。</div></pre></td></tr></table></figure></p>
+<h4 id="为什么要用ORM"><a href="#为什么要用ORM" class="headerlink" title="为什么要用ORM"></a>为什么要用ORM</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">向开发者屏蔽了数据库细节，使开发者无须与sql语句打交道，提高开发效率；</div><div class="line">便于数据库迁移。优于每种数据库的sql有细微差别，所以基于sql的数据访问层在更换数据库时通常需要花费大量时间调试sql语句；</div><div class="line">应用缓存优化等技术有时可以提高数据库操作的频率。</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/18/python类和对象/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -574,481 +1044,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/01/10/k8s滚动升级/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/10/k8s滚动升级/" itemprop="url">
-                  k8s滚动升级 
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-10T13:58:43+08:00">
-                2017-01-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/容器管理软件/" itemprop="url" rel="index">
-                    <span itemprop="name">容器管理软件</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/01/10/k8s滚动升级/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/10/k8s滚动升级/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/01/10/k8s滚动升级/" class="leancloud_visitors" data-flag-title="k8s滚动升级 ">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>常用命令详解：<br>```<br>kubectl –kubeconfig=/etc/kubernetes/admin.conf get nodes</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/01/05/docker日记/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/05/docker日记/" itemprop="url">
-                  　docker日记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-05T15:07:55+08:00">
-                2017-01-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/docker/" itemprop="url" rel="index">
-                    <span itemprop="name">docker</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/01/05/docker日记/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/05/docker日记/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/01/05/docker日记/" class="leancloud_visitors" data-flag-title="　docker日记">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="why"><a href="#why" class="headerlink" title="why?"></a>why?</h3><p>测试使用过程中发现根分区预警了，查看了下发现是/var/lib太大了，怎么办呢？</p>
-<h3 id="怎么办？"><a href="#怎么办？" class="headerlink" title="怎么办？"></a>怎么办？</h3><p>挂载一个200g的盘到根下面的important.<br>停掉docker服务，然后将数据移动到这个目录下。<br>把/var/lib/docker下的数据移动到/importan/docker下面。</p>
-<p>[root@ucloud-test-bj2c-master1 ~]# cat /etc/fstab </p>
-<p>#</p>
-<h1 id="etc-fstab"><a href="#etc-fstab" class="headerlink" title="/etc/fstab"></a>/etc/fstab</h1><h1 id="Created-by-anaconda-on-Thu-Jul-31-07-50-13-2014"><a href="#Created-by-anaconda-on-Thu-Jul-31-07-50-13-2014" class="headerlink" title="Created by anaconda on Thu Jul 31 07:50:13 2014"></a>Created by anaconda on Thu Jul 31 07:50:13 2014</h1><p>#</p>
-<h1 id="Accessible-filesystems-by-reference-are-maintained-under-‘-dev-disk’"><a href="#Accessible-filesystems-by-reference-are-maintained-under-‘-dev-disk’" class="headerlink" title="Accessible filesystems, by reference, are maintained under ‘/dev/disk’"></a>Accessible filesystems, by reference, are maintained under ‘/dev/disk’</h1><h1 id="See-man-pages-fstab-5-findfs-8-mount-8-and-or-blkid-8-for-more-info"><a href="#See-man-pages-fstab-5-findfs-8-mount-8-and-or-blkid-8-for-more-info" class="headerlink" title="See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info"></a>See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info</h1><p>#<br>/dev/vda1         /                       xfs     errors=remount-ro 0 1<br>/swapfile                none                    swap    defaults        0 0<br>/dev/vdb /data xfs defaults,noatime 0 0<br>/dev/vdc1                 /zhongyao            xfs       defaults     1  2<br>/zhongyao/docker       /var/lib/docker         none      bind          0   0 </p>
-<p>mount  -a<br>重启docker服务。<br>完美解决问题。</p>
-<h3 id="等等，如果我有服务正在跑着怎么办？"><a href="#等等，如果我有服务正在跑着怎么办？" class="headerlink" title="等等，如果我有服务正在跑着怎么办？"></a>等等，如果我有服务正在跑着怎么办？</h3><p>停掉docker进程，然后重启机器。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/01/04/python中classmethond和staticmethod的用法/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/04/python中classmethond和staticmethod的用法/" itemprop="url">
-                  python中classmethond和staticmethod的用法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-04T11:33:24+08:00">
-                2017-01-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python开发/" itemprop="url" rel="index">
-                    <span itemprop="name">python开发</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/01/04/python中classmethond和staticmethod的用法/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/04/python中classmethond和staticmethod的用法/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/01/04/python中classmethond和staticmethod的用法/" class="leancloud_visitors" data-flag-title="python中classmethond和staticmethod的用法">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="先上一个简单的类"><a href="#先上一个简单的类" class="headerlink" title="先上一个简单的类"></a>先上一个简单的类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">#coding:utf-8</div><div class="line">class Kls(object):</div><div class="line">    def __init__(self, data):</div><div class="line">        self.data = data</div><div class="line">    def printd(self):</div><div class="line">        print(self.data)</div><div class="line">ik1 = Kls(&apos;arun&apos;)</div><div class="line">ik2 = Kls(&apos;seema&apos;)</div><div class="line">ik1.printd()</div><div class="line">ik2.printd()</div><div class="line"></div><div class="line">运行结果：</div><div class="line">E:\python\python.exe E:/workspace/test/test.py</div><div class="line">arun</div><div class="line">seema</div></pre></td></tr></table></figure>
-<p>这个类的解释看下图：<br><img src="/images/2017/01/1.png" alt="image"></p>
-<p>1和2参数传递给方法；<br>3 self实例指向当前实例自身，<br>4 我们不需要传递参数给方法，python解释器自己会做这些操作</p>
-<p>如果我们现在想写一些仅仅与类交互而不是和实例交互的方法会怎么样呢？我们可以在类外面写一个简单的方法来做这些，<br>但是这样做就扩散了类代码的关系到类的外面定义，如果像下面这样写就会导致以后代码维护的困难。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#coding:utf-8</div><div class="line">def get_no_of_instances(cls_obj):</div><div class="line">    return cls_obj.no_inst</div><div class="line">class Kls(object):</div><div class="line">    no_inst = 0</div><div class="line">    def __init__(self):</div><div class="line">        Kls.no_inst = Kls.no_inst + 1</div><div class="line">ik1 = Kls()</div><div class="line">ik2 = Kls()</div><div class="line">ik3 = Kls()</div><div class="line">print(get_no_of_instances(Kls))</div></pre></td></tr></table></figure>
-<p>@classmethod<br>我们要写一个只在类中运行而不在实例中运行的方法. 如果我们想让方法不在实例中运行，可以这么做:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">def iget_no_of_instance(ins_obj):</div><div class="line">    return ins_obj.__class__.no_inst</div><div class="line">class Kls(object):</div><div class="line">    no_inst = 0</div><div class="line">    def __init__(self):</div><div class="line">    Kls.no_inst = Kls.no_inst + 1</div><div class="line">ik1 = Kls()</div><div class="line">ik2 = Kls()</div><div class="line">print iget_no_of_instance(ik1)</div></pre></td></tr></table></figure></p>
-<p>在Python2.2以后可以使用@classmethod装饰器来创建类方法.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">class Kls(object):</div><div class="line">    no_inst = 0</div><div class="line">    def __init__(self):</div><div class="line">        Kls.no_inst = Kls.no_inst + 1</div><div class="line">    @classmethod</div><div class="line">    def get_no_of_instance(cls_obj):</div><div class="line">        return cls_obj.no_inst</div><div class="line">ik1 = Kls()</div><div class="line">ik2 = Kls()</div><div class="line">print ik1.get_no_of_instance()</div><div class="line">print Kls.get_no_of_instance()</div></pre></td></tr></table></figure>
-<p>这样的好处是: 不管这个方式是从实例调用还是从类调用，它都用第一个参数把类传递过来.<br>@staticmethod<br>经常有一些跟类有关系的功能但在运行时又不需要实例和类参与的情况下需要用到静态方法.<br>比如更改环境变量或者修改其他类的属性等能用到静态方法. 这种情况可以直接用函数解决, 但这样同样会扩散类内部的代码，造成维护困难.<br>比如这样:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">IND = &apos;ON&apos;</div><div class="line">def checkind():</div><div class="line">    return (IND == &apos;ON&apos;)</div><div class="line">class Kls(object):</div><div class="line">    def __init__(self,data):</div><div class="line">        self.data = data</div><div class="line">    def do_reset(self):</div><div class="line">        if checkind():</div><div class="line">            print(&apos;Reset done for:&apos;, self.data)</div><div class="line">    def set_db(self):</div><div class="line">        if checkind():</div><div class="line">            self.db = &apos;new db connection&apos;</div><div class="line">            print(&apos;DB connection made for:&apos;,self.data)</div><div class="line">ik1 = Kls(12)</div><div class="line">ik1.do_reset()</div><div class="line">ik1.set_db()</div></pre></td></tr></table></figure></p>
-<p>下面这个更全面的代码和图示来展示这两种方法的不同<br>@staticmethod 和 @classmethod的不同.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">class Kls(object):</div><div class="line">    def __init__(self, data):</div><div class="line">        self.data = data</div><div class="line">    def printd(self):</div><div class="line">        print(self.data)</div><div class="line">    @staticmethod</div><div class="line">    def smethod(*arg):</div><div class="line">        print(&apos;Static:&apos;, arg)</div><div class="line">    @classmethod</div><div class="line">    def cmethod(*arg):</div><div class="line">        print(&apos;Class:&apos;, arg)</div><div class="line"></div><div class="line">ik = Kls(23)</div><div class="line">ik.printd()</div><div class="line">ik.smethod()</div><div class="line">ik.cmethod()</div><div class="line">Kls.smethod()</div><div class="line">Kls.cmethod()</div></pre></td></tr></table></figure></p>
-<p>总结下吧 static就是一个静态方法，classmethod是一个类的方法。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1089,7 +1089,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">54</span>
+              <span class="site-state-item-count">57</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1097,7 +1097,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1106,7 +1106,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

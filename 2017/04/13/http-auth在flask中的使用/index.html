@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/04/13/http-auth在flask中的使用/index.html">
 <meta property="og:site_name" content="Zero">
 <meta property="og:description" content="模块安装pip install flask-httpauth如果我们只想我们的web服务器只被用户名是miguel和password是python的用户访问。我们可以按照下面的方式进行配置：123456789101112from flask.ext.httpauth import HTTPBasicAuthauth = HTTPBasicAuth()@auth.get_passworddef ge">
-<meta property="og:updated_time" content="2017-04-13T07:58:15.536Z">
+<meta property="og:updated_time" content="2017-05-08T02:11:50.156Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="httpauth在flask中的使用-">
 <meta name="twitter:description" content="模块安装pip install flask-httpauth如果我们只想我们的web服务器只被用户名是miguel和password是python的用户访问。我们可以按照下面的方式进行配置：123456789101112from flask.ext.httpauth import HTTPBasicAuthauth = HTTPBasicAuth()@auth.get_passworddef ge">
@@ -380,9 +380,6 @@
 <h3 id="url配置"><a href="#url配置" class="headerlink" title="url配置"></a>url配置</h3><p>当认证配置完成之后，将其加到我们需要保护的url下面，通过一个装饰器。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@app.route(&apos;/todo/api/v1.0/tasks&apos;, methods=[&apos;GET&apos;])</div><div class="line">@auth.login_required</div><div class="line">def get_tasks():</div><div class="line">    return jsonify(&#123;&apos;tasks&apos;: tasks&#125;)</div></pre></td></tr></table></figure></p>
 <p>如果我们使用curl来进行访问，像下面这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ curl -i http://localhost:5000/todo/api/v1.0/tasks</div><div class="line">HTTP/1.0 401 UNAUTHORIZED</div><div class="line">Content-Type: application/json</div><div class="line">Content-Length: 36</div><div class="line">WWW-Authenticate: Basic realm=&quot;Authentication Required&quot;</div><div class="line">Server: Werkzeug/0.8.3 Python/2.7.3</div><div class="line">Date: Mon, 20 May 2013 06:41:14 GMT</div><div class="line"></div><div class="line">&#123;</div><div class="line">  &quot;error&quot;: &quot;Unauthorized access&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>要使用此功能，我们必须使用凭证。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">$ curl -u miguel:python -i http://localhost:5000/todo/api/v1.0/tasks</div><div class="line">HTTP/1.0 200 OK</div><div class="line">Content-Type: application/json</div><div class="line">Content-Length: 316</div><div class="line">Server: Werkzeug/0.8.3 Python/2.7.3</div><div class="line">Date: Mon, 20 May 2013 06:46:45 GMT</div><div class="line"></div><div class="line">&#123;</div><div class="line">  &quot;tasks&quot;: [</div><div class="line">    &#123;</div><div class="line">      &quot;title&quot;: &quot;Buy groceries&quot;,</div><div class="line">      &quot;done&quot;: false,</div><div class="line">      &quot;description&quot;: &quot;Milk, Cheese, Pizza, Fruit, Tylenol&quot;,</div><div class="line">      &quot;uri&quot;: &quot;http://localhost:5000/todo/api/v1.0/tasks/1&quot;</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      &quot;title&quot;: &quot;Learn Python&quot;,</div><div class="line">      &quot;done&quot;: false,</div><div class="line">      &quot;description&quot;: &quot;Need to find a good Python tutorial on the web&quot;,</div><div class="line">      &quot;uri&quot;: &quot;http://localhost:5000/todo/api/v1.0/tasks/2&quot;</div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>对于初学者来说，一个真正的Web服务应该由一个真实的数据库支持。我们使用的内存数据结构在功能上非常有限，不应该用于实际应用。<br>可以进行改进的另一个领域是处理多个用户。如果系统支持多个用户，则由客户端发送的身份验证凭据可用于获取用户特定的待办事项列表。</p>
-<p>在这样的系统中，我们将有第二个资源，这将是用户。用户资源上的POST请求将表示为该服务注册的新用户。GET请求将用户信息返回给客户端。<br>提交请求将更新用户信息，可能更新电子邮件地址。删除请求将删除用户帐户。检索任务列表的GET请求可以通过两种方式扩展。首先，这个要求可以随意分<br>页参数，使客户端可以请求列表的一部分。使这个函数更有用的另一种方法是允许按一定的标准过滤。<br>例如，一个客户端可能只想看到完成的任务，或者只使用带有字母A的标题的任务。所有这些元素都可以作为参数添加到URL中。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">from flask import Flask</div><div class="line">from flask.ext.restful import Api, Resource</div><div class="line"></div><div class="line">app = Flask(__name__)</div><div class="line">api = Api(app)</div><div class="line"></div><div class="line">class UserAPI(Resource):</div><div class="line">    def get(self, id):</div><div class="line">        pass</div><div class="line"></div><div class="line">    def put(self, id):</div><div class="line">        pass</div><div class="line"></div><div class="line">    def delete(self, id):</div><div class="line">        pass</div><div class="line"></div><div class="line">api.add_resource(UserAPI, &apos;/users/&lt;int:id&gt;&apos;, endpoint = &apos;user&apos;)</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -520,7 +517,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">54</span>
+              <span class="site-state-item-count">57</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -528,7 +525,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -537,7 +534,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
