@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/05/11/k8s新版本安装/index.html">
 <meta property="og:site_name" content="Zero">
 <meta property="og:description" content="国内镜像源配置docker.repocat &amp;gt;&amp;gt; /etc/yum.repos.d/docker.repo &amp;lt;&amp;lt;EOF[docker-repo]name=Docker Repositorybaseurl=http://mirrors.aliyun.com/docker-engine/yum/repo/main/centos/$releasever/enabled=1gpgc">
-<meta property="og:updated_time" content="2017-05-16T03:23:05.004Z">
+<meta property="og:updated_time" content="2017-05-23T08:23:40.251Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="k8s新版本安装（1.6.2）">
 <meta name="twitter:description" content="国内镜像源配置docker.repocat &amp;gt;&amp;gt; /etc/yum.repos.d/docker.repo &amp;lt;&amp;lt;EOF[docker-repo]name=Docker Repositorybaseurl=http://mirrors.aliyun.com/docker-engine/yum/repo/main/centos/$releasever/enabled=1gpgc">
@@ -393,11 +393,17 @@
 <li><a href="http://10.10.48.162:2380" target="_blank" rel="external">http://10.10.48.162:2380</a></li>
 <li><a href="http://10.10.9.68:2379" target="_blank" rel="external">http://10.10.9.68:2379</a><br>kubernetesVersion: v1.6.2<br>‘’’</li>
 </ul>
+<h3 id="修改docker私服地址"><a href="#修改docker私服地址" class="headerlink" title="修改docker私服地址"></a>修改docker私服地址</h3><p>‘’’<br>cat /usr/lib/systemd/system/docker.service<br>[Unit]<br>Description=Docker Application Container Engine<br>Documentation=<a href="http://docs.docker.com" target="_blank" rel="external">http://docs.docker.com</a><br>After=network.target<br>Wants=docker-storage-setup.service<br>Requires=docker-cleanup.timer</p>
+<p>[Service]<br>Type=notify<br>NotifyAccess=all<br>EnvironmentFile=-/etc/sysconfig/docker<br>EnvironmentFile=-/etc/sysconfig/docker-storage<br>EnvironmentFile=-/etc/sysconfig/docker-network<br>Environment=GOTRACEBACK=crash<br>Environment=DOCKER_HTTP_HOST_COMPAT=1<br>Environment=PATH=/usr/libexec/docker:/usr/bin:/usr/sbin<br>ExecStart=/usr/bin/dockerd-current \<br>          –add-runtime docker-runc=/usr/libexec/docker/docker-runc-current \<br>          –default-runtime=docker-runc \<br>          –exec-opt native.cgroupdriver=systemd \<br>          –userland-proxy-path=/usr/libexec/docker/docker-proxy-current \<br>          –insecure-registry 10.10.132.89 \<br>          $OPTIONS \<br>          $DOCKER_STORAGE_OPTIONS \<br>          $DOCKER_NETWORK_OPTIONS \<br>          $ADD_REGISTRY \<br>          $BLOCK_REGISTRY \<br>          $INSECURE_REGISTRY<br>ExecReload=/bin/kill -s HUP $MAINPID<br>LimitNOFILE=1048576<br>LimitNPROC=1048576<br>LimitCORE=infinity<br>TimeoutStartSec=0<br>Restart=on-abnormal<br>MountFlags=slave</p>
+<p>[Install]<br>WantedBy=multi-user.target<br>‘’’</p>
 <h3 id="按照官方文档准备集群镜像文件："><a href="#按照官方文档准备集群镜像文件：" class="headerlink" title="按照官方文档准备集群镜像文件："></a>按照官方文档准备集群镜像文件：</h3><p>镜像列表如下：<br>‘’’<br>gcr.io/google_containers/kube-proxy-amd64                v1.6.2              7a1b61b8f5d4        3 weeks ago         109.2 MB<br>gcr.io/google_containers/kube-apiserver-amd64            v1.6.2              e14b1d5ee474        3 weeks ago         150.5 MB<br>gcr.io/google_containers/kube-controller-manager-amd64   v1.6.2              c7ad09fe3b82        3 weeks ago         132.7 MB<br>gcr.io/google_containers/kube-scheduler-amd64            v1.6.2              b55f2a2481b9        3 weeks ago         76.76 MB<br>gcr.io/google_containers/etcd-amd64                      3.0.17              243830dae7dd        10 weeks ago        168.9 MB<br>gcr.io/google_containers/kube-discovery-amd64            1.0                 c5e0c9a457fc        7 months ago        134.2 MB<br>gcr.io/google_containers/kubedns-amd64                   1.7                 bec33bc01f03        8 months ago        55.06 MB<br>gcr.io/google_containers/exechealthz-amd64               1.1                 c3a89c92ef5b        9 months ago        8.332 MB<br>gcr.io/google_containers/k8s-dns-sidecar-amd64    1.14.1<br>gcr.io/google_containers/k8s-dns-kube-dns-amd64    1.14.1<br>gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64    1.14.1<br>gcr.io/google_containers/pause-amd64                     3.0                 99e59f495ffa        12 months ago       746.9 kB<br>‘’’<br>进行初始化操作：<br>‘’’<br>systemctl stop kubelet;<br>docker rm -f -v $(docker ps -q);<br>find /var/lib/kubelet | xargs -n 1 findmnt -n -t tmpfs -o TARGET -T | uniq | xargs -r umount -v;<br>rm -r -f /etc/kubernetes /var/lib/kubelet /var/lib/etcd<br>export ECTD_API=3<br>etcdctl get –prefix  /registry/  –only-keys<br>systemctl start kubelet;<br>‘’’<br>kubeadm init –config=k8s_master_config.yaml</p>
 <p>出现token说明Master初始化完成，使用kubeadm初始化的Kubernetes集群在Master节点上的核心组件：kube-apiserver,kube-scheduler,<br>kube-controller-manager是以静态Pod的形式运行的。<br>ls -l /etc/kubernetes/manifests/<br>etcd.yaml<br>kube-apiserver.yaml<br>kube-controller-manager.yaml<br>kube-scheduler.yaml<br>如果想修改kubernetes组件的参数, 可以修改对应组件的yaml配置文件, 然后重启kubelet服务使之生效</p>
 <p>systemctl restart kubelet</p>
 <p>都成功之后运行如下命令，先不要问为什么。<br>sudo cp /etc/kubernetes/admin.conf $HOME/<br>sudo chown $(id -u):$(id -g) $HOME/admin.conf<br>export KUBECONFIG=$HOME/admin.conf</p>
-<h3 id="部署pod-网络"><a href="#部署pod-网络" class="headerlink" title="部署pod 网络"></a>部署pod 网络</h3><h3 id="节点加入到集群"><a href="#节点加入到集群" class="headerlink" title="节点加入到集群"></a>节点加入到集群</h3><p>kubeadm join –token c9b51c.416daf3a9bf8ebcd 10.10.17.59:6443<br>如果忘记token，可以使用如下命令：<br>kubeadm token list</p>
+<h3 id="部署pod-网络"><a href="#部署pod-网络" class="headerlink" title="部署pod 网络"></a>部署pod 网络</h3><p>kubectl  create -f  kube-flannel-rbac.yml<br>kubectl create -f   kube-flannel.yml</p>
+<p>删除网络<br>ip addr del 10.16.0.0/32 dev flannel.1<br>ip addr del 10.16.1.0/32 dev flannel.1</p>
+<p>vim /etc/systemd/system/kubelet.service.d/10-kubeadm.conf<br>Environment=”KUBELET_CGROUP_ARGS=–cgroup-driver=cgroupfs”</p>
+<h3 id="节点加入到集群"><a href="#节点加入到集群" class="headerlink" title="节点加入到集群"></a>节点加入到集群</h3><p>kubeadm join –token c9b51c.416daf3a9bf8ebcd 10.10.17.59:6443<br>如果忘记token，可以使用如下命令：<br>kubeadm token list</p>
 
       
     </div>
@@ -535,7 +541,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">59</span>
+              <span class="site-state-item-count">62</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -543,7 +549,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -552,7 +558,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-count">43</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -607,7 +613,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#国内镜像源配置"><span class="nav-number">1.</span> <span class="nav-text">国内镜像源配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装docker"><span class="nav-number">2.</span> <span class="nav-text">安装docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改系统参数"><span class="nav-number">3.</span> <span class="nav-text">修改系统参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装kubeadm和kubelet"><span class="nav-number">4.</span> <span class="nav-text">安装kubeadm和kubelet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启用kubelet服务"><span class="nav-number">5.</span> <span class="nav-text">启用kubelet服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化集群"><span class="nav-number">6.</span> <span class="nav-text">初始化集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#按照官方文档准备集群镜像文件："><span class="nav-number">7.</span> <span class="nav-text">按照官方文档准备集群镜像文件：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署pod-网络"><span class="nav-number">8.</span> <span class="nav-text">部署pod 网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#节点加入到集群"><span class="nav-number">9.</span> <span class="nav-text">节点加入到集群</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#国内镜像源配置"><span class="nav-number">1.</span> <span class="nav-text">国内镜像源配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装docker"><span class="nav-number">2.</span> <span class="nav-text">安装docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改系统参数"><span class="nav-number">3.</span> <span class="nav-text">修改系统参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装kubeadm和kubelet"><span class="nav-number">4.</span> <span class="nav-text">安装kubeadm和kubelet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启用kubelet服务"><span class="nav-number">5.</span> <span class="nav-text">启用kubelet服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化集群"><span class="nav-number">6.</span> <span class="nav-text">初始化集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改docker私服地址"><span class="nav-number">7.</span> <span class="nav-text">修改docker私服地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#按照官方文档准备集群镜像文件："><span class="nav-number">8.</span> <span class="nav-text">按照官方文档准备集群镜像文件：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署pod-网络"><span class="nav-number">9.</span> <span class="nav-text">部署pod 网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#节点加入到集群"><span class="nav-number">10.</span> <span class="nav-text">节点加入到集群</span></a></li></ol></div>
             
 
           </div>

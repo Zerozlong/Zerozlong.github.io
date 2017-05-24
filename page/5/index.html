@@ -269,6 +269,505 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/21/glusterfs优化思想/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/21/glusterfs优化思想/" itemprop="url">
+                  glusterfs优化思想
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-21T11:50:25+08:00">
+                2017-03-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/分布式存储/" itemprop="url" rel="index">
+                    <span itemprop="name">分布式存储</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/03/21/glusterfs优化思想/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/21/glusterfs优化思想/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/03/21/glusterfs优化思想/" class="leancloud_visitors" data-flag-title="glusterfs优化思想">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>互联网的触角已融入到生活细节，人们习惯将越来越多的照片、短视频等上传至服务器存储、调用。在互联网(尤其是移动互联网)、物联网、云计算、大数据等高速发展的大背景下，数据呈现爆炸式地增长。“小文件”，特别是海量小文件的存储越来越被人们所需要。<br>业界也有很多文件系统专门针对小文件进行优化的分布式文件系统。例如国外的Facebook专门推出的Haystack，国内淘宝的开源TFS等。针对GlusterFS，作者谈谈如何在Gluster上对海量小文件场景进行优化。<br>问题概述<br>海量小文件，当文件数量达到千万级、亿级、十亿级甚至百亿等，在元数据读写、存储效率等要求越来越高，海量小文件通常是业界的一大难题。<br>通常我们认为文件大小小于1MB的文件为小文件，GlusterFS文件系统他的设计在海量小文件场景有他的优劣，后面将细致分析GlusterFS在这种用户场景下的优劣势，<br>已经如何扬长避短，对小文件进行优化。</p>
+<h3 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h3><p>衡量存储性能主要用两个关键指标，即IOPS和吞吐量（bandwidth）。IOPS（Input/Output per Second）即每秒读写次数，是随机读写主要需要关注的指标；吞吐量指每秒读写的数据<br>量，是顺序大文件读写主要关注的指标。</p>
+<p>一般文件系统对文件的读写操作分成几个阶段，查询（lookup），打开/创建（open/create），读写（read/write），关闭（close）。<br>查询，创建和读写基本上是对磁盘操作，其他操作基本上在内核就OK。而小文件读写，在磁盘表现上基本上是随机读写。</p>
+<h3 id="GlusterFS在小文件操作上的优劣势"><a href="#GlusterFS在小文件操作上的优劣势" class="headerlink" title="GlusterFS在小文件操作上的优劣势"></a>GlusterFS在小文件操作上的优劣势</h3><p>主要是针对GlusterFS本身特点分析在小文件操作上的优劣势。<br>GlusterFS在架构设计上，有一个特色就是metadata跟数据在一起，没有集中式的metadata服务。这个跟业界其他分布式存储上有很大的差别。其他分布式存储，<br>像ceph、hdfs等，都是有独立的metadata服务，管理整个集群中的metadata。这个特点造成GlusterFS有自己的优势，也有劣势。</p>
+<p>（1） 优势<br>·在查找工作时候，在server端会有entry（关于最后落盘文件的元数据和分布）的缓存，这样在open操作时候不需要再操作一次磁盘。而metadata分离的文件系统，<br>查询工作是在metadata服务上进行，要实际open或者读写时候，需要额外去读取一次disk查找落盘文件的元数据和分布情况。<br>·由于metadata和数据结合紧密，理论上，scale out更为线性。添加节点，该节点的所有metadata都在那个节点上。</p>
+<p>（2） 劣势<br>·在进行目录遍历相关操作时候，由于没有集中式的metadata服务，遍历目录，需要遍历所有brick服务相应的目前取出相关的文件列表。<br>并且，由于Gluster默认会使用readdirp操作（readdirp是对readdir扩展操作，在返回时候，会将文件的相关的metadata同时返回，readdir与readdirp区别类似ls与ls -l），<br>这样每次可以返回的entry数量少，交互次数相应更多，导致ls或者find等遍历操作会变成非常慢（这个问题在gluster brick数量多或者文件数量多时候回比较严重）。<br>·Gluster在每一个brick节点都有隐藏目录.glusterfs，这个目录是含本机所有的一般文件的硬链接，和目录等文件的软连接。使得对于后端文件系统的inode数量翻倍。</p>
+<h3 id="优化建议"><a href="#优化建议" class="headerlink" title="优化建议"></a>优化建议</h3><p>从Gluster本身，以及使用方式上来描述如何针对GlusterFS的海量小文件场景进行性能优化。</p>
+<h4 id="Gluster方面"><a href="#Gluster方面" class="headerlink" title="Gluster方面"></a>Gluster方面</h4><p>Gluster Feature<br>Gluster在3.7planning中计划实现对小文件的优化Feature.但是，这个是要DHT 4.0实现，这里DHT 4.0在设计实现阶段。需要在gluster v4上实现的Feature。期待Gluster官方实现这个Feature。<br>撤销lookup-unhash<br>Lookup-unhash配置是在dht上生效的，是指在查找时候，如果在hash所在节点上没有找到相应文件的话，去所有节点上查找一遍。<br>撤销这个配置项，通过如下命令：<br>gluster volume set lookup-unhashed off<br>开启write-behind和flush-behind<br>这两个配置可以开启异步写模式，对于io来说，上层不需要等待太多时间。<br>关闭io-cache，readahead等xlator<br>这些xlator主要是为了大文件设计的，在小文件场景上会有一些性能损耗，需要关闭。</p>
+<h4 id="Brick数量设置"><a href="#Brick数量设置" class="headerlink" title="Brick数量设置"></a>Brick数量设置</h4><p>这一块对于Gluster来说是很重要的事情。Gluster客户端会跟所有brick进程建立链接，当brick数量多了以后，对于客户端连接上会变慢，需要等所有brick连接回应后采用响应。<br>另外，brick数量太少的话，每个brick数据太多，io延时会相应变长。这里需要平衡一下。笔者没有细测，这里需要有一定测试。</p>
+<h4 id="底层文件系统"><a href="#底层文件系统" class="headerlink" title="底层文件系统"></a>底层文件系统</h4><p>底层文件系统推荐使用xfs，这里红帽的测试基本上是基于xfs上测试。另外，xfs的特性更适合小文件系统。<br>另外，如果热数据不多的场景，关闭文件系统的cache，使用cache在海量文件时候，在内存满时候，查找内存是否命中，以及内存的释放上对io性能造成额外的开销。<br>这里，底层文件系统上，可以做一些加速。<br>例如，在明显有热流量的场景下，可以使用flashcache方式，指定合适的策略，对底层文件系统进行加速。</p>
+<h4 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h4><p>目录层级设计<br>目录层级每多一级，对于一次文件的Open行为很可能会多查找一次磁盘。但是目录层级太少，会导致一个目录底下过多的文件，使得同一个目录下面查找相应文件的时间变长。<br>这里建议使用256*256方式，即在底下ab/cd/file。其中ab和cd是指两个两位16进制的数。<br>这里可以在创建好volume以后预先创建好目录结构。<br>另外，在这种情况下，如果要改代码，可以在brick进程即（glusterfsd）上缓存这个目录结构的信息，使得对这个目录结构的查找时候不需要对硬盘过多的操作。</p>
+<h4 id="不使用遍历操作"><a href="#不使用遍历操作" class="headerlink" title="不使用遍历操作"></a>不使用遍历操作</h4><p>理由前文已经说过，对于gluster目前版本的架构来说ls这种遍历操作会对整个文件系统造成很大的开销，以及本身性能很慢。看社区的planning，可以期待在4.0版本上这个有所改善。但是目前情况上还是避免这类型操作。</p>
+<h4 id="小文件聚合"><a href="#小文件聚合" class="headerlink" title="小文件聚合"></a>小文件聚合</h4><p>存储业界对于海量小文件性能调优上，还是将小文件聚合这种方案更为有效。这里需要注意几个限制：这里小文件聚合后上层需要记录好聚合后所在的file和offset等信息，以及这里小文件聚合场景中文件是一次写，后面不做变更，要不然实现起来会有很多劣势。<br>由于gluster尚未实现这种Feature，需要上层应用来实现，或者自己修改gluster代码。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>少brick；<br>少目录结构；<br>少进行find这种操作，进行key/value操作规避小文件过多；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">cluster.lookup-unhashed: off</div><div class="line">performance.io-thread-count: 24</div><div class="line">auth.allow:10.10.10.10</div><div class="line">transport.address-family: inet</div><div class="line">performance.readdir-ahead: on</div><div class="line">nfs.disable: on</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/20/glusterfs中继器调优/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/20/glusterfs中继器调优/" itemprop="url">
+                  glusterfs中继器调优
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-20T14:45:42+08:00">
+                2017-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/分布式存储/" itemprop="url" rel="index">
+                    <span itemprop="name">分布式存储</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/03/20/glusterfs中继器调优/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/20/glusterfs中继器调优/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/03/20/glusterfs中继器调优/" class="leancloud_visitors" data-flag-title="glusterfs中继器调优">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="write-behind（默认on）"><a href="#write-behind（默认on）" class="headerlink" title="write-behind（默认on）"></a>write-behind（默认on）</h3><p>luster volume set test write-behind on</p>
+<p>Write Behind Translator （后写）<br>通常情况下，写操作会比读要慢。通过使用”aggregated background write”技术，write-behind translator 相当显著地改善了写的性能。更确切地说，<br>大量小的写操作被集中起来，形成少量的、大一些的写操作，并且进行后台写处理(non-blocking)。后写方式在client端上聚合了写操作，减小了必须传递的网络包数量。<br>在server端，它帮助服务器优化写的磁盘寻道时间。</p>
+<p>aggregate-size<br>该选项决定了在汇聚写操作之前块的大小。参照你的连接速度、RAM的大小，以及工作负载情况，你可以调整这个值。默认的，该值为128KB，能够比较好的满足大多数应用情况。<br>无限制的增加和减小这个值可能会带来性能上的降低。你可以逐渐调整和分析，慢慢找出一个最优化的结果。</p>
+<p>flush-behind<br>该选项可以直接通过命令 gluster volume set test flush-behind 的形式进行设置，但实际上，该参数是write-behind的一个选项，<br>如果write-behind为off，只设置flush-behind应该是没有意义的。该选项也同样是为了提升处理大量小文件的性能。<br>在这个选项里close()/flush()能够被堆到后台，允许客户端去处理下一个请求。默认值是on。</p>
+<p>注意:<br>通常情况下，protocol translator对于一个请求或者转发的数据包有一个4MB的上限。因此，如果你在client端用了上面的write-behind(大多数会如此)，<br>并且aggregate-size大于4MB，他也不会发出大的数据包。</p>
+<h3 id="read-ahead（默认on）"><a href="#read-ahead（默认on）" class="headerlink" title="read-ahead（默认on）"></a>read-ahead（默认on）</h3><p>gluster volume set test read-ahead on<br>Read Ahead Translator （预读）<br>基于预设值，read-ahead会顺序地预取一些块。当你的应用忙于处理一些数据的时候，GlusterFS能够预读下一批等待处理的数据。<br>这样能够使得读取操作更加流畅和迅速。而且，工作起来像一个读的集合器一样（read-aggregator），也就是说，将大量的、零散的读取操作集合成少量的、<br>大一些的读操作，这样，减小了网络和磁盘的负载。page-size 描述了块的大小。page-count 描述了预读块的总数量。</p>
+<p>注意:<br>这个translator比较适合于应用在IB-verbs transport环境里。在百兆和千兆以太网接口、没有read-ahead的环境下，能够达到这种连接的最高速度。</p>
+<p>gluster volume set test quick-read on</p>
+<p>从描述上看，该选项只对fuse有用，同时，如果文件的大小大于默认的64k，则该选项也不起作用。<br>Translator performance/quick-read</p>
+<p>该中继器用来提高小文件读性能。<br>通过网络对文件系统进行操作开销很大，因此，quick-read使用glusterfs内部get接口来一次执行多个posix系统调用open/read/close，一次get调用包含：一个open调用 + 多个read调用 + 一个close调用。<br>This translator improves performance of read on small files. Over a posix interface, files are read using the apis open, read and close. For a filesystem implemented over a network, the round trip overhead of these calls can be significant. Hence quick-read uses the glusterfs internal get interface to implement posix abstraction of using open/read/close for reading of files there by reducing the number of calls over network from n to 1 where n = no of read calls + 1 (open) + 1 (close).<br>Example:<br>volume quick-read<br>  type performance/quick-read<br>  option cache-timeout nsecs (1 second)<br>  option max-file-size nbytes (64Kb)<br>  subvolumes client<br>end-volume</p>
+<p>cache-timeout<br>缓存失效验证时间，默认值1秒。<br>Timeout for validation of cached file. On timeout stats of the file is compared with that of cached copy. If the file is found to be changed after it is cached, the cache is flushed. The default timeout value is 1 second.<br>max-file-size</p>
+<p>可以使用get接口读取的文件最大值，默认值是64KB。当文件大于该值，则使用标准的open/read/close调用。</p>
+<p>Maximum size of the file that can be fetched using get interface. Files bigger than this are read using the normal open/read/close. Note that this option controls only how quick-read behaves. Irrespective of the value this option, the applications running on glusterfs continue to use the normal open/read/close interface. Default value of this option is 64 kilo bytes.</p>
+<p>glusterfs3.4把quick-read（3.3就这一个translaotr）分解为open-behind和quick-read。原来设计不管操作文件的目的是什么，都要获取真正的fd。重构后，可以根据文件操作目的，如果是修改文件内容，就在后台打开文件并进行操作。如果仅仅是fstat等类似操作，就利用匿名fd来进行，不会等待真正的fd。这样根据操作目的，优化了性能。在lookup时，根据需要设置xdata key，在posix translator层就抓取文件内容。read操作执行到quick-read层时就返回文件内容。</p>
+<h3 id="open-behind（默认on）"><a href="#open-behind（默认on）" class="headerlink" title="open-behind（默认on）"></a>open-behind（默认on）</h3><p>gluster volume set test open-behind on<br>Perform open in the backend only when a necessary FOP arrives (e.g writev on the FD, unlink of the file). When option is disabled, perform backend open right after unwinding open().</p>
+<h3 id="stat-prefetch（默认on）"><a href="#stat-prefetch（默认on）" class="headerlink" title="stat-prefetch（默认on）"></a>stat-prefetch（默认on）</h3><p>即：performance/md-cache<br>gluster volume set test stat-prefetch on<br>meta-data caching translator in the volume。<br>网上有说法：<br>为规避客户端元数据不一致，把客户端的metadata cache禁用，即配置performance.md-cache-timeout 0。<br>有可能正确，待深入分析，暂用默认值。</p>
+<p>force-readdirp参数：<br>Convert all readdir requests to readdirplus to collect stat info on each entry.</p>
+<h3 id="io-threads（默认on，16线程）"><a href="#io-threads（默认on，16线程）" class="headerlink" title="io-threads（默认on，16线程）"></a>io-threads（默认on，16线程）</h3><p>gluster volume set test io-thread-count 16</p>
+<p>IO线程中继(performance/io-threads）属于性能调整中继的一种，作用是增加IO的并发线程，以提高IO性能。<br>IO线程中继试图增加服务器后台进程对文件元数据读写I/O的处理能力。由于GlusterFS服务是单线程的，使用IO线程转换器可以较大的提高性能。这个转换器最好是被用于服务器端，而且是在服务器协议转换器后面被加载。<br>IO线程操作会将读和写操作分成不同的线程。同一时刻存在的总线程是恒定的并且是可以配置的。</p>
+<p>之前GlusterFS Translators v1.3手册对io-threads描述，和当前实现相比可能有出入：<br>AIO增加了异步（后台）读写的功能。通过加载这个translator，你可以利用server的空闲时间去处理新的任务。当server在 DMA方式处理读或者写操作的时候，CPU、内存或者网络并没有被使用。这个translator可以将资源更好的利用起来去处理和增加当前的I/O性能。<br>注意:</p>
+<ol>
+<li>io-threads translator 只有在unify之上或者在Server protocol之下才会有效果。如果在unify和namespace brick之间，因为没有文件io的处理，所以不会有效果。</li>
+<li>‘thread-count’小于或等于你的CPU数量。</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/20/glusterfs中继器/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/20/glusterfs中继器/" itemprop="url">
+                  glusterfs中继器
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-20T14:30:49+08:00">
+                2017-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/分布式存储/" itemprop="url" rel="index">
+                    <span itemprop="name">分布式存储</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/03/20/glusterfs中继器/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/20/glusterfs中继器/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/03/20/glusterfs中继器/" class="leancloud_visitors" data-flag-title="glusterfs中继器">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="性能相关中继器"><a href="#性能相关中继器" class="headerlink" title="性能相关中继器"></a>性能相关中继器</h3><p>write-behind, read-ahead, io-cache, quick-read, open-behind, stat-prefetch(md-cache), io-threads(默认server端)<br>以上中继器默认全部开启，symlink-cache默认关闭。<br>NFS相关性能优化中继器<br>默认开启：<br>performance.nfs.write-behind<br>默认关闭：<br>performance.nfs.read-ahead<br>performance.nfs.io-cache<br>performance.nfs.quick-read<br>performance.nfs.stat-prefetch<br>performance.nfs.io-threads<br>performance.force-readdirp</p>
+<p>默认配置中继<br>在./vols/test/test-fuse.vol（客户端）文件中，默认会配置如下中继器：<br>dht和性能相关的write-behind, read-ahead, io-cache, quick-read, open-behind, stat-prefetch(md-cache).</p>
+<p>在./vols/test/test.node1.data-disk3.vol同类（服务器端）文件中，默认会设置如下中继器参数：<br>posix、access-control、locks、io-threads、index、maker</p>
+<h3 id="默认配置信息"><a href="#默认配置信息" class="headerlink" title="默认配置信息"></a>默认配置信息</h3><p>默认配置项值<br>cache-size<br>io-cahce：cache-size：默认32MB<br>Size of the read cache<br>quick-read：cache-size：默认128MB<br>Size of the read cache</p>
+<p>gluster volume set test cache-size 32MB</p>
+<p>该命令导致的cache-size更新包含两个部分，一个是io-cache里对应的cache大小，一个是quick-read里的cache大小。<br>从源代码上看，这两个cache-size对应同一个key，所以会出现一改全改的现象，应该是一个bug。<br>read-ahead：page-count：默认值4<br>key为performance.read-ahead-page-count，可以通过该选项进行设置。<br>gluster volume set test read-ahead-page-count 4<br>Number of pages that will be pre-fetched</p>
+<p>write-behind：”cache-size”或者”window-size”：默认值1MB<br>key为performance.write-behind-window-size，可以通过该选项进行设置。</p>
+<p>gluster volume set test write-behind-window-size 1MB<br>Size of the write-behind buffer for a single file (inode).</p>
+<p>io-threads：thread-count：默认16<br>key：performance.io-thread-count<br>gluster volume set test io-thread-count 16</p>
+<p>Number of threads in IO threads translator which perform concurrent IO operations at a given time</p>
+<p>该配置保存在/vols/test/test.node1.data-disk3.vol同类文件中。<br>md-cache：md-cache-timeout：默认值1（亦stat-prefetch）<br>gluster volume set test md-cache-timeout 1<br>该操作会更改md-cache中继器md-cache-timeout选项的默认值<br>Time period after which cache has to be refreshed<br>io-cache：cache-timeout：默认值1<br>key：performance.cache-refresh-timeout<br>gluster volume set test cache-refresh-timeout 1<br>cache-timeout：The cached data for a file will be retained till ‘cache-refresh-timeout’ seconds, after which data re-validation is performed.</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/20/glusterfs调优/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -590,533 +1089,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/14/SQLALchemy-查询篇/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/14/SQLALchemy-查询篇/" itemprop="url">
-                  SQLALchemy-查询篇
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-14T11:43:36+08:00">
-                2017-03-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python开发/" itemprop="url" rel="index">
-                    <span itemprop="name">python开发</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/03/14/SQLALchemy-查询篇/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/14/SQLALchemy-查询篇/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/03/14/SQLALchemy-查询篇/" class="leancloud_visitors" data-flag-title="SQLALchemy-查询篇">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="ORM简介"><a href="#ORM简介" class="headerlink" title="ORM简介"></a>ORM简介</h3><p>似乎ORM最难设计的部分是查询。特别是面向对象的查询，总结下SQLAlchemy，<br>发现SQLAlchemy的查询语法竟如此灵活，惊叹其如此强大的表达能力的同时也对Python也有了更深的认识。下面看一下我写的一些查询语句：<br>Python代码:</p>
-<h3 id="简单查询"><a href="#简单查询" class="headerlink" title="简单查询"></a>简单查询</h3><p>注意User是一个类对象,user_table是数据库中的表<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">print(session.query(User).all())</div><div class="line">---相当于SQL语句---&gt;</div><div class="line">select * from user_table</div><div class="line"> </div><div class="line">print(session.query(User.name,User.fullname.all()))</div><div class="line">---相当于SQL语句---&gt;</div><div class="line">select user_table.name,user_table.fullname from user_table</div><div class="line"> </div><div class="line">print(session.query(User,user.name).all())</div><div class="line">---相当于SQL语句---&gt;</div><div class="line">select user_table.name from user_table</div></pre></td></tr></table></figure></p>
-<h3 id="条件查询"><a href="#条件查询" class="headerlink" title="条件查询"></a>条件查询</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">print (session.query(User).filter_by(name=&apos;user1).all())</div><div class="line">---相当于SQL语句---&gt;</div><div class="line">select * from user_table where name = &apos;user1&apos;</div><div class="line">print (session.query(User).filter(User.name == &quot;user).all())</div><div class="line">---相当于SQL语句---&gt;</div><div class="line">select * from user_table where user_table.name = user</div><div class="line">print (session.query(User).filter(User.name.like(&quot;user%&quot;)).all())</div><div class="line">---相当于SQL语句---&gt;</div><div class="line">select * from user_table where user_table.name like user%</div></pre></td></tr></table></figure>
-<h3 id="多条件查询"><a href="#多条件查询" class="headerlink" title="多条件查询"></a>多条件查询</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">print (session.query(User).filter(and_(User.name.like(&quot;user),User.fullname.like(&quot;first%&quot;))).all()</div><div class="line">---相当于SQL语句---&gt;</div><div class="line">select * from user_table where user_table.name like %user and user_table.fullname like first%</div><div class="line">print(session.query(User).filter(or_(User.name.like(&quot;user%),User.password != None)).all()</div><div class="line">---相当于SQL语句---&gt;</div><div class="line">select * from user_table where user_table.name = user% or user_table.password != none</div></pre></td></tr></table></figure>
-<h3 id="sql过滤"><a href="#sql过滤" class="headerlink" title="sql过滤"></a>sql过滤</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(session(User).filter(&quot;id&gt;:id&quot;).params(id=1).all()</div><div class="line">---相当于SQL语句---&gt;</div><div class="line">select * from user_table where user_table.id &gt; 1</div></pre></td></tr></table></figure>
-<h3 id="关联查询"><a href="#关联查询" class="headerlink" title="关联查询"></a>关联查询</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">print(session.query(User,Address).filter(User.id == Address.user_id).all()</div><div class="line">---相当于SQL语句---&gt;</div><div class="line">select * from user_table,address_table where user_table.id == address.user_id</div><div class="line">print (session.query(User).jion(User.address).all()</div><div class="line">---相当于SQL语句---&gt;</div><div class="line">********************</div><div class="line">print (session.query(User).outerjoin(User.address).all())</div><div class="line">*******************</div></pre></td></tr></table></figure>
-<h3 id="聚合查询"><a href="#聚合查询" class="headerlink" title="聚合查询"></a>聚合查询</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">print(session.query(User.name,func.count(&apos;*&apos;).label(&quot;user_count)).group_by(User.name).all())</div><div class="line">---相当于SQL语句---&gt;</div><div class="line">select count(user_table.name) as user_count from user_table where group by(user_table.name)</div><div class="line"> </div><div class="line">print(session.query(User.name,func.sum(User.id).label(&quot;user_id_sum&quot;)).group_by(User.name).all())</div><div class="line">---相当于SQL语句---&gt;</div><div class="line">select user_table.name,sum(user_table.id)  from user_table where group by(user_table.name)</div></pre></td></tr></table></figure>
-<h3 id="子查询"><a href="#子查询" class="headerlink" title="子查询"></a>子查询</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">stmt = session.query(Address.user_id,func.count(&apos;*&apos;).label(&quot;address_count&quot;).group by(Address.user_id).subquery()</div><div class="line">print (session.query(User,stmt.c.address_count).outjion((stmt,User.id == stmt.c.user_id.order_by(User_id).all()</div><div class="line">exits</div><div class="line">print (session.query(User).filter(exists().where(Address.user_id == User.id)))</div><div class="line">print (session.query(User).filter(User.addresses.any()))</div></pre></td></tr></table></figure>
-<p>SQLALcheme官方教程地址：<br><a href="http://docs.sqlalchemy.org/en/latest/orm/mapping_api.html" target="_blank" rel="external">http://docs.sqlalchemy.org/en/latest/orm/mapping_api.html</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/01/celery/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/01/celery/" itemprop="url">
-                  celery入门
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-01T10:28:35+08:00">
-                2017-03-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python开发/" itemprop="url" rel="index">
-                    <span itemprop="name">python开发</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/03/01/celery/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/01/celery/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/03/01/celery/" class="leancloud_visitors" data-flag-title="celery入门">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="celery简介"><a href="#celery简介" class="headerlink" title="celery简介"></a>celery简介</h3><p>Celery 是一个简单、灵活且可靠的，处理大量消息的分布式系统，并且提供维护这样一个系统的必需工具。<br>它是一个专注于实时处理的任务队列，同时也支持任务调度。Celery 是开源的，使用 BSD 许可证 授权。<br>Celery 是一个“自带电池”的的任务队列。它易于使用，所以你可以无视其所解决问题的复杂程度而轻松入门。它遵照最佳实践设计，所以你的产品可以扩展，或与其他语言集成，并且它自带了在生产环境中运行这样一个系统所需的工具和支持。<br>在此教程中，你会了解使用 Celery 的最基础部分。包括：<br>选择和安装消息传输方式（中间人）。<br>安装 Celery 并创建第一个任务<br>运行职程并调用任务。<br>追踪任务在不同状态间的迁移，并检视返回值。</p>
-<h3 id="celery使用场景"><a href="#celery使用场景" class="headerlink" title="celery使用场景"></a>celery使用场景</h3><ol>
-<li>Web应用。当用户触发的一个操作需要较长时间才能执行完成时，可以把它作为任务交给Celery去异步执行，执行完再返回给用户。<br>这段时间用户不需要等待，提高了网站的整体吞吐量和响应时间。</li>
-<li>定时任务。生产环境经常会跑一些定时任务。假如你有上千台的服务器、上千种任务，定时任务的管理很困难，Celery可以帮助我们<br>快速在不同的机器设定不同种任务。</li>
-<li>同步完成的附加工作都可以异步完成。比如发送短信/邮件、推送消息、清理/设置缓存等。</li>
-</ol>
-<h3 id="celery特性"><a href="#celery特性" class="headerlink" title="celery特性"></a>celery特性</h3><p>Celery还提供了如下的特性：</p>
-<ol>
-<li>方便地查看定时任务的执行情况，比如执行是否成功、当前状态、执行任务花费的时间等。</li>
-<li>可以使用功能齐备的管理后台或者命令行添加、更新、删除任务。</li>
-<li>方便把任务和配置管理相关联。</li>
-<li>可选多进程、Eventlet和Gevent三种模式并发执行。</li>
-<li>提供错误处理机制。</li>
-</ol>
-<ul>
-<li>提供多种任务原语，方便实现任务分组、拆分和调用链。</li>
-<li>支持多种消息代理和存储后端。</li>
-</ul>
-<h3 id="celery的架构"><a href="#celery的架构" class="headerlink" title="celery的架构"></a>celery的架构</h3><ol>
-<li>Celery Beat：任务调度器，Beat进程会读取配置文件的内容，周期性地将配置中到期需要执行的任务发送给任务队列。</li>
-<li>Celery Worker：执行任务的消费者，通常会在多台服务器运行多个消费者来提高执行效率。</li>
-<li>Broker：消息代理，或者叫作消息中间件，接受任务生产者发送过来的任务消息，存进队列再按序分发给任务消费方（通常是消息队列或者数据库）。</li>
-<li>Producer：调用了Celery提供的API、函数或者装饰器而产生任务并交给任务队列处理的都是任务生产者。</li>
-<li>Result Backend：任务处理完后保存状态信息和结果，以供查询。Celery默认已支持Redis、RabbitMQ、MongoDB、Django ORM、SQLAlchemy等方式。<br>celery的架构图如下所示：</li>
-</ol>
-<p>任务发布者(producer)               任务调度(celery beat)<br>          消息代理(broker)<br>任务消费者                 任务消费者       任务消费者<br>（celery worker）<br>                 存储结果</p>
-<h3 id="消息代理"><a href="#消息代理" class="headerlink" title="消息代理"></a>消息代理</h3><p>Celery目前支持RabbitMQ、Redis、MongoDB、Beanstalk、SQLAlchemy、Zookeeper等作为消息代理，<br>但适用于生产环境的只有RabbitMQ和Redis，至于其他的方式，一是支持有限，二是可能得不到更好的技术支持。</p>
-<p>Celery官方推荐的是RabbitMQ，Celery的作者Ask Solem Hoel最初在VMware就是为RabbitMQ工作的，Celery最初的设计就是基于RabbitMQ，<br>所以使用RabbitMQ会非常稳定，成功案例很多。如果使用Redis，则需要能接受发生突然断电之类的问题造成Redis突然终止后的数据丢失等后果。</p>
-<h3 id="celery序列化"><a href="#celery序列化" class="headerlink" title="celery序列化"></a>celery序列化</h3><p>在客户端和消费者之间传输数据需要序列化和反序列化，Celery支持如下所示的序列化方案：<br>1、pickle<br>2、json<br>3、yaml<br>4、msgpack</p>
-<h3 id="为了提供更高的性能，我们选择如下方案："><a href="#为了提供更高的性能，我们选择如下方案：" class="headerlink" title="为了提供更高的性能，我们选择如下方案："></a>为了提供更高的性能，我们选择如下方案：</h3><ol>
-<li>选择RabbitMQ作为消息代理。</li>
-<li>RabbitMQ的Python客户端选择librabbitmq这个C库。</li>
-<li>选择Msgpack做序列化。</li>
-<li>选择Redis做结果存储。</li>
-</ol>
-<h3 id="安装celery"><a href="#安装celery" class="headerlink" title="安装celery"></a>安装celery</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">pip install celery</div><div class="line">pip install  redis</div><div class="line">[root@ucloud-pro-bj2D-renmai-redis01 data]# cat task.py</div><div class="line">from celery import Celery</div><div class="line">app = Celery(&apos;task&apos;, broker=&apos;redis://:foobared@10.19.190.234:6379/0&apos;)</div><div class="line">@app.task</div><div class="line">def add(x, y):</div><div class="line">    return x + y</div></pre></td></tr></table></figure>
-<p>Celery 的第一个参数是当前模块的名称，这个参数是必须的，这样的话名称可以自动生成。第二个参数是中间人关键字参数，指定你所使用的消息中间人的 URL，<br>此处使用了 redis，也是默认的选项。定义了一个单一的任务称为add，返回两个数字的和。</p>
-<p>celery worker –help<br>启动celery:<br>celery -A task worker –loglevel=info </p>
-<h3 id="调用任务"><a href="#调用任务" class="headerlink" title="调用任务"></a>调用任务</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">from task import add</div><div class="line">add.delay(2,3)</div></pre></td></tr></table></figure>
-<h3 id="保存结果"><a href="#保存结果" class="headerlink" title="保存结果"></a>保存结果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-pro-bj2D-renmai-redis01 data]# cat task.py</div><div class="line">from celery import Celery</div><div class="line"></div><div class="line">app = Celery(&apos;task&apos;, backend=&apos;redis://:foobared@10.19.190.234:6379/0&apos;,broker=&apos;redis://:foobared@10.19.190.234:6379/0&apos;)</div><div class="line"></div><div class="line">@app.task</div><div class="line">def add(x, y):</div><div class="line">    return x + y</div></pre></td></tr></table></figure>
-<p>如果你想要保持追踪任务的状态，celery需要在某个地方存储或者发送这些状态，可以使用backed来制定。<br>配置好结果后端之后，让我们再次调用任务。这次你会得到调用任务后返回的AsyncResult实例。</p>
-<pre><code>from task import add
-result = add.delay(4, 4)
-result.ready()
-result.get(timeout=1)
-</code></pre><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>celery，如同家用电器一般,并不需要太多操作。它有一个输入和输出，你必须把输入连接到中间人上，如果想把输出连接到结果后端上。</p>
-<pre><code>cat  &gt;&gt; celeryconfig.py &lt;&lt;EOF
-app.conf.update(
-    CELERY_TASK_SERIALIZER=&apos;json&apos;,
-    CELERY_ACCEPT_CONTENT=[&apos;json&apos;],  # Ignore other content
-    CELERY_RESULT_SERIALIZER=&apos;json&apos;,
-    CELERY_TIMEZONE=&apos;Asia/Shanghai&apos;,
-    CELERY_ENABLE_UTC=True,
-)
-EOF
-</code></pre><p>对于大型项目，采用独立配置模块更为有效，事实上你会为硬编码周期任务间隔和任务路由选项感到沮丧，<br>因为中心化保存配置更合适。尤其是对于库而言，这使得用户控制任务行为成为可能，你也可以想象系统管理员在遇到系统故障时对配置做出简单修改。<br>你可以调用app.config_from_object(‘celeryconfig’).<br>配置模块通常称为celryconfig，你可以使用任意的模块名。</p>
-<p>CELERY_QUEUES = (<br>    Queue(“default”, routing_key=’task.#’),<br>    Queue(‘deploy_sc’, routing_key=’deploy_q’),<br>    Queue(‘test’, routing_key=’test’),<br>    )</p>
-<p>CELERY_ROUTES = {<br>    ‘tasks.git_pull’:{‘queue’:’deploy_sc’, ‘routing_key’:’deploy_q’},<br>    ‘tasks.package’:{‘queue’:’deploy_sc’, ‘routing_key’:’deploy_q’},<br>    ‘tasks.deployCall’:{‘queue’:’deploy_sc’, ‘routing_key’:’deploy_q’},<br>    ‘tasks.proj_backup’:{‘queue’:’deploy_sc’, ‘routing_key’:’deploy_q’},<br>    ‘tasks.add’:{‘queue’:’test’, ‘routing_key’:’test’},<br>}</p>
-<p>如果你使用mq或者redis作为中间人，那么你也可以在运行时直接在职程上设置速率限制：</p>
-<p>在终端里面对应路径下面把celery的任务队列跑起来：</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/28/tornado之三/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/28/tornado之三/" itemprop="url">
-                  tornado之三
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-28T17:08:14+08:00">
-                2017-02-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python开发/" itemprop="url" rel="index">
-                    <span itemprop="name">python开发</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/02/28/tornado之三/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/28/tornado之三/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/02/28/tornado之三/" class="leancloud_visitors" data-flag-title="tornado之三">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="网站架构："><a href="#网站架构：" class="headerlink" title="网站架构："></a>网站架构：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">import tornado.ioloop</div><div class="line">import tornado.web</div><div class="line">class MainHandler(tornado.web.RequestHandler):</div><div class="line">    def get(self):</div><div class="line">        self.write(&quot;hello world&quot;)</div><div class="line">def make_app():</div><div class="line">    return tornado.web.Application([(&quot;r/&quot;,MainHandler),])</div><div class="line">def main():</div><div class="line">    app = make_app()</div><div class="line">    app.listen(8888)</div><div class="line">    tornado.ioloop.IOLoop.current().start()</div><div class="line">if __name__ == &quot;__main__&quot;:</div><div class="line">    main()</div></pre></td></tr></table></figure>
-<p>代码说明：<br>首先通过import语句引入tornado包中iollp和web类；这两个类是tornado程序的基础；<br>实现一个web.RequestHandler子类，重载其中的get()函数，该函数负责相应定位到该requesthandler的httpget请求处理。<br>定义了make_app函数，该函数返回一个web.application对象。<br>用tornado.web.application.listen()函数指定服务器监听的端口。<br>用tornado.ioloop.IOLoop.current().start启动IOLOOP，该函数将一直运行且不退出。</p>
-<h3 id="路由解析"><a href="#路由解析" class="headerlink" title="路由解析"></a>路由解析</h3><h4 id="固定字串路径"><a href="#固定字串路径" class="headerlink" title="固定字串路径"></a>固定字串路径</h4><p>Handlers = [(“/“,MainHandler),<br>             (“/entry” ,EntryHandler),<br>             (“/entry/2015”,Entry2015Handler),]</p>
-<h4 id="参数字串路径"><a href="#参数字串路径" class="headerlink" title="参数字串路径"></a>参数字串路径</h4>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1157,7 +1134,7 @@ EOF
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">59</span>
+              <span class="site-state-item-count">62</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1165,7 +1142,7 @@ EOF
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1174,7 +1151,7 @@ EOF
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-count">43</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
