@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/05/11/k8s新版本安装/index.html">
 <meta property="og:site_name" content="Zero">
 <meta property="og:description" content="国内镜像源配置docker.repocat &amp;gt;&amp;gt; /etc/yum.repos.d/docker.repo &amp;lt;&amp;lt;EOF[docker-repo]name=Docker Repositorybaseurl=http://mirrors.aliyun.com/docker-engine/yum/repo/main/centos/$releasever/enabled=1gpgc">
-<meta property="og:updated_time" content="2017-05-23T08:23:40.251Z">
+<meta property="og:updated_time" content="2017-06-01T08:58:16.591Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="k8s新版本安装（1.6.2）">
 <meta name="twitter:description" content="国内镜像源配置docker.repocat &amp;gt;&amp;gt; /etc/yum.repos.d/docker.repo &amp;lt;&amp;lt;EOF[docker-repo]name=Docker Repositorybaseurl=http://mirrors.aliyun.com/docker-engine/yum/repo/main/centos/$releasever/enabled=1gpgc">
@@ -404,6 +404,8 @@
 <p>删除网络<br>ip addr del 10.16.0.0/32 dev flannel.1<br>ip addr del 10.16.1.0/32 dev flannel.1</p>
 <p>vim /etc/systemd/system/kubelet.service.d/10-kubeadm.conf<br>Environment=”KUBELET_CGROUP_ARGS=–cgroup-driver=cgroupfs”</p>
 <h3 id="节点加入到集群"><a href="#节点加入到集群" class="headerlink" title="节点加入到集群"></a>节点加入到集群</h3><p>kubeadm join –token c9b51c.416daf3a9bf8ebcd 10.10.17.59:6443<br>如果忘记token，可以使用如下命令：<br>kubeadm token list</p>
+<p>总结下1.6版本查询key值方法：1、export ETCDCTL_API=3；2、etcdctl get –prefix /  –keys-only</p>
+<p>kubectl delete po xxx –grace-period=0</p>
 
       
     </div>
@@ -541,7 +543,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">62</span>
+              <span class="site-state-item-count">63</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -549,7 +551,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -558,7 +560,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-count">44</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
