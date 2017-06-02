@@ -269,170 +269,6 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/27/tornado/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/27/tornado/" itemprop="url">
-                  tornado
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-27T14:26:40+08:00">
-                2017-02-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python开发/" itemprop="url" rel="index">
-                    <span itemprop="name">python开发</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/02/27/tornado/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/27/tornado/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/02/27/tornado/" class="leancloud_visitors" data-flag-title="tornado">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Tornado是一个可扩展的非阻塞式web服务器及其相关工具的开源版本。tornado每秒可以处理若干连接。所以对于实时web服务来说，tornado是一个理想的web框架。</p>
-<h3 id="tornado介绍"><a href="#tornado介绍" class="headerlink" title="tornado介绍"></a>tornado介绍</h3><p>tornado是使用python编写的一个强大的可扩展的web服务器。它在处理高流量时表现的足够强健，却在创建和编写的时有着足够的轻量级，并能够被用在大量的应用和开发中。</p>
-<h3 id="tornado特点"><a href="#tornado特点" class="headerlink" title="tornado特点"></a>tornado特点</h3><p>完备的web框架：与django/flask一样，tornado也提供了url路由映射；request上下文/基于模板的页面渲染技术等开发web应用的必备工具；<br>是一个高效的网络库，性能与twisted/gevent等底层python框架媲美；提供了异步I/O支持,超时事件处理。这使得tornado除了可以作为web应用服务器框架，还可以用来<br>做爬虫应用；<br>提供高效的内部http服务器：虽然其他python网络框架也提供了内部http服务器，但他们的http服务器由于性能原因只能用于测试环境。<br>完备的websocket支持，websocket是HTML5的一种新标准，实现了浏览器与服务器之间的双向实时通信。</p>
-<h4 id="异步及协程基础"><a href="#异步及协程基础" class="headerlink" title="异步及协程基础"></a>异步及协程基础</h4><p>协程是tornado中推荐的编码方式，使用协程可以开发出便捷/高效的异步代码。</p>
-<h4 id="同步与异步I-O"><a href="#同步与异步I-O" class="headerlink" title="同步与异步I/O"></a>同步与异步I/O</h4><p>同步I/O操作导致请求进程阻塞，直到I/O操作完成。异步I/O操作不导致请求进程阻塞。在python中，同步I/O可以被理解为一个被调用的I/O函数会阻塞调用函数的执行，而异步I/O操作导致请求进程阻塞，直到I/O操作完成。异步I/O操作不导致请求进程阻塞。在python中，同步I/O可以被理解为一个被调用的I/O函数会阻塞调用函数的执行，而异步I/O<br>则不会阻塞调用函数的执行。代码举例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">from tornado.httpclient import HTTPClient</div><div class="line">def synchronous_visit():</div><div class="line">    http_client=HTTPClient()</div><div class="line">    response=http_client.fetch(&quot;www.baidu.com&quot;)</div><div class="line">    print response.body</div><div class="line"></div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">    synchronous_visit()</div></pre></td></tr></table></figure></p>
-<p>该函数使用了典型的同步I/O操作访问www.baidu.com网站，该函数的执行时间取决于网络速度/对方服务响应速度等。只有当对www.baidu.com的访问完成并获取结果后，才能完成对synchroncous_visit()<br>函数的执行。</p>
-<p>而使用异步I/O访问www.baidu.com网站无需等待访问完成才能返回。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">from tornado.httpclient import AsyncHTTPClient</div><div class="line">def handle_response(response):</div><div class="line">    print response.body</div><div class="line">def asynchronous_visit():</div><div class="line">    http_client=AsyncHTTPClient()</div><div class="line">    http_client.fetch(&quot;www.baidu.com&quot;,callback=handle_response)</div></pre></td></tr></table></figure></p>
-<p>AsyncHTTPCLient是tornado的异步访问http客户端，在上述代码的asynchronous_visit函数中使用AsyncHTTPClient对第三方网站进行异步访问，http_client.fetch()函数会在调用后立刻<br>返回而无需等待实际访问完成，从而导致asynchronous_visit()也会立刻完成。当对www.baidu.com的实际访问完成后，async会调用callback参数制定的函数，开发者可以在其中写入处理<br>访问结果的逻辑代码。</p>
-<h4 id="python关键字yield"><a href="#python关键字yield" class="headerlink" title="python关键字yield"></a>python关键字yield</h4><p>协程是tornado中进行异步I/O代码开发的方法。协程使用了python关键字yield将调用挂起和恢复执行。所以我们需要先学习下python中的yield。</p>
-<h5 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h5><p>迭代器是访问集合内元素的一种方式。迭代器对象从集合的第一个元素开始访问，直到所有元素都被一一访问一遍后结束。迭代器不能回退，只能往前进行迭代。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">for number in range(5):</div><div class="line">    print number</div></pre></td></tr></table></figure></p>
-<p>详解：range()函数返回一个包含所制定元素的集合，而for语句将其封装成一个迭代器后访问。<br>使用iter（）可以将列表、集合转换为迭代器。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">numbers=[0,1,2,3,4,5]</div><div class="line">t=iter(numbers)</div><div class="line">print t</div></pre></td></tr></table></figure></p>
-<p>迭代器与普通python对象的区别是迭代器有一个next()方法，每次调用该方法可以返回一个元素。调用者可以通过不断调用next()方法来逐个访问集合元素。调用者可以一直调用next()<br>方法来访问迭代器，直到next()返回stopIteration异常来表示迭代已经完成。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">numbers=[0,1,2,3,4,5]</div><div class="line">t=iter(numbers)</div><div class="line">print t</div><div class="line">print t.next()</div><div class="line">print t.next()</div></pre></td></tr></table></figure></p>
-<h5 id="使用yield"><a href="#使用yield" class="headerlink" title="使用yield"></a>使用yield</h5><p>迭代器在python编程中的使用范围很广，那么开发者如何定制自己的迭代器呢？答案是使用yield关键字。调用任何定义中包含yield关键字的函数都不会执行该函数，而会获得一个<br>对应该函数的迭代器。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">def demoIterator():</div><div class="line">    # test(&quot;I am in the first call of next()&quot;)</div><div class="line"></div><div class="line">    yield &quot;I am in the first call of next()&quot;</div><div class="line">    # print &quot;I am in the second call of next()&quot;</div><div class="line">    # print &quot;2&quot;</div><div class="line">    yield &quot;I am in the second call of next()&quot;</div><div class="line">    # print &quot;3&quot;</div><div class="line">    yield &quot;I am in the third call of next()&quot;</div><div class="line">    # print &quot;I am in the third call of next()&quot;</div><div class="line">    # yield 9</div><div class="line">for i in demoIterator():</div><div class="line">      print i</div><div class="line">      print &quot;hehe&quot;</div></pre></td></tr></table></figure></p>
-<p>每次调用迭代器的next（）函数，并返回yield的结果作为迭代返回元素。当迭代器函数return时，迭代器会抛出stopIteration异常使迭代终止。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/24/python-网络框架介绍/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -552,6 +388,162 @@
 <h4 id="模型（model）"><a href="#模型（model）" class="headerlink" title="模型（model）"></a>模型（model）</h4><p>用于封装与应用程序的业务逻辑相关的数据及对数据处理的方法，是web应用程序中用于处理应用程序的数据逻辑部分，model只提供功能性的接口，通过这些接口<br>可以获取model的所有功能。model不依赖于view和controller，它们可以在任何时候调用model访问数据。有些model还提供了事件通知机制，为在其上的注册过的view<br>或者controller提供实时数据更新。</p>
 <h4 id="视图（view）"><a href="#视图（view）" class="headerlink" title="视图（view）"></a>视图（view）</h4><p>负责数据的展示和呈现，view是对用户的直接输出，mvc中的一个modle通常为多个view提供服务。为了获取model的实时更新数据，view应该尽早注册到model中。</p>
 <h4 id="控制器（controller）"><a href="#控制器（controller）" class="headerlink" title="控制器（controller）"></a>控制器（controller）</h4><p>负责从用户端收集用户的输入，可以看成提供View的反向功能。当用户的输入导致view发生变化时，这种变化必须是通过model反映给view的。在mvc架构下，controller一般<br>不能与view直接通信，这样提高了业务数据的一致性，即以model作为数据中心。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/24/python-ORM库介绍/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/02/24/python-ORM库介绍/" itemprop="url">
+                  python ORM库介绍
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-24T10:53:51+08:00">
+                2017-02-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python开发/" itemprop="url" rel="index">
+                    <span itemprop="name">python开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/02/24/python-ORM库介绍/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/24/python-ORM库介绍/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/02/24/python-ORM库介绍/" class="leancloud_visitors" data-flag-title="python ORM库介绍">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>python中提供orm支持的组件有很多，每个组件的应用领域稍有区别，但是数据操作的理论原理是相同的。下面对比较著名的<br>python数据库的orm框架介绍如下。</p>
+<h3 id="SQLALchemy"><a href="#SQLALchemy" class="headerlink" title="SQLALchemy"></a>SQLALchemy</h3><p>python中最成熟的ORM框架，资源和文档都很丰富。大多数Python web框架都有很好的支持。能够胜任大多数python开发的场合；</p>
+<h3 id="Django-ORM"><a href="#Django-ORM" class="headerlink" title="Django ORM"></a>Django ORM</h3><p>python世界中大名鼎鼎的Django web框架独用的ORM技术。DJANGO是一个大而全的框架，这使得其灵活性大大降低。其他python框架<br>可以随意更换orm，但django不能这样做，因为django内置的model是用django内置orm实现的。</p>
+<h3 id="peewee"><a href="#peewee" class="headerlink" title="peewee"></a>peewee</h3><p>小强灵活，是一个轻量级的ORM。peewee是基于sqlchemy内核开发的，整个框架只有一个文件构成。peewee提供了对多种数据库访问方式，<br>如sqllite/mysql/postsql，适用于功能简单的小型网站。</p>
+<h3 id="storm"><a href="#storm" class="headerlink" title="storm"></a>storm</h3><p>中型的ORM库，比sqlalchem和django等轻量，比peewee更丰富。storm要求开发者编写数据表的DDL代码，而不能直接从数据表定义中自生成表定义。</p>
+<h3 id="sqlobject"><a href="#sqlobject" class="headerlink" title="sqlobject"></a>sqlobject</h3><p>与sqlalchemy相似，也是一套大而全的ORM。sqlobject的特点是其设计借鉴了ruby on rails的ActiveRecord模型，使得熟悉RUBY的开发者能够快速上手。</p>
 
           
         
@@ -747,162 +739,6 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/24/python-ORM库介绍/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/24/python-ORM库介绍/" itemprop="url">
-                  python ORM库介绍
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-24T10:53:51+08:00">
-                2017-02-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python开发/" itemprop="url" rel="index">
-                    <span itemprop="name">python开发</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/02/24/python-ORM库介绍/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/24/python-ORM库介绍/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/02/24/python-ORM库介绍/" class="leancloud_visitors" data-flag-title="python ORM库介绍">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>python中提供orm支持的组件有很多，每个组件的应用领域稍有区别，但是数据操作的理论原理是相同的。下面对比较著名的<br>python数据库的orm框架介绍如下。</p>
-<h3 id="SQLALchemy"><a href="#SQLALchemy" class="headerlink" title="SQLALchemy"></a>SQLALchemy</h3><p>python中最成熟的ORM框架，资源和文档都很丰富。大多数Python web框架都有很好的支持。能够胜任大多数python开发的场合；</p>
-<h3 id="Django-ORM"><a href="#Django-ORM" class="headerlink" title="Django ORM"></a>Django ORM</h3><p>python世界中大名鼎鼎的Django web框架独用的ORM技术。DJANGO是一个大而全的框架，这使得其灵活性大大降低。其他python框架<br>可以随意更换orm，但django不能这样做，因为django内置的model是用django内置orm实现的。</p>
-<h3 id="peewee"><a href="#peewee" class="headerlink" title="peewee"></a>peewee</h3><p>小强灵活，是一个轻量级的ORM。peewee是基于sqlchemy内核开发的，整个框架只有一个文件构成。peewee提供了对多种数据库访问方式，<br>如sqllite/mysql/postsql，适用于功能简单的小型网站。</p>
-<h3 id="storm"><a href="#storm" class="headerlink" title="storm"></a>storm</h3><p>中型的ORM库，比sqlalchem和django等轻量，比peewee更丰富。storm要求开发者编写数据表的DDL代码，而不能直接从数据表定义中自生成表定义。</p>
-<h3 id="sqlobject"><a href="#sqlobject" class="headerlink" title="sqlobject"></a>sqlobject</h3><p>与sqlalchemy相似，也是一套大而全的ORM。sqlobject的特点是其设计借鉴了ruby on rails的ActiveRecord模型，使得熟悉RUBY的开发者能够快速上手。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/18/python类和对象/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1058,6 +894,156 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/01/10/k8s监控之prometheus/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/10/k8s监控之prometheus/" itemprop="url">
+                  k8s监控之prometheus
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-10T23:33:44+08:00">
+                2017-01-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/容器管理软件/" itemprop="url" rel="index">
+                    <span itemprop="name">容器管理软件</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/01/10/k8s监控之prometheus/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/10/k8s监控之prometheus/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/01/10/k8s监控之prometheus/" class="leancloud_visitors" data-flag-title="k8s监控之prometheus">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -1103,7 +1089,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">63</span>
+              <span class="site-state-item-count">62</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

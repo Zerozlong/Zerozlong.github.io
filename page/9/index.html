@@ -269,164 +269,6 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/22/redis高可用方案之主从及哨兵配置/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/22/redis高可用方案之主从及哨兵配置/" itemprop="url">
-                  redis高可用方案之主从及哨兵配置(三)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-22T17:15:39+08:00">
-                2016-12-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/redis/" itemprop="url" rel="index">
-                    <span itemprop="name">redis</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2016/12/22/redis高可用方案之主从及哨兵配置/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/22/redis高可用方案之主从及哨兵配置/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/12/22/redis高可用方案之主从及哨兵配置/" class="leancloud_visitors" data-flag-title="redis高可用方案之主从及哨兵配置(三)">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="本篇幅主要是实验，关于理论请看下篇文章"><a href="#本篇幅主要是实验，关于理论请看下篇文章" class="headerlink" title="本篇幅主要是实验，关于理论请看下篇文章"></a>本篇幅主要是实验，关于理论请看下篇文章</h3><p>第一部分备忘命令</p>
-<h3 id="备忘命令"><a href="#备忘命令" class="headerlink" title="备忘命令"></a>备忘命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">#启动命令</div><div class="line">./redis-server /usr/local/src/redis-3.2.0/redis.conf </div><div class="line"></div><div class="line">#动态修改配置</div><div class="line">./redis-cli  -h ip  -a passwd</div><div class="line">save  # 保存当前快照</div><div class="line"></div><div class="line">#列出所有当前配置</div><div class="line">config get *</div><div class="line"></div><div class="line">#查看指定配置</div><div class="line">config get maxmemory</div><div class="line"></div><div class="line">#动态修改配置参数</div><div class="line">config set maxmemory  15360000000</div><div class="line"></div><div class="line">#查看系统信息命令</div><div class="line">info</div></pre></td></tr></table></figure>
-<h3 id="先上一个经典生产图解"><a href="#先上一个经典生产图解" class="headerlink" title="先上一个经典生产图解"></a>先上一个经典生产图解</h3><p><img src="images/12.png" alt="image"></p>
-<h3 id="redis主从配置："><a href="#redis主从配置：" class="headerlink" title="redis主从配置："></a>redis主从配置：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">#详细配置参考上一篇文，这里只写主从配置相关的地方</div><div class="line">#master端</div><div class="line">1.关闭rdb快照（备份工作交给slave）</div><div class="line">配置master(redis.conf): </div><div class="line">requirepass 123456 #设置master的密码</div><div class="line"></div><div class="line">masterauth 123456 </div><div class="line">#设置slave连接master进行同步时使用的密码(虽然当前是master不需要密码，但是当master挂了以后再重启以后，</div><div class="line">这个时候可能failover已经完成了，master会自动被降级为slave)</div><div class="line"></div><div class="line">##slave端</div><div class="line">分别配置slave1:</div><div class="line">slaveof 172.17.138.94 6379 #指定slave1和slave2的master</div><div class="line"></div><div class="line">requirepass 123456 #设置slave的密码</div><div class="line"></div><div class="line">masterauth 123456 #设置slave连接master进行同步时使用的密码</div><div class="line"></div><div class="line">检查主从是否同步，着重查看这个地方：</div><div class="line"># Replication</div><div class="line">role:slave</div><div class="line">master_host:ip</div><div class="line">master_port:6379</div><div class="line">master_link_status:up</div><div class="line">master_last_io_seconds_ago:8</div><div class="line">master_sync_in_progress:0</div><div class="line">slave_repl_offset:1504472</div><div class="line">slave_priority:100</div><div class="line">slave_read_only:1</div><div class="line">connected_slaves:0</div><div class="line">master_repl_offset:0</div><div class="line">repl_backlog_active:0</div><div class="line">repl_backlog_size:1048576</div><div class="line">repl_backlog_first_byte_offset:0</div><div class="line">repl_backlog_histlen:0</div></pre></td></tr></table></figure>
-<h3 id="分别配置sentine1，sentine2（sentine-conf"><a href="#分别配置sentine1，sentine2（sentine-conf" class="headerlink" title="分别配置sentine1，sentine2（sentine.conf)"></a>分别配置sentine1，sentine2（sentine.conf)</h3><p>sentinel monitor mymaster 172.17.138.94 6379 1 #指定sentinel监控的master(组id为mymaster，当前master ip为172.17.138.94，端口6379，<br>最后的2指定quorum的值，表明如果有2个sentinels无法连接master，才认为master挂了)，slave不用指定，sentinel会通过pub/sub机制自动发现所有slave<br>sentinel auth-pass mymaster  #设置sentinel连接的master和slave的密码(只能设置一个密码，所以master和slaves的密码必须相同)</p>
-<h3 id="sentinel1-配置文件展示"><a href="#sentinel1-配置文件展示" class="headerlink" title="sentinel1 配置文件展示"></a>sentinel1 配置文件展示</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">#sentinell 1</div><div class="line">port 26379</div><div class="line">dir &quot;/tmp&quot;</div><div class="line">sentinel myid b570970d27accd0d28de9aa4de17d3b66380afd8</div><div class="line">sentinel monitor mymaster 10.19.42.33 6379 1</div><div class="line">sentinel down-after-milliseconds mymaster 10000</div><div class="line">sentinel auth-pass mymaster foobared</div><div class="line">sentinel config-epoch mymaster 0</div><div class="line">sentinel leader-epoch mymaster 0</div><div class="line">sentinel known-slave mymaster 10.19.99.195 6379</div><div class="line">sentinel known-sentinel mymaster 10.19.42.33 26379 e5c597f8782a9d3f7afd9fbc3b86d2182d6096a7</div><div class="line">sentinel current-epoch </div><div class="line"></div><div class="line">#sentinell 2</div><div class="line">[root@ucloud-pro-bj2D-renmai-redis01 redis-3.2.0]# grep -v  &quot;^#&quot; sentinel.conf |grep -v &quot;^$&quot;</div><div class="line">port 26379</div><div class="line">dir &quot;/tmp&quot;</div><div class="line">sentinel myid e5c597f8782a9d3f7afd9fbc3b86d2182d6096a7</div><div class="line">sentinel monitor mymaster 10.19.42.33 6379 1</div><div class="line">sentinel down-after-milliseconds mymaster 10000</div><div class="line">sentinel auth-pass mymaster foobared</div><div class="line">sentinel config-epoch mymaster 0</div><div class="line">sentinel leader-epoch mymaster 0</div><div class="line">sentinel known-slave mymaster 10.19.99.195 6379</div><div class="line">sentinel known-sentinel mymaster 10.19.99.195 26379 b570970d27accd0d28de9aa4de17d3b66380afd8</div><div class="line">sentinel current-epoch 0</div></pre></td></tr></table></figure>
-<h3 id="配置结果认证"><a href="#配置结果认证" class="headerlink" title="配置结果认证"></a>配置结果认证</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-pro-bj2D-renmai-redis01 bin]# ./redis-cli -p 26379 SENTINEL get-master-addr-by-name mymaster</div><div class="line">1) &quot;10.19.42.33&quot;</div><div class="line">2) &quot;6379&quot;</div><div class="line"></div><div class="line">[root@ucloud-pro-bj2D-renmai-redis02 bin]# ./redis-cli -p 26379 SENTINEL get-master-addr-by-name mymaster</div><div class="line">1) &quot;10.19.42.33&quot;</div><div class="line">2) &quot;6379&quot;</div></pre></td></tr></table></figure>
-<p>未完待续</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/22/redis3-2-0配置文件详解/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1177,6 +1019,191 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/20/k8s日志使用-四/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/20/k8s日志使用-四/" itemprop="url">
+                  k8s日志使用(四)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-20T15:55:14+08:00">
+                2016-12-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/容器管理软件/" itemprop="url" rel="index">
+                    <span itemprop="name">容器管理软件</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/12/20/k8s日志使用-四/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/20/k8s日志使用-四/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/12/20/k8s日志使用-四/" class="leancloud_visitors" data-flag-title="k8s日志使用(四)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>logstash vs fluentd</p>
+<h3 id="部署kibana"><a href="#部署kibana" class="headerlink" title="部署kibana"></a>部署kibana</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">wget https://download.elastic.co/kibana/kibana/kibana-4.5.4-1.x86_64.rpm</div><div class="line">yum localinstall kibana-4.5.4-1.x86_64.rpm </div><div class="line">[root@ucloud-test-etcd03 ~]# rpm -qc kibana</div><div class="line">/opt/kibana/config/kibana.yml</div><div class="line">[root@ucloud-test-etcd03 ~]# vim /opt/kibana/config/kibana.yml </div><div class="line">elasticsearch.url: &quot;http://10.10.123.29:9200&quot;</div><div class="line">[root@ucloud-test-etcd03 ~]# systemctl enable kibana.service</div><div class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/kibana.service to /usr/lib/systemd/system/kibana.service.</div><div class="line">[root@ucloud-test-etcd03 ~]# systemctl restart kibana.service </div><div class="line">[root@ucloud-test-etcd03 ~]# systemctl status kibana.service -l</div><div class="line">● kibana.service - no description given</div><div class="line">   Loaded: loaded (/usr/lib/systemd/system/kibana.service; enabled; vendor preset: disabled)</div><div class="line">   Active: active (running) since Tue 2016-12-20 16:55:26 CST; 1min 9s ago</div><div class="line"> Main PID: 21596 (node)</div><div class="line">   CGroup: /system.slice/kibana.service</div><div class="line">           └─21596 /opt/kibana/bin/../node/bin/node /opt/kibana/bin/../src/cli</div><div class="line"></div><div class="line">Dec 20 16:55:29 ucloud-test-etcd03 kibana[21596]: &#123;&quot;type&quot;:&quot;log&quot;,&quot;@timestamp&quot;:&quot;2016-12-20T08:55:29+00:00&quot;,&quot;tags&quot;:[&quot;status&quot;,&quot;plugin:elasticsearch&quot;,&quot;info&quot;],&quot;pid&quot;:21596,&quot;name&quot;:&quot;plugin:elasticsearch&quot;,&quot;state&quot;:&quot;yellow&quot;,&quot;message&quot;:&quot;Status changed from uninitialized to yellow - Waiting for Elasticsearch&quot;,&quot;prevState&quot;:&quot;uninitialized&quot;,&quot;prevMsg&quot;:&quot;uninitialized&quot;&#125;</div><div class="line">Dec 20 16:55:29 ucloud-test-etcd03 kibana[21596]: &#123;&quot;type&quot;:&quot;log&quot;,&quot;@timestamp&quot;:&quot;2016-12-20T08:55:29+00:00&quot;,&quot;tags&quot;:[&quot;status&quot;,&quot;plugin:kbn_vislib_vis_types&quot;,&quot;info&quot;],&quot;pid&quot;:21596,&quot;name&quot;:&quot;plugin:kbn_vislib_vis_types&quot;,&quot;state&quot;:&quot;green&quot;,&quot;message&quot;:&quot;Status changed from uninitialized to green - Ready&quot;,&quot;prevState&quot;:&quot;uninitialized&quot;,&quot;prevMsg&quot;:&quot;uninitialized&quot;&#125;</div><div class="line">Dec 20 16:55:29 ucloud-test-etcd03 kibana[21596]: &#123;&quot;type&quot;:&quot;log&quot;,&quot;@timestamp&quot;:&quot;2016-12-20T08:55:29+00:00&quot;,&quot;tags&quot;:[&quot;status&quot;,&quot;plugin:markdown_vis&quot;,&quot;info&quot;],&quot;pid&quot;:21596,&quot;name&quot;:&quot;plugin:markdown_vis&quot;,&quot;state&quot;:&quot;green&quot;,&quot;message&quot;:&quot;Status changed from uninitialized to green - Ready&quot;,&quot;prevState&quot;:&quot;uninitialized&quot;,&quot;prevMsg&quot;:&quot;uninitialized&quot;&#125;</div><div class="line">Dec 20 16:55:29 ucloud-test-etcd03 kibana[21596]: &#123;&quot;type&quot;:&quot;log&quot;,&quot;@timestamp&quot;:&quot;2016-12-20T08:55:29+00:00&quot;,&quot;tags&quot;:[&quot;status&quot;,&quot;plugin:metric_vis&quot;,&quot;info&quot;],&quot;pid&quot;:21596,&quot;name&quot;:&quot;plugin:metric_vis&quot;,&quot;state&quot;:&quot;green&quot;,&quot;message&quot;:&quot;Status changed from uninitialized to green - Ready&quot;,&quot;prevState&quot;:&quot;uninitialized&quot;,&quot;prevMsg&quot;:&quot;uninitialized&quot;&#125;</div><div class="line">Dec 20 16:55:29 ucloud-test-etcd03 kibana[21596]: &#123;&quot;type&quot;:&quot;log&quot;,&quot;@timestamp&quot;:&quot;2016-12-20T08:55:29+00:00&quot;,&quot;tags&quot;:[&quot;status&quot;,&quot;plugin:spyModes&quot;,&quot;info&quot;],&quot;pid&quot;:21596,&quot;name&quot;:&quot;plugin:spyModes&quot;,&quot;state&quot;:&quot;green&quot;,&quot;message&quot;:&quot;Status changed from uninitialized to green - Ready&quot;,&quot;prevState&quot;:&quot;uninitialized&quot;,&quot;prevMsg&quot;:&quot;uninitialized&quot;&#125;</div><div class="line">Dec 20 16:55:29 ucloud-test-etcd03 kibana[21596]: &#123;&quot;type&quot;:&quot;log&quot;,&quot;@timestamp&quot;:&quot;2016-12-20T08:55:29+00:00&quot;,&quot;tags&quot;:[&quot;status&quot;,&quot;plugin:statusPage&quot;,&quot;info&quot;],&quot;pid&quot;:21596,&quot;name&quot;:&quot;plugin:statusPage&quot;,&quot;state&quot;:&quot;green&quot;,&quot;message&quot;:&quot;Status changed from uninitialized to green - Ready&quot;,&quot;prevState&quot;:&quot;uninitialized&quot;,&quot;prevMsg&quot;:&quot;uninitialized&quot;&#125;</div><div class="line">Dec 20 16:55:29 ucloud-test-etcd03 kibana[21596]: &#123;&quot;type&quot;:&quot;log&quot;,&quot;@timestamp&quot;:&quot;2016-12-20T08:55:29+00:00&quot;,&quot;tags&quot;:[&quot;status&quot;,&quot;plugin:table_vis&quot;,&quot;info&quot;],&quot;pid&quot;:21596,&quot;name&quot;:&quot;plugin:table_vis&quot;,&quot;state&quot;:&quot;green&quot;,&quot;message&quot;:&quot;Status changed from uninitialized to green - Ready&quot;,&quot;prevState&quot;:&quot;uninitialized&quot;,&quot;prevMsg&quot;:&quot;uninitialized&quot;&#125;</div><div class="line">Dec 20 16:55:29 ucloud-test-etcd03 kibana[21596]: &#123;&quot;type&quot;:&quot;log&quot;,&quot;@timestamp&quot;:&quot;2016-12-20T08:55:29+00:00&quot;,&quot;tags&quot;:[&quot;listening&quot;,&quot;info&quot;],&quot;pid&quot;:21596,&quot;message&quot;:&quot;Server running at http://0.0.0.0:5601&quot;&#125;</div><div class="line">Dec 20 16:55:34 ucloud-test-etcd03 kibana[21596]: &#123;&quot;type&quot;:&quot;log&quot;,&quot;@timestamp&quot;:&quot;2016-12-20T08:55:34+00:00&quot;,&quot;tags&quot;:[&quot;status&quot;,&quot;plugin:elasticsearch&quot;,&quot;info&quot;],&quot;pid&quot;:21596,&quot;name&quot;:&quot;plugin:elasticsearch&quot;,&quot;state&quot;:&quot;yellow&quot;,&quot;message&quot;:&quot;Status changed from yellow to yellow - No existing Kibana index found&quot;,&quot;prevState&quot;:&quot;yellow&quot;,&quot;prevMsg&quot;:&quot;Waiting for Elasticsearch&quot;&#125;</div><div class="line">Dec 20 16:55:37 ucloud-test-etcd03 kibana[21596]: &#123;&quot;type&quot;:&quot;log&quot;,&quot;@timestamp&quot;:&quot;2016-12-20T08:55:37+00:00&quot;,&quot;tags&quot;:[&quot;status&quot;,&quot;plugin:elasticsearch&quot;,&quot;info&quot;],&quot;pid&quot;:21596,&quot;name&quot;:&quot;plugin:elasticsearch&quot;,&quot;state&quot;:&quot;green&quot;,&quot;message&quot;:&quot;Status changed from yellow to green - Kibana index ready&quot;,&quot;prevState&quot;:&quot;yellow&quot;,&quot;prevMsg&quot;:&quot;No existing Kibana index found&quot;&#125;</div><div class="line">[root@ucloud-test-etcd03 ~]# netstat -ntulp </div><div class="line">Active Internet connections (only servers)</div><div class="line">Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    </div><div class="line">tcp        0      0 127.0.0.1:2379          0.0.0.0:*               LISTEN      7632/etcd           </div><div class="line">tcp        0      0 10.10.151.214:2379      0.0.0.0:*               LISTEN      7632/etcd           </div><div class="line">tcp        0      0 10.10.123.29:2379       0.0.0.0:*               LISTEN      7632/etcd           </div><div class="line">tcp        0      0 10.10.123.29:2380       0.0.0.0:*               LISTEN      7632/etcd           </div><div class="line">tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN      25872/rpcbind       </div><div class="line">tcp        0      0 10.10.123.29:9200       0.0.0.0:*               LISTEN      21418/java          </div><div class="line">tcp        0      0 10.10.123.29:9300       0.0.0.0:*               LISTEN      21418/java          </div><div class="line">tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      2008/sshd           </div><div class="line">tcp        0      0 0.0.0.0:49152           0.0.0.0:*               LISTEN      28528/glusterfsd    </div><div class="line">tcp        0      0 0.0.0.0:5601            0.0.0.0:*               LISTEN      21596/node          </div><div class="line">tcp        0      0 0.0.0.0:24007           0.0.0.0:*               LISTEN      28422/glusterd      </div><div class="line">tcp6       0      0 :::111                  :::*                    LISTEN      25872/rpcbind       </div><div class="line">tcp6       0      0 :::22                   :::*                    LISTEN      2008/sshd           </div><div class="line">udp        0      0 0.0.0.0:111             0.0.0.0:*                           25872/rpcbind       </div><div class="line">udp        0      0 10.10.151.214:123       0.0.0.0:*                           2210/ntpd           </div><div class="line">udp        0      0 10.10.123.29:123        0.0.0.0:*                           2210/ntpd           </div><div class="line">udp        0      0 127.0.0.1:123           0.0.0.0:*                           2210/ntpd           </div><div class="line">udp        0      0 0.0.0.0:123             0.0.0.0:*                           2210/ntpd           </div><div class="line">udp        0      0 0.0.0.0:33210           0.0.0.0:*                           445/avahi-daemon: r </div><div class="line">udp        0      0 0.0.0.0:607             0.0.0.0:*                           25872/rpcbind       </div><div class="line">udp        0      0 0.0.0.0:5353            0.0.0.0:*                           445/avahi-daemon: r </div><div class="line">udp6       0      0 :::111                  :::*                                25872/rpcbind       </div><div class="line">udp6       0      0 :::123                  :::*                                2210/ntpd           </div><div class="line">udp6       0      0 :::607                  :::*                                25872/rpcbind</div></pre></td></tr></table></figure>
+<p>浏览器访问：<br><a href="http://10.10.123.29:5601/" target="_blank" rel="external">http://10.10.123.29:5601/</a><br><img src="images/11.png" alt="image"></p>
+<p>#abac<br>abac</p>
+<h3 id="集群部署kibana"><a href="#集群部署kibana" class="headerlink" title="集群部署kibana"></a>集群部署kibana</h3><p>很简单了，一句话，就是每个elasticsearch上面配置一个kibana，然后用nginx做upstream即可解决。</p>
+<h3 id="对接fluentd（td-agent-日志"><a href="#对接fluentd（td-agent-日志" class="headerlink" title="对接fluentd（td-agent)日志"></a>对接fluentd（td-agent)日志</h3><p>目前我们将日志分为三类：<br>第一类日志： 宿主机日志，主要监控message日志；<br>第二类日志： docker宿主机，主要监控容器日志；<br>第三类日志：k8s的master和node，主要监控各个组件日志和容器日志。</p>
+<h4 id="部署td-agent"><a href="#部署td-agent" class="headerlink" title="部署td-agent"></a>部署td-agent</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-test-bj2c-master1 zhanglong]#  curl -L https://toolbelt.treasuredata.com/sh/install-redhat-td-agent2.sh | sh</div><div class="line">安装fluent-plugin-elasticsearch插件</div><div class="line">http://docs.fluentd.org/articles/quickstart</div><div class="line">http://www.fluentd.org/plugins</div><div class="line">https://github.com/uken/fluent-plugin-elasticsearch</div><div class="line">[root@ucloud-test-bj2c-master1 zhanglong]# /usr/sbin/td-agent-gem install fluent-plugin-elasticsearch</div><div class="line">[root@ucloud-test-bj2c-master1 zhanglong]# /usr/sbin/td-agent-gem install fluent-plugin-typecast </div><div class="line"></div><div class="line">[root@ucloud-dev-node1 td-agent]# cat /etc/td-agent/td-agent.conf </div><div class="line">&lt;source&gt;</div><div class="line">    @type tail</div><div class="line">    path /var/log/messages</div><div class="line">    pos_file /var/log/td-agent/messages.log.pos</div><div class="line">    tag messages.log</div><div class="line">    format /^(?&lt;time&gt;[^ ]*\s*[^ ]* [^ ]*) (?&lt;host&gt;[^ ]*) (?&lt;ident&gt;[a-zA-Z0-9_\/\.\-]*)(?:\[(?&lt;pid&gt;[0-9]+)\])?(?:[^\:]*\:)? *(?&lt;message&gt;.*)$/</div><div class="line">    time_format %b %d %H:%M:%S</div><div class="line">&lt;/source&gt;</div><div class="line">&lt;match messages.**&gt;</div><div class="line">    @type copy</div><div class="line">    &lt;store&gt;</div><div class="line">      @type stdout</div><div class="line">    &lt;/store&gt;</div><div class="line">    &lt;store&gt;</div><div class="line">      @type elasticsearch</div><div class="line">      host 10.10.123.29</div><div class="line">      port 9200</div><div class="line">      logstash_format true</div><div class="line">      flush_interval 10s</div><div class="line">    &lt;/store&gt;</div><div class="line">&lt;/match&gt;</div><div class="line"></div><div class="line">重启服务</div><div class="line">/etc/initd.d/td-agent restart</div></pre></td></tr></table></figure>
+<h4 id="登陆kibana查看数据"><a href="#登陆kibana查看数据" class="headerlink" title="登陆kibana查看数据"></a>登陆kibana查看数据</h4><p><img src="images/13.jpg" alt="image"></p>
+<h4 id="k8s主机（10-10-220-246）"><a href="#k8s主机（10-10-220-246）" class="headerlink" title="k8s主机（10.10.220.246）"></a>k8s主机（10.10.220.246）</h4><p>```<br>详细地址可参考：<br><a href="https://github.com/kubernetes/kubernetes/tree/master/cluster/addons" target="_blank" rel="external">https://github.com/kubernetes/kubernetes/tree/master/cluster/addons</a></p>
+<p>#根据官方提供的dockerfile，修改td-agent.conf，制定镜像<br>[root@ucloud-test-bj2c-master1 fluentd-elasticsearch-image]# mkdir fluentd-es-image<br>[root@ucloud-test-bj2c-master1 fluentd-elasticsearch-image]# cd fluentd-es-image/<br>[root@ucloud-test-bj2c-master1 fluentd-elasticsearch-image]# vi Dockerfile<br>FROM index.tenxcloud.com/google_containers/fluentd-elasticsearch:1.17<br>MAINTAINER k8s “123@k8s.io”</p>
+<h1 id="Copy-the-Fluentd-configuration-file"><a href="#Copy-the-Fluentd-configuration-file" class="headerlink" title="Copy the Fluentd configuration file."></a>Copy the Fluentd configuration file.</h1><p>COPY td-agent.conf /etc/td-agent/td-agent.conf</p>
+<h1 id="Run-the-Fluentd-service"><a href="#Run-the-Fluentd-service" class="headerlink" title="Run the Fluentd service."></a>Run the Fluentd service.</h1><p>ENTRYPOINT [“td-agent”]</p>
+<p>[root@ucloud-test-bj2c-master1 fluentd-elasticsearch-image]# vi td-agent.conf<br>…</p>
+<p><match **=""><br>   type elasticsearch<br>   log_level info<br>   include_tag_key true<br>   host 10.10.123.29<br>   port 9200<br>…<br>[root@ucloud-test-bj2c-master1 fluentd-elasticsearch-image]# docker tag fluentd-elasticsearch:1.17.2  10.10.132.89/renmai-test/fluentd-elasticsearch:1.17.2<br>[root@ucloud-test-bj2c-master1 fluentd-elasticsearch-image]# docker push 10.10.132.89/renmai-test/fluentd-elasticsearch:1.17.2 </match></p>
+<p>apiVersion: extensions/v1beta1<br>kind: DaemonSet<br>metadata:<br>  name: fluentd-elasticsearch<br>  namespace: kube-system<br>  labels:<br>    k8s-app: fluentd-logging<br>spec:<br>  template:<br>    metadata:<br>      name: fluentd-elasticsearch<br>      labels:<br>        k8s-app: fluentd-logging<br>    spec:<br>      containers:</p>
+<pre><code>- name: fluentd-elasticsearch
+  image: 10.10.132.89/renmai-test/fluentd-elasticsearch:1.17-2
+  - name: KUBERNETES_URL
+    value: &quot;http://10.10.220.246:8080&quot;
+  - name: VERIFY_SSL
+    value: &quot;false&quot;
+  volumeMounts:
+  - name: varlog
+    mountPath: /var/log
+  - name: varlibdockercontainers
+    mountPath: /var/lib/docker/containers
+    readOnly: true
+terminationGracePeriodSeconds: 30
+volumes:
+- name: varlog
+  hostPath:
+    path: /var/log
+- name: varlibdockercontainers
+  hostPath:
+    path: /var/lib/docker/containers
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -1222,7 +1249,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">63</span>
+              <span class="site-state-item-count">62</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
