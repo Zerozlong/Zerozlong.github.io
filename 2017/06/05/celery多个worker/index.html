@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="Zero">
 <meta property="og:description" content="参考文章：https://denibertovic.com/posts/celery-best-practices/Celery 是一个简单、灵活且可靠的，处理大量消息的分布式系统，并且提供维护这样一个系统的必需工具。由于在工作的平台中用到Celery系统（用于发送邮件、发送短信、发送上线等任务），记录一下学习的知识。
 安装使用RabbitMQ作为Celery Broker的优点：Highly c">
-<meta property="og:updated_time" content="2017-06-06T06:28:31.054Z">
+<meta property="og:updated_time" content="2017-06-06T06:34:53.540Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="celery多个worker">
 <meta name="twitter:description" content="参考文章：https://denibertovic.com/posts/celery-best-practices/Celery 是一个简单、灵活且可靠的，处理大量消息的分布式系统，并且提供维护这样一个系统的必需工具。由于在工作的平台中用到Celery系统（用于发送邮件、发送短信、发送上线等任务），记录一下学习的知识。
@@ -391,18 +391,17 @@
 
 
 
-<p><script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script><textarea id="flowchart-0-code" style="display: none">st=>start: Start|past:>http://www.google.com[blank]
+<p><script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script><textarea id="flowchart-0-code" style="display: none">st=>start: 任务1
 e=>end: End:>http://www.google.com
 op1=>operation: My Operation|past
 op2=>operation: Stuff|current
 sub1=>subroutine: My Subroutine|invalid
-cond=>condition: Yes
+cond=>condition: 路由键key1
 or No?|approved:>http://www.google.com
 c2=>condition: Good idea|rejected
 io=>inputoutput: catch something...|request
 
-st->op1(right)->cond
-cond(yes, right)->c2
+st->cond(right)->cond
 cond(no)->sub1(left)->op1
 c2(yes)->io->e
 c2(no)->op2->e</textarea><textarea id="flowchart-0-options" style="display: none">{"scale":1,"line-width":2,"line-length":50,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-0-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-0-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-0", options);</script></p>
