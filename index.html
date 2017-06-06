@@ -375,24 +375,9 @@
 <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>使用RabbitMQ作为Celery Broker的优点：<br>Highly customizable routing（高度定制路由）<br>Persistent queues（一致性队列）</p>
 <p>使用redis作为celery brocker的优点：<br>high speed due to in memory datastore（速度极快的内存数据库）<br>can double up as both key-value datastore and job queue(可以保证key-value 数据存储及job序列)</p>
 <p>celery官网首推rabbitmq，不过我开发过程中一致使用的是redis。</p>
-<h3 id="redis安装"><a href="#redis安装" class="headerlink" title="redis安装"></a>redis安装</h3><p>‘’’<br>[root@ucloud-pro-bj2D-renmai-redis01 redis]# more install.sls<br>redis-source-install:<br>  file.managed:</p>
-<ul>
-<li>source: salt://redis/files/redis-3.2.0.tar.gz</li>
-<li>name: /usr/local/src/redis-3.2.0.tar.gz</li>
-<li>user: root</li>
-<li>group: root</li>
-<li>mode: 644<br>cmd.run:</li>
-<li>name: cd /usr/local/src &amp;&amp;  tar -xzvf redis-3.2.0.tar.gz -C /usr/local  &amp;&amp; cd /usr/local/redis-3.2.0  &amp;&amp; make &amp;&amp; make install </li>
-<li>require:<ul>
-<li>file: redis-source-install</li>
-</ul>
-</li>
-<li><p>unless: test -d  /usr/local/redis-3.2.0</p>
-<p>./redis-server IP:PORT   启动服务<br>‘’’</p>
-<h3 id="celery安装"><a href="#celery安装" class="headerlink" title="celery安装"></a>celery安装</h3></li>
-</ul>
-<p>‘’’<br>pip install celery<br>‘’’</p>
-<h3 id="celery-web监控"><a href="#celery-web监控" class="headerlink" title="celery web监控"></a>celery web监控</h3><p>‘’’<br>pip install flower<br>‘’’</p>
+<h3 id="redis安装"><a href="#redis安装" class="headerlink" title="redis安装"></a>redis安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-pro-bj2D-renmai-redis01 redis]# more install.sls </div><div class="line">redis-source-install:</div><div class="line">  file.managed:</div><div class="line">  - source: salt://redis/files/redis-3.2.0.tar.gz</div><div class="line">  - name: /usr/local/src/redis-3.2.0.tar.gz</div><div class="line">  - user: root</div><div class="line">  - group: root</div><div class="line">  - mode: 644</div><div class="line">  cmd.run:</div><div class="line">  - name: cd /usr/local/src &amp;&amp;  tar -xzvf redis-3.2.0.tar.gz -C /usr/local  &amp;&amp; cd /usr/local/redis-3.2.0  &amp;&amp; make &amp;&amp; make install </div><div class="line">  - require:</div><div class="line">    - file: redis-source-install</div><div class="line">  - unless: test -d  /usr/local/redis-3.2.0</div><div class="line">  </div><div class="line"> ./redis-server IP:PORT   启动服务</div></pre></td></tr></table></figure>
+<h3 id="celery安装"><a href="#celery安装" class="headerlink" title="celery安装"></a>celery安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install celery</div></pre></td></tr></table></figure>
+<h3 id="celery-web监控"><a href="#celery-web监控" class="headerlink" title="celery web监控"></a>celery web监控</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install flower</div></pre></td></tr></table></figure>
 <h3 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h3>
           
         
