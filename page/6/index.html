@@ -741,7 +741,7 @@
 <p>Celery 的第一个参数是当前模块的名称，这个参数是必须的，这样的话名称可以自动生成。第二个参数是中间人关键字参数，指定你所使用的消息中间人的 URL，<br>此处使用了 redis，也是默认的选项。定义了一个单一的任务称为add，返回两个数字的和。</p>
 <p>celery worker –help<br>启动celery:<br>celery -A task worker –loglevel=info </p>
 <h3 id="调用任务"><a href="#调用任务" class="headerlink" title="调用任务"></a>调用任务</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">from task import add</div><div class="line">add.delay(2,3)</div></pre></td></tr></table></figure>
-<h3 id="保存结果"><a href="#保存结果" class="headerlink" title="保存结果"></a>保存结果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-pro-bj2D-renmai-redis01 data]# cat task.py</div><div class="line">from celery import Celery</div><div class="line"></div><div class="line">app = Celery(&apos;task&apos;, backend=&apos;redis://:foobared@10.19.190.234:6379/0&apos;,broker=&apos;redis://:foobared@10.19.190.234:6379/0&apos;)</div><div class="line"></div><div class="line">@app.task</div><div class="line">def add(x, y):</div><div class="line">    return x + y</div></pre></td></tr></table></figure>
+<h3 id="保存结果"><a href="#保存结果" class="headerlink" title="保存结果"></a>保存结果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-pro-bj2D-renmai-redis01 data]# cat task.py</div><div class="line">from celery import Celery</div><div class="line"></div><div class="line">app = Celery(&apos;task&apos;, backend=&apos;redis://:fooafafaafacccc@10.10.190.234:6379/0&apos;,broker=&apos;redis://:fafafafafafa@10.10.190.234:6379/0&apos;)</div><div class="line"></div><div class="line">@app.task</div><div class="line">def add(x, y):</div><div class="line">    return x + y</div></pre></td></tr></table></figure>
 <p>如果你想要保持追踪任务的状态，celery需要在某个地方存储或者发送这些状态，可以使用backed来制定。<br>配置好结果后端之后，让我们再次调用任务。这次你会得到调用任务后返回的AsyncResult实例。</p>
 <pre><code>from task import add
 result = add.delay(4, 4)
@@ -760,8 +760,6 @@ EOF
 </code></pre><p>对于大型项目，采用独立配置模块更为有效，事实上你会为硬编码周期任务间隔和任务路由选项感到沮丧，<br>因为中心化保存配置更合适。尤其是对于库而言，这使得用户控制任务行为成为可能，你也可以想象系统管理员在遇到系统故障时对配置做出简单修改。<br>你可以调用app.config_from_object(‘celeryconfig’).<br>配置模块通常称为celryconfig，你可以使用任意的模块名。</p>
 <p>CELERY_QUEUES = (<br>    Queue(“default”, routing_key=’task.#’),<br>    Queue(‘deploy_sc’, routing_key=’deploy_q’),<br>    Queue(‘test’, routing_key=’test’),<br>    )</p>
 <p>CELERY_ROUTES = {<br>    ‘tasks.git_pull’:{‘queue’:’deploy_sc’, ‘routing_key’:’deploy_q’},<br>    ‘tasks.package’:{‘queue’:’deploy_sc’, ‘routing_key’:’deploy_q’},<br>    ‘tasks.deployCall’:{‘queue’:’deploy_sc’, ‘routing_key’:’deploy_q’},<br>    ‘tasks.proj_backup’:{‘queue’:’deploy_sc’, ‘routing_key’:’deploy_q’},<br>    ‘tasks.add’:{‘queue’:’test’, ‘routing_key’:’test’},<br>}</p>
-<p>如果你使用mq或者redis作为中间人，那么你也可以在运行时直接在职程上设置速率限制：</p>
-<p>在终端里面对应路径下面把celery的任务队列跑起来：</p>
 
           
         
