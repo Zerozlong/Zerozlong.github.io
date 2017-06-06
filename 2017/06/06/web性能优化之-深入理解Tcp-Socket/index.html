@@ -94,7 +94,7 @@
 <meta property="og:description" content="内容来源：运维社区https://www.unixhot.com/article/65
 什么是Socket？大家都用电脑上网，当我们访问运维社区https://www.unixhot.com的时候，我们的电脑和运维社区的服务器就会创建一条Socket，我们称之为网络套接字。那么既然是网络通信，肯定是成对的。至少有一个客户端和服务端，我们称之为套接字对。
 一个套接字对（socket pair）是一个">
-<meta property="og:updated_time" content="2017-06-06T10:56:11.289Z">
+<meta property="og:updated_time" content="2017-06-06T10:59:46.080Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="web性能优化之-深入理解Tcp Socket（转载）">
 <meta name="twitter:description" content="内容来源：运维社区https://www.unixhot.com/article/65
@@ -373,8 +373,8 @@
       
         <p>内容来源：运维社区<a href="https://www.unixhot.com/article/65" target="_blank" rel="external">https://www.unixhot.com/article/65</a></p>
 <h3 id="什么是Socket？"><a href="#什么是Socket？" class="headerlink" title="什么是Socket？"></a>什么是Socket？</h3><p>大家都用电脑上网，当我们访问运维社区<a href="https://www.unixhot.com的时候，我们的电脑和运维社区的服务器就会创建一条Socket，" target="_blank" rel="external">https://www.unixhot.com的时候，我们的电脑和运维社区的服务器就会创建一条Socket，</a><br>我们称之为网络套接字。那么既然是网络通信，肯定是成对的。至少有一个客户端和服务端，我们称之为套接字对。</p>
-<p>一个套接字对（socket pair）是一个定义该网络连接的两个端点的五元组，包括：<br>源IP地址<br>源端口<br>目的IP地址<br>目的端口<br>类型：TCP or UDP<br>那么针对于HTTP请求来说，我们知道底层是建立了一条TCP的Socket，那么TCP的套接字对就是一个四元组，因为协议已经确定了：<br>   1.源IP地址、2.源端口、3.目的IP地址、4.目的端口。</p>
-<p>客户端的随机端口<br>为了更直观的认识这个TCP Socket，我们做一个小实验，我这里准备了两台服务</p>
+<p>一个套接字对（socket pair）是一个定义该网络连接的两个端点的五元组，包括：<br>   源IP地址<br>   源端口<br>   目的IP地址<br>   目的端口<br>类型：TCP or UDP</p>
+<p>那么针对于HTTP请求来说，我们知道底层是建立了一条TCP的Socket，那么TCP的套接字对就是一个四元组，因为协议已经确定了：<br>   1.源IP地址、2.源端口、3.目的IP地址、4.目的端口。<br>客户端的随机端口<br>为了更直观的认识这个TCP Socket，我们做一个小实验，我这里准备了两台服务器：</p>
 
       
     </div>
