@@ -374,7 +374,7 @@
             <p>内容来源：运维社区<a href="https://www.unixhot.com/article/65" target="_blank" rel="external">https://www.unixhot.com/article/65</a></p>
 <h3 id="什么是Socket？"><a href="#什么是Socket？" class="headerlink" title="什么是Socket？"></a>什么是Socket？</h3><p>大家都用电脑上网，当我们访问运维社区<a href="https://www.unixhot.com的时候，我们的电脑和运维社区的服务器就会创建一条Socket，" target="_blank" rel="external">https://www.unixhot.com的时候，我们的电脑和运维社区的服务器就会创建一条Socket，</a><br>我们称之为网络套接字。那么既然是网络通信，肯定是成对的。至少有一个客户端和服务端，我们称之为套接字对。</p>
 <p>一个套接字对（socket pair）是一个定义该网络连接的两个端点的五元组，包括：<br>   源IP地址<br>   源端口<br>   目的IP地址<br>   目的端口<br>类型：TCP or UDP</p>
-<p>那么针对于HTTP请求来说，我们知道底层是建立了一条TCP的Socket，那么TCP的套接字对就是一个四元组，因为协议已经确定了：<br>   1.源IP地址、2.源端口、3.目的IP地址、4.目的端口。<br>客户端的随机端口<br>为了更直观的认识这个TCP Socket，我们做一个小实验，我这里准备了两台服务器：</p>
+<p>那么针对于HTTP请求来说，我们知道底层是建立了一条TCP的Socket，那么TCP的套接字对就是一个四元组，因为协议已经确定了：<br>   1.源IP地址、2.源端口、3.目的IP地址、4.目的端口。<br>客户端的随机端口<br>为了更直观的认识这个TCP Socket，我们做一个小实验，我这里准备了两台服务器：<br><img src="/images/2017/06/2.png" alt="image"><br>当客户端192.168.56.11访问192.168.56.12的9999端口的时候，那么会选择一个随机端口来进行通信，那么这个随机端口，<br>到底是从什么范围随机出来了呢，端口总有一个范围不可能无穷多的。<br>那么对于TCP套接字来说客户端的一个IP地址，到底能有多少个端口呢？由于TCP协议头部使用16位来保存端口号，所以端口的个数最多为65536个，<br>2^16=65536<br><img src="/images/2017/06/3.png" alt="image"></p>
 
           
         
