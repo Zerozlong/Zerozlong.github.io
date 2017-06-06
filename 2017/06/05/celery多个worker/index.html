@@ -84,19 +84,19 @@
 
 
 
-<meta name="description" content="Celery 是一个简单、灵活且可靠的，处理大量消息的分布式系统，并且提供维护这样一个系统的必需工具。由于在工作的平台中用到Celery系统（用于发送邮件、发送短信、发送上线等任务），记录一下学习的知识。还有就是“百毒”上关于Celery的博客，基本都没有多机器worker节点怎么部署的介绍，所以有这方面疑惑的童鞋可以参考之。
-安装使用RabbitMQ作为Celery Broker的优点：High">
+<meta name="description" content="参考文章：https://denibertovic.com/posts/celery-best-practices/Celery 是一个简单、灵活且可靠的，处理大量消息的分布式系统，并且提供维护这样一个系统的必需工具。由于在工作的平台中用到Celery系统（用于发送邮件、发送短信、发送上线等任务），记录一下学习的知识。
+安装使用RabbitMQ作为Celery Broker的优点：Highly c">
 <meta property="og:type" content="article">
 <meta property="og:title" content="celery多个worker">
 <meta property="og:url" content="http://yoursite.com/2017/06/05/celery多个worker/index.html">
 <meta property="og:site_name" content="Zero">
-<meta property="og:description" content="Celery 是一个简单、灵活且可靠的，处理大量消息的分布式系统，并且提供维护这样一个系统的必需工具。由于在工作的平台中用到Celery系统（用于发送邮件、发送短信、发送上线等任务），记录一下学习的知识。还有就是“百毒”上关于Celery的博客，基本都没有多机器worker节点怎么部署的介绍，所以有这方面疑惑的童鞋可以参考之。
-安装使用RabbitMQ作为Celery Broker的优点：High">
-<meta property="og:updated_time" content="2017-06-06T05:43:17.885Z">
+<meta property="og:description" content="参考文章：https://denibertovic.com/posts/celery-best-practices/Celery 是一个简单、灵活且可靠的，处理大量消息的分布式系统，并且提供维护这样一个系统的必需工具。由于在工作的平台中用到Celery系统（用于发送邮件、发送短信、发送上线等任务），记录一下学习的知识。
+安装使用RabbitMQ作为Celery Broker的优点：Highly c">
+<meta property="og:updated_time" content="2017-06-06T06:02:43.964Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="celery多个worker">
-<meta name="twitter:description" content="Celery 是一个简单、灵活且可靠的，处理大量消息的分布式系统，并且提供维护这样一个系统的必需工具。由于在工作的平台中用到Celery系统（用于发送邮件、发送短信、发送上线等任务），记录一下学习的知识。还有就是“百毒”上关于Celery的博客，基本都没有多机器worker节点怎么部署的介绍，所以有这方面疑惑的童鞋可以参考之。
-安装使用RabbitMQ作为Celery Broker的优点：High">
+<meta name="twitter:description" content="参考文章：https://denibertovic.com/posts/celery-best-practices/Celery 是一个简单、灵活且可靠的，处理大量消息的分布式系统，并且提供维护这样一个系统的必需工具。由于在工作的平台中用到Celery系统（用于发送邮件、发送短信、发送上线等任务），记录一下学习的知识。
+安装使用RabbitMQ作为Celery Broker的优点：Highly c">
 
 
 
@@ -368,14 +368,15 @@
       
 
       
-        <p>Celery 是一个简单、灵活且可靠的，处理大量消息的分布式系统，并且提供维护这样一个系统的必需工具。<br>由于在工作的平台中用到Celery系统（用于发送邮件、发送短信、发送上线等任务），记录一下学习的知识。<br>还有就是“百毒”上关于Celery的博客，基本都没有多机器worker节点怎么部署的介绍，所以有这方面疑惑的童鞋可以参考之。</p>
+        <p>参考文章：<br><a href="https://denibertovic.com/posts/celery-best-practices/" target="_blank" rel="external">https://denibertovic.com/posts/celery-best-practices/</a><br>Celery 是一个简单、灵活且可靠的，处理大量消息的分布式系统，并且提供维护这样一个系统的必需工具。<br>由于在工作的平台中用到Celery系统（用于发送邮件、发送短信、发送上线等任务），记录一下学习的知识。</p>
 <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>使用RabbitMQ作为Celery Broker的优点：<br>Highly customizable routing（高度定制路由）<br>Persistent queues（一致性队列）</p>
 <p>使用redis作为celery brocker的优点：<br>high speed due to in memory datastore（速度极快的内存数据库）<br>can double up as both key-value datastore and job queue(可以保证key-value 数据存储及job序列)</p>
 <p>celery官网首推rabbitmq，不过我开发过程中一致使用的是redis。</p>
 <h3 id="redis安装"><a href="#redis安装" class="headerlink" title="redis安装"></a>redis安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-pro-bj2D-renmai-redis01 redis]# more install.sls </div><div class="line">redis-source-install:</div><div class="line">  file.managed:</div><div class="line">  - source: salt://redis/files/redis-3.2.0.tar.gz</div><div class="line">  - name: /usr/local/src/redis-3.2.0.tar.gz</div><div class="line">  - user: root</div><div class="line">  - group: root</div><div class="line">  - mode: 644</div><div class="line">  cmd.run:</div><div class="line">  - name: cd /usr/local/src &amp;&amp;  tar -xzvf redis-3.2.0.tar.gz -C /usr/local  &amp;&amp; cd /usr/local/redis-3.2.0  &amp;&amp; make &amp;&amp; make install </div><div class="line">  - require:</div><div class="line">    - file: redis-source-install</div><div class="line">  - unless: test -d  /usr/local/redis-3.2.0</div><div class="line">  </div><div class="line"> ./redis-server IP:PORT   启动服务</div></pre></td></tr></table></figure>
 <h3 id="celery安装"><a href="#celery安装" class="headerlink" title="celery安装"></a>celery安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install celery</div></pre></td></tr></table></figure>
 <h3 id="celery-web监控"><a href="#celery-web监控" class="headerlink" title="celery web监控"></a>celery web监控</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install flower</div></pre></td></tr></table></figure>
-<h3 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h3>
+<h3 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h3><p>如下为流程图：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">st=&gt;start: Start</div><div class="line">op=&gt;operation: Your Operation</div><div class="line">sub=&gt;subroutine: My Subroutine</div><div class="line">cond=&gt;condition: Yes or No?</div><div class="line">io=&gt;inputoutput: catch something...</div><div class="line">e=&gt;end: End</div></pre></td></tr></table></figure></p>
+
       
     </div>
 
