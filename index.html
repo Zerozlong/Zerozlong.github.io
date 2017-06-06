@@ -375,7 +375,7 @@
 <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>使用RabbitMQ作为Celery Broker的优点：<br>Highly customizable routing（高度定制路由）<br>Persistent queues（一致性队列）</p>
 <p>使用redis作为celery brocker的优点：<br>high speed due to in memory datastore（速度极快的内存数据库）<br>can double up as both key-value datastore and job queue(可以保证key-value 数据存储及job序列)</p>
 <p>celery官网首推rabbitmq，不过我开发过程中一致使用的是redis。</p>
-<h3 id="redis安装"><a href="#redis安装" class="headerlink" title="redis安装"></a>redis安装</h3><p>[root@ucloud-pro-bj2D-renmai-redis01 redis]# more install.sls<br>redis-source-install:<br>  file.managed:</p>
+<h3 id="redis安装"><a href="#redis安装" class="headerlink" title="redis安装"></a>redis安装</h3><p>‘’’<br>[root@ucloud-pro-bj2D-renmai-redis01 redis]# more install.sls<br>redis-source-install:<br>  file.managed:</p>
 <ul>
 <li>source: salt://redis/files/redis-3.2.0.tar.gz</li>
 <li>name: /usr/local/src/redis-3.2.0.tar.gz</li>
@@ -388,11 +388,11 @@
 </ul>
 </li>
 <li><p>unless: test -d  /usr/local/redis-3.2.0</p>
-<p>./redis-server IP:PORT   启动服务</p>
-</li>
+<p>./redis-server IP:PORT   启动服务<br>‘’’</p>
+<h3 id="celery安装"><a href="#celery安装" class="headerlink" title="celery安装"></a>celery安装</h3></li>
 </ul>
-<h3 id="celery安装"><a href="#celery安装" class="headerlink" title="celery安装"></a>celery安装</h3><p>pip install celery</p>
-<h3 id="celery-web监控"><a href="#celery-web监控" class="headerlink" title="celery web监控"></a>celery web监控</h3><p>pip install flower</p>
+<p>‘’’<br>pip install celery<br>‘’’</p>
+<h3 id="celery-web监控"><a href="#celery-web监控" class="headerlink" title="celery web监控"></a>celery web监控</h3><p>‘’’<br>pip install flower<br>‘’’</p>
 <h3 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h3>
           
         
