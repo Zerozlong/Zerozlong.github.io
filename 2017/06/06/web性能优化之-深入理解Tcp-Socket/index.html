@@ -96,7 +96,7 @@
 一个套接字对（socket pair）是一个">
 <meta property="og:image" content="http://yoursite.com/images/2017/06/2.png">
 <meta property="og:image" content="http://yoursite.com/images/2017/06/3.png">
-<meta property="og:updated_time" content="2017-06-06T12:10:31.363Z">
+<meta property="og:updated_time" content="2017-06-06T12:22:17.905Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="web性能优化之-深入理解Tcp Socket（转载）">
 <meta name="twitter:description" content="内容来源：运维社区https://www.unixhot.com/article/65
@@ -387,7 +387,11 @@
 <p>我们模拟发送2万个请求，2000的并发来测试百度：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[root@test ~]#ab -n 10000 -c 2000 https://www.baidu.com/</div><div class="line">This isApacheBench, Version 2.3 &lt;$Revision: 1430300 $&gt;</div><div class="line">Copyright 1996Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/</div><div class="line">Licensed to TheApache Software Foundation, http://www.apache.org/</div><div class="line"></div><div class="line">Benchmarkingwww.baidu.com (be patient)</div><div class="line">socket: Toomany open files (24)</div></pre></td></tr></table></figure></p>
 <p>这不可能，为什么报错了？不要担心，报错我们很容易看懂了socket: Too many open files (24)</p>
 <p>，不能打开太多的文件。我们使用ulimit来看看系统资源限限制。<br>[root@test ~]# ulimit -a<br>core file size          (blocks, -c) 0<br>data seg size           (kbytes, -d) unlimited<br>scheduling priority             (-e) 0<br>file size               (blocks, -f) unlimited<br>pending signals                 (-i) 31219<br>max locked memory       (kbytes, -l) 64<br>max memory size         (kbytes, -m) unlimited<br>open files                      (-n) 1024<br>(省略部分输出)<br>没错，默认情况下，当前用户能够打开的文件数量最大是1024，但是这个和我们使用ab测试有什么关系呢？ab测试创建的不是socket吗？如果你不理解，那就要回归本质，<br>想想我们刚刚学习Linux的时候，经常听到的一句Linux的思想“一切皆文件”！谁说socket不是一个文件呢？<br>我相信你知道怎么做了，你可以使用ulimit –n来修改当前用户、当前session的限制，也可以修改配置文件/etc/security/limits.conf来彻底解决这个问题，<br>这也是进行系统性能调优的必备基础。</p>
-<h3 id="创建一条tcp-Socket"><a href="#创建一条tcp-Socket" class="headerlink" title="创建一条tcp Socket"></a>创建一条tcp Socket</h3><p>好的，刚才只是一个小插曲，我们继续探索TCP Socket，光说不练是个棒槌。我们来创建一个套接字对看看：<br>服务端：<br>首先，我们在192.168.56.12上使用nc命令，来监听9999端口。</p>
+<h3 id="创建一条tcp-Socket"><a href="#创建一条tcp-Socket" class="headerlink" title="创建一条tcp Socket"></a>创建一条tcp Socket</h3><p>好的，刚才只是一个小插曲，我们继续探索TCP Socket，光说不练是个棒槌。我们来创建一个套接字对看看：</p>
+<h4 id="服务端："><a href="#服务端：" class="headerlink" title="服务端："></a>服务端：</h4><p>首先，我们在192.168.56.12上使用nc命令，来监听9999端口。<br>[root@192.168.56.12 ~]#nc -l  9999<br>[root@192.168.56.12 ~]#netstat -ntlp | grep 9999<br>tcp        0     0 0.0.0.0:9999     0.0.0.0:*      LISTEN     26789/n</p>
+<h4 id="客户端："><a href="#客户端：" class="headerlink" title="客户端："></a>客户端：</h4><p>在客户端，同样使用nc命令来连接到服务端的9999端口。<br>[root@192.168.56.11 ~]#nc 192.168.56.12 9999<br>好的，现在你可以在客户端上输入任何的语言和服务端愉快的聊天了?不过这不是重点。<br>我们先来看看客户端的TCPSocket。<br>[root@192.168.56.11 ~]#netstat -na | grep 9999<br>tcp    0     0 192.168.56.11:11525    192.168.56.12:9999     ESTABLISHED<br>服务端的TCP Socket<br>[root@192.168.56.12 ~]#netstat -na | grep 9999<br>tcp    0     0 0.0.0.0:9999           0.0.0.0:*               LISTEN<br>tcp    0     0 192.168.56.12:9999     192.168.56.11:11525    ESTABLISHED<br>我相信你已经真正理解了Socket，剩下的就是无尽的想象，还记得TIME_WAIT吗？如果有大量的TIME_WAIT存在，那么这个套接字对是不释放的，不释放也就代表着占用一个，资源嘛，<br>占用一个就少一个。怎么优化呢？且听下回分解！<br>不过，如果你真的理解了Socket的概念，你已经有了一个终极解决方案。既然一个TCP Socket是一个四元组，那如果我这台机器有多个IP地址呢？哈哈，这是一句画龙点睛之语，<br>你懂的！</p>
+<h3 id="使用伪终端发送数据"><a href="#使用伪终端发送数据" class="headerlink" title="使用伪终端发送数据"></a>使用伪终端发送数据</h3><pre><code>最后，留一个小彩蛋，除了使用nc进行数据发送之外，其实Linux还提供了一种称之为伪设备的方式，让我们来体验下/dev下面的tcp伪设备。/dev下面提供了很多的伪设备，比如tcp就可以用来直接进行远程端口的访问。
+</code></pre><p>[root@192.168.56.11 ~]# echo”886” &gt; /dev/tcp/192.168.56.12/9999<br>赶紧看看服务端有没有收到886。</p>
 
       
     </div>
@@ -595,7 +599,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是Socket？"><span class="nav-number">1.</span> <span class="nav-text">什么是Socket？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端的随机端口"><span class="nav-number">2.</span> <span class="nav-text">客户端的随机端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#瓶颈真的只有随机端口范围吗？"><span class="nav-number">3.</span> <span class="nav-text">瓶颈真的只有随机端口范围吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建一条tcp-Socket"><span class="nav-number">4.</span> <span class="nav-text">创建一条tcp Socket</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是Socket？"><span class="nav-number">1.</span> <span class="nav-text">什么是Socket？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端的随机端口"><span class="nav-number">2.</span> <span class="nav-text">客户端的随机端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#瓶颈真的只有随机端口范围吗？"><span class="nav-number">3.</span> <span class="nav-text">瓶颈真的只有随机端口范围吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建一条tcp-Socket"><span class="nav-number">4.</span> <span class="nav-text">创建一条tcp Socket</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#服务端："><span class="nav-number">4.1.</span> <span class="nav-text">服务端：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#客户端："><span class="nav-number">4.2.</span> <span class="nav-text">客户端：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用伪终端发送数据"><span class="nav-number">5.</span> <span class="nav-text">使用伪终端发送数据</span></a></li></ol></div>
             
 
           </div>
