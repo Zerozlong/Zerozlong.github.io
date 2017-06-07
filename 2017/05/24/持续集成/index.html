@@ -652,9 +652,9 @@ CI价值1、降低风险：静态代码分析，尽早发现bug2、自动化：�
 </div>
 
 <script  language="javascript">
-window.onload = function() {
-var show = document.getElementById("show");
-setInterval(function() {
+window.onload = function() { 
+var show = document.getElementById("show"); 
+setInterval(function() { 
 var time = new Date();
 // 程序计时的月从0开始取值后+1
 var m = time.getMonth() + 1;
@@ -662,14 +662,14 @@ var m = time.getMonth() + 1;
 var t = "Welcome to Zero's  Blog!"+(time.getFullYear()-2017) + "年" + (m-3) + "月"
 + time.getDate() + "天 " + time.getHours() + "时"
 + time.getMinutes() + "分" + time.getSeconds() + "秒";
-   t+="   <span" +'id="busuanzi_container_site_pv">'+
-    "本站总访问量"+ "<span" + 'id="busuanzi_value_site_pv">'+"</span>"+"次"+
-   "</span>"+"<span" + 'id="busuanzi_container_site_uv">'+
-  "你是本站的第"+"<span" + 'id="busuanzi_value_site_uv">'+"</span>"+"个访客"+
+   t+="   <span" +' id="busuanzi_container_site_pv">'+
+    "本站总访问量"+ "<span" + ' id="busuanzi_value_site_pv">'+"</span>"+"次"+
+   "</span>"+"<span" + ' id="busuanzi_container_site_uv">'+
+  "你是本站的第"+"<span" + ' id="busuanzi_value_site_uv">'+"</span>"+"个访客"+
 "</span>"
 show.innerHTML = t;
 }, 1000);
-};
+}; 
 </script>
 
 
