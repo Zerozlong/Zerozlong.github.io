@@ -96,7 +96,7 @@
 一个套接字对（socket pair）是一个">
 <meta property="og:image" content="http://yoursite.com/images/2017/06/2.png">
 <meta property="og:image" content="http://yoursite.com/images/2017/06/3.png">
-<meta property="og:updated_time" content="2017-06-06T12:24:11.923Z">
+<meta property="og:updated_time" content="2017-06-07T03:10:44.171Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="web性能优化之-深入理解Tcp Socket（转载）">
 <meta name="twitter:description" content="内容来源：运维社区https://www.unixhot.com/article/65
@@ -386,7 +386,7 @@
 <p>不要惊讶答案确实是32768到61000，现在你应该明白，别人说的发10万并发进行压力测试代表什么意思了吧。至少默认情况下是无法实现的，读完这句话，是否有启发呢？并不是不能实现哦。</p>
 <h3 id="瓶颈真的只有随机端口范围吗？"><a href="#瓶颈真的只有随机端口范围吗？" class="headerlink" title="瓶颈真的只有随机端口范围吗？"></a>瓶颈真的只有随机端口范围吗？</h3><p>刚才我们也看了，我们访问其它服务器，作为客户端，我们要使用一个随机端口，32768-61000，貌似也不少，当然你还可以修改它，扩大随机端口范围。<br>例如我们使用Nginx做反向代理负载均衡的时候，用户端和Nginx建立Socket进行通信，Nginx还需要和后端真实服务器也建立Socket进行通信，在高并发的场景下，这个随机端口肯定是一个瓶颈。但是真的只有随机端口范围是瓶颈吗？下面我们使用ab命令来对百度进行一次压力测试。</p>
 <p>ab是Apache的性能测试工具，可以模拟并发进行Web性能测试。在CenotOS下，你可以这样来安装:<br>[root@test ~]# yum  install -y httpd-devel<br>按照咱们之前的认识，随机端口61000-32768=28232，那么我实验的机器是一台刚安装的系统，没有什么网络传输，即便有，我们创建2万个套接字对应该是没问题吧。事实真的如此吗？我们用实验来证明：</p>
-<p>我们模拟发送2万个请求，2000的并发来测试百度：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">[root@test ~]#ab -n 10000 -c 2000 https://www.baidu.com/</div><div class="line">This isApacheBench, Version 2.3 &lt;$Revision: 1430300 $&gt;</div><div class="line">Copyright 1996Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/</div><div class="line">Licensed to TheApache Software Foundation, http://www.apache.org/</div><div class="line"></div><div class="line">Benchmarkingwww.baidu.com (be patient)</div><div class="line">socket: Toomany open files (24)</div></pre></td></tr></table></figure></p>
+<p>我们模拟发送2万个请求，2000的并发来测试百度：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">[root@test ~]#ab -n 20000 -c 2000 https://www.baidu.com/</div><div class="line">This isApacheBench, Version 2.3 &lt;$Revision: 1430300 $&gt;</div><div class="line">Copyright 1996Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/</div><div class="line">Licensed to TheApache Software Foundation, http://www.apache.org/</div><div class="line"></div><div class="line">Benchmarkingwww.baidu.com (be patient)</div><div class="line">socket: Toomany open files (24)</div></pre></td></tr></table></figure></p>
 <p>这不可能，为什么报错了？不要担心，报错我们很容易看懂了socket: Too many open files (24)</p>
 <p>，不能打开太多的文件。我们使用ulimit来看看系统资源限限制。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[root@test ~]# ulimit -a</div><div class="line">core file size          (blocks, -c) 0</div><div class="line">data seg size           (kbytes, -d) unlimited</div><div class="line">scheduling priority             (-e) 0</div><div class="line">file size               (blocks, -f) unlimited</div><div class="line">pending signals                 (-i) 31219</div><div class="line">max locked memory       (kbytes, -l) 64</div><div class="line">max memory size         (kbytes, -m) unlimited</div><div class="line">open files                      (-n) 1024</div></pre></td></tr></table></figure></p>
 <p>(省略部分输出)<br>没错，默认情况下，当前用户能够打开的文件数量最大是1024，但是这个和我们使用ab测试有什么关系呢？ab测试创建的不是socket吗？如果你不理解，那就要回归本质，<br>想想我们刚刚学习Linux的时候，经常听到的一句Linux的思想“一切皆文件”！谁说socket不是一个文件呢？<br>我相信你知道怎么做了，你可以使用ulimit –n来修改当前用户、当前session的限制，也可以修改配置文件/etc/security/limits.conf来彻底解决这个问题，<br>这也是进行系统性能调优的必备基础。</p>
@@ -634,6 +634,8 @@
   <span class="author" itemprop="copyrightHolder">Zero</span>
 </div>
 
+
+
 <span id="busuanzi_container_site_pv">
     本站总访问量<span id="busuanzi_value_site_pv"></span>次
 </span>
@@ -653,6 +655,29 @@
     NexT.Pisces
   </a>
 </div>
+
+window.onload = function() { 
+var show = document.getElementById("show"); 
+setInterval(function() { 
+var time = new Date(); 
+// 程序计时的月从0开始取值后+1 
+var m = time.getMonth() + 1; 
+//根据自己博客的创建时间更改数值 
+var t = "提示内容"+(time.getFullYear()-2017) + "年" + (m-3) + "月" 
++ time.getDate() + "天 " + time.getHours() + "时" 
++ time.getMinutes() + "分" + time.getSeconds() + "秒"; 
+show.innerHTML = t; 
+}, 1000); 
+}; 
+
+
+
+
+
+
+
+
+
 
 
 -->
