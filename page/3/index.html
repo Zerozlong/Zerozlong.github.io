@@ -16,7 +16,8 @@
 <meta http-equiv="Cache-Control" content="no-transform" />
 <meta http-equiv="Cache-Control" content="no-siteapp" />
 
-
+<div id="show" >
+</div>
 
 
 
@@ -1208,6 +1209,21 @@ Date: Thu, 13 Apr 2017 11:13:13 GMT
   <span class="author" itemprop="copyrightHolder">Zero</span>
 </div>
 
+<script  language="javascript">
+window.onload = function() { 
+var show = document.getElementById("show"); 
+setInterval(function() { 
+var time = new Date(); 
+// 程序计时的月从0开始取值后+1 
+var m = time.getMonth() + 1; 
+//根据自己博客的创建时间更改数值 
+var t = "提示内容"+(time.getFullYear()-2017) + "年" + (m-3) + "月" 
++ time.getDate() + "天 " + time.getHours() + "时" 
++ time.getMinutes() + "分" + time.getSeconds() + "秒"; 
+show.innerHTML = t; 
+}, 1000); 
+}; 
+</script>
 
 
 <span id="busuanzi_container_site_pv">
@@ -1229,27 +1245,6 @@ Date: Thu, 13 Apr 2017 11:13:13 GMT
     NexT.Pisces
   </a>
 </div>
-
-window.onload = function() { 
-var show = document.getElementById("show"); 
-setInterval(function() { 
-var time = new Date(); 
-// 程序计时的月从0开始取值后+1 
-var m = time.getMonth() + 1; 
-//根据自己博客的创建时间更改数值 
-var t = "提示内容"+(time.getFullYear()-2017) + "年" + (m-3) + "月" 
-+ time.getDate() + "天 " + time.getHours() + "时" 
-+ time.getMinutes() + "分" + time.getSeconds() + "秒"; 
-show.innerHTML = t; 
-}, 1000); 
-}; 
-
-
-
-
-
-
-
 
 
 
