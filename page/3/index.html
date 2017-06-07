@@ -1210,10 +1210,10 @@ Date: Thu, 13 Apr 2017 11:13:13 GMT
 </div>
 
 <script  language="javascript">
-window.onload = function() { 
-var show = document.getElementById("show"); 
-setInterval(function() { 
-var time = new Date(); 
+window.onload = function() {
+var show = document.getElementById("show");
+setInterval(function() {
+var time = new Date();
 // 程序计时的月从0开始取值后+1
 var m = time.getMonth() + 1;
 //根据自己博客的创建时间更改数值
@@ -1222,7 +1222,7 @@ var t = "Welcome to Zero's  Blog!"+(time.getFullYear()-2017) + "年" + (m-3) + "
 + time.getMinutes() + "分" + time.getSeconds() + "秒";
    t+="<span id='busuanzi_container_site_pv'>"+
     "本站总访问量"+ "<span id='busuanzi_value_site_pv'></span>"+"次"+
-   "</span>"+"<span id='busuanzi_container_site_uv'>+
+   "</span>"+"<span id='busuanzi_container_site_uv'>"+
   "你是本站的第"+"<span id='busuanzi_value_site_uv'></span>"+"个访客"+
 "</span>"
 show.innerHTML = t;
