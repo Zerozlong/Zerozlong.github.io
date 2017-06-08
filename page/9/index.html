@@ -260,6 +260,167 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/01/04/python中classmethond和staticmethod的用法/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/04/python中classmethond和staticmethod的用法/" itemprop="url">
+                  python中classmethond和staticmethod的用法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-04T11:33:24+08:00">
+                2017-01-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python开发/" itemprop="url" rel="index">
+                    <span itemprop="name">python开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/01/04/python中classmethond和staticmethod的用法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/04/python中classmethond和staticmethod的用法/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/01/04/python中classmethond和staticmethod的用法/" class="leancloud_visitors" data-flag-title="python中classmethond和staticmethod的用法">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="先上一个简单的类"><a href="#先上一个简单的类" class="headerlink" title="先上一个简单的类"></a>先上一个简单的类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">#coding:utf-8</div><div class="line">class Kls(object):</div><div class="line">    def __init__(self, data):</div><div class="line">        self.data = data</div><div class="line">    def printd(self):</div><div class="line">        print(self.data)</div><div class="line">ik1 = Kls(&apos;arun&apos;)</div><div class="line">ik2 = Kls(&apos;seema&apos;)</div><div class="line">ik1.printd()</div><div class="line">ik2.printd()</div><div class="line"></div><div class="line">运行结果：</div><div class="line">E:\python\python.exe E:/workspace/test/test.py</div><div class="line">arun</div><div class="line">seema</div></pre></td></tr></table></figure>
+<p>这个类的解释看下图：<br><img src="/images/2017/01/1.png" alt="image"></p>
+<p>1和2参数传递给方法；<br>3 self实例指向当前实例自身，<br>4 我们不需要传递参数给方法，python解释器自己会做这些操作</p>
+<p>如果我们现在想写一些仅仅与类交互而不是和实例交互的方法会怎么样呢？我们可以在类外面写一个简单的方法来做这些，<br>但是这样做就扩散了类代码的关系到类的外面定义，如果像下面这样写就会导致以后代码维护的困难。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#coding:utf-8</div><div class="line">def get_no_of_instances(cls_obj):</div><div class="line">    return cls_obj.no_inst</div><div class="line">class Kls(object):</div><div class="line">    no_inst = 0</div><div class="line">    def __init__(self):</div><div class="line">        Kls.no_inst = Kls.no_inst + 1</div><div class="line">ik1 = Kls()</div><div class="line">ik2 = Kls()</div><div class="line">ik3 = Kls()</div><div class="line">print(get_no_of_instances(Kls))</div></pre></td></tr></table></figure>
+<p>@classmethod<br>我们要写一个只在类中运行而不在实例中运行的方法. 如果我们想让方法不在实例中运行，可以这么做:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">def iget_no_of_instance(ins_obj):</div><div class="line">    return ins_obj.__class__.no_inst</div><div class="line">class Kls(object):</div><div class="line">    no_inst = 0</div><div class="line">    def __init__(self):</div><div class="line">    Kls.no_inst = Kls.no_inst + 1</div><div class="line">ik1 = Kls()</div><div class="line">ik2 = Kls()</div><div class="line">print iget_no_of_instance(ik1)</div></pre></td></tr></table></figure></p>
+<p>在Python2.2以后可以使用@classmethod装饰器来创建类方法.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">class Kls(object):</div><div class="line">    no_inst = 0</div><div class="line">    def __init__(self):</div><div class="line">        Kls.no_inst = Kls.no_inst + 1</div><div class="line">    @classmethod</div><div class="line">    def get_no_of_instance(cls_obj):</div><div class="line">        return cls_obj.no_inst</div><div class="line">ik1 = Kls()</div><div class="line">ik2 = Kls()</div><div class="line">print ik1.get_no_of_instance()</div><div class="line">print Kls.get_no_of_instance()</div></pre></td></tr></table></figure>
+<p>这样的好处是: 不管这个方式是从实例调用还是从类调用，它都用第一个参数把类传递过来.<br>@staticmethod<br>经常有一些跟类有关系的功能但在运行时又不需要实例和类参与的情况下需要用到静态方法.<br>比如更改环境变量或者修改其他类的属性等能用到静态方法. 这种情况可以直接用函数解决, 但这样同样会扩散类内部的代码，造成维护困难.<br>比如这样:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">IND = &apos;ON&apos;</div><div class="line">def checkind():</div><div class="line">    return (IND == &apos;ON&apos;)</div><div class="line">class Kls(object):</div><div class="line">    def __init__(self,data):</div><div class="line">        self.data = data</div><div class="line">    def do_reset(self):</div><div class="line">        if checkind():</div><div class="line">            print(&apos;Reset done for:&apos;, self.data)</div><div class="line">    def set_db(self):</div><div class="line">        if checkind():</div><div class="line">            self.db = &apos;new db connection&apos;</div><div class="line">            print(&apos;DB connection made for:&apos;,self.data)</div><div class="line">ik1 = Kls(12)</div><div class="line">ik1.do_reset()</div><div class="line">ik1.set_db()</div></pre></td></tr></table></figure></p>
+<p>下面这个更全面的代码和图示来展示这两种方法的不同<br>@staticmethod 和 @classmethod的不同.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">class Kls(object):</div><div class="line">    def __init__(self, data):</div><div class="line">        self.data = data</div><div class="line">    def printd(self):</div><div class="line">        print(self.data)</div><div class="line">    @staticmethod</div><div class="line">    def smethod(*arg):</div><div class="line">        print(&apos;Static:&apos;, arg)</div><div class="line">    @classmethod</div><div class="line">    def cmethod(*arg):</div><div class="line">        print(&apos;Class:&apos;, arg)</div><div class="line"></div><div class="line">ik = Kls(23)</div><div class="line">ik.printd()</div><div class="line">ik.smethod()</div><div class="line">ik.cmethod()</div><div class="line">Kls.smethod()</div><div class="line">Kls.cmethod()</div></pre></td></tr></table></figure></p>
+<p>总结下吧 static就是一个静态方法，classmethod是一个类的方法。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/30/k8s-google镜像转存/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1022,159 +1183,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/21/redis基本概念介绍/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/21/redis基本概念介绍/" itemprop="url">
-                  redis基本概念介绍(一)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-21T14:10:18+08:00">
-                2016-12-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/redis/" itemprop="url" rel="index">
-                    <span itemprop="name">redis</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2016/12/21/redis基本概念介绍/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/21/redis基本概念介绍/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/12/21/redis基本概念介绍/" class="leancloud_visitors" data-flag-title="redis基本概念介绍(一)">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="What’s-Redis"><a href="#What’s-Redis" class="headerlink" title="What’s Redis"></a>What’s Redis</h3><p>Redis作为一个open source key-value store，与传统的k-v存储开源方案相比，其value类型支持各种常见数据类型（如strings, hashes, lists, sets, sorted-sets, etc.），<br>正因如此，其可被用于多种应用场景。特别需要明确的是：当需要处理的数据能被内存完全容纳时，Redis才能发挥其优异的性能，即Redis works with an in-memory dataset。<br>备注：从v2.0开始到v2.4，Redis支持vitual memory的概念，即当数据集比物理内存大时，会将冷key的value交换到磁盘上，当被请求时，再重新换回主存。不过由于VM机制弊大于利，<br>从redis v2.4之后的版本（不包括2.4）开始，VM特性已被Redis弃用，详细说明可以参考这里。<br>Redis支持数据持久化（persistence），以便Redis服务因各种原因重启后，可以load之前已有数据，从而恢复服务状态。用户可根据实际使用情况选择两种持久化策略：</p>
-<p>1) RDB方式：dump内存数据库至磁盘<br>2) AOF方式：将每个写操作记录到command log文件中，以便server重启时回放log以恢复数据状态（类似于MySQL的binlog）<br>Redis支持Master-Slave Replication，从库以全镜像方式同步主库数据，以防系统故障。<br>Redis目前还不支持集群，不过支持集群的版本已在作者开发计划中（cluster目前有alpha版本，尚未发布生产环境可用版本）。<br>虽无官方的集群实现，但业界主流做法是用Partitioning方式将数据集散列到不同的redis实例上，从而变相实现了对redis集群的支持，redis官网的这里对partitioning的实现思路<br>做了描述并推荐了twitter开源的一个支持redis的proxy - twemproxy（该proxy最初是作为memcached proxy开源的）。<br>有两个基本概念需要区分：Redis Master-Slave Replication和Redis Cluster，前者在两个库之间实现数据全镜像，后者则是将用户数据散列到不同机器上，<br>每个机器的Redis节点只hold一部分用户数据。    </p>
-<p>个人感觉，两种方法都可以起到单点故障容错作用，只是实现方式及应用场合不同而已。<br>Redis还可以被用作Message Queue，支持的指令集见这里<br>关于Redis的更多基础介绍，可直接查看其官网文档。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1220,7 +1228,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">64</span>
+              <span class="site-state-item-count">65</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1228,7 +1236,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1237,7 +1245,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">45</span>
+                <span class="site-state-item-count">47</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
