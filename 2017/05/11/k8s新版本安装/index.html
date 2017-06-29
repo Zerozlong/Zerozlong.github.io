@@ -91,10 +91,14 @@
 <meta property="og:url" content="http://yoursite.com/2017/05/11/k8s新版本安装/index.html">
 <meta property="og:site_name" content="Zero">
 <meta property="og:description" content="国内镜像源配置docker.repocat &amp;gt;&amp;gt; /etc/yum.repos.d/docker.repo &amp;lt;&amp;lt;EOF[docker-repo]name=Docker Repositorybaseurl=http://mirrors.aliyun.com/docker-engine/yum/repo/main/centos/$releasever/enabled=1gpgc">
-<meta property="og:updated_time" content="2017-06-01T08:58:16.591Z">
+<meta property="og:image" content="http://yoursite.com/images/2017/06/4.png">
+<meta property="og:image" content="http://yoursite.com/images/2017/06/5.png">
+<meta property="og:image" content="http://yoursite.com/images/2017/06/6.png">
+<meta property="og:updated_time" content="2017-06-29T09:10:36.327Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="k8s新版本安装（1.6.2）">
 <meta name="twitter:description" content="国内镜像源配置docker.repocat &amp;gt;&amp;gt; /etc/yum.repos.d/docker.repo &amp;lt;&amp;lt;EOF[docker-repo]name=Docker Repositorybaseurl=http://mirrors.aliyun.com/docker-engine/yum/repo/main/centos/$releasever/enabled=1gpgc">
+<meta name="twitter:image" content="http://yoursite.com/images/2017/06/4.png">
 
 
 
@@ -378,10 +382,10 @@
 <p>yum list kubelet –showduplicates<br>kubelet.x86_64                                                                                                                       1.6.2-0                                                                                                                       kubernetes<br>kubelet.x86_64                                                                                                                       1.6.2-0 </p>
 <p>yum install -y  kubernetes-cni-0.5.1-0.x86_64  kubelet-1.6.2-0.x86_64 kubectl-1.6.2-0.x86_64   kubeadm-1.6.2-0.x86_64</p>
 <h3 id="启用kubelet服务"><a href="#启用kubelet服务" class="headerlink" title="启用kubelet服务"></a>启用kubelet服务</h3><p>systemctl enable kubelet.service</p>
-<h3 id="初始化集群"><a href="#初始化集群" class="headerlink" title="初始化集群"></a>初始化集群</h3><p>准备MasterConfiguration文件<br>‘’’<br>[root@ucloud-test-bd-k8s-master1 ~]# cat k8s_master_config.yaml<br>apiVersion: kubeadm.k8s.io/v1alpha1<br>kind: MasterConfiguration<br>api:<br>  advertiseAddress: 10.10.17.59<br>networking:<br>  dnsDomain: cluster.local<br>etcd:<br>  endpoints:</p>
+<h3 id="初始化集群"><a href="#初始化集群" class="headerlink" title="初始化集群"></a>初始化集群</h3><p>准备MasterConfiguration文件<br>‘’’<br>[root@ucloud-test-bd-k8s-master1 ~]# cat k8s_master_config.yaml<br>apiVersion: kubeadm.k8s.io/v1alpha1<br>kind: MasterConfiguration<br>api:<br>  advertiseAddress: 10.10.17.59<br>networking:<br>  dnsDomain: cluster.local<br>  podSubnet: 172.17.0.0/16<br>etcd:<br>  endpoints:</p>
 <ul>
-<li><a href="http://10.10.29.103:2380" target="_blank" rel="external">http://10.10.29.103:2380</a></li>
-<li><a href="http://10.10.48.162:2380" target="_blank" rel="external">http://10.10.48.162:2380</a></li>
+<li><a href="http://10.10.29.103:2379" target="_blank" rel="external">http://10.10.29.103:2379</a></li>
+<li><a href="http://10.10.48.162:2379" target="_blank" rel="external">http://10.10.48.162:2379</a></li>
 <li><a href="http://10.10.9.68:2379" target="_blank" rel="external">http://10.10.9.68:2379</a><br>kubernetesVersion: v1.6.2<br>‘’’</li>
 </ul>
 <h3 id="修改docker私服地址"><a href="#修改docker私服地址" class="headerlink" title="修改docker私服地址"></a>修改docker私服地址</h3><p>‘’’<br>cat /usr/lib/systemd/system/docker.service<br>[Unit]<br>Description=Docker Application Container Engine<br>Documentation=<a href="http://docs.docker.com" target="_blank" rel="external">http://docs.docker.com</a><br>After=network.target<br>Wants=docker-storage-setup.service<br>Requires=docker-cleanup.timer</p>
@@ -397,6 +401,18 @@
 <h3 id="节点加入到集群"><a href="#节点加入到集群" class="headerlink" title="节点加入到集群"></a>节点加入到集群</h3><p>kubeadm join –token c9b51c.416daf3a9bf8ebcd 10.10.17.59:6443<br>如果忘记token，可以使用如下命令：<br>kubeadm token list</p>
 <p>总结下1.6版本查询key值方法：1、export ETCDCTL_API=3；2、etcdctl get –prefix /  –keys-only</p>
 <p>kubectl delete po xxx –grace-period=0</p>
+<h3 id="flannel网络踩坑续"><a href="#flannel网络踩坑续" class="headerlink" title="flannel网络踩坑续"></a>flannel网络踩坑续</h3><p>具体体现在使用cni网络之后，pod的网络可以跨主机与其它主机的pod通信；但是网络却不能与其它主机的主机ip通信。<br>鉴于cni网络的各种bug，现决定使用flannel老版本。</p>
+<h4 id="在etcd集群上创建一个pod网段，使用如下命令："><a href="#在etcd集群上创建一个pod网段，使用如下命令：" class="headerlink" title="在etcd集群上创建一个pod网段，使用如下命令："></a>在etcd集群上创建一个pod网段，使用如下命令：</h4><p>etcdctl mkdir /coreos.com/network<br>etcdctl set /coreos.com/network/config ‘{“Network”:”172.17.0.0/16”}’</p>
+<h4 id="使用yum安装flannel"><a href="#使用yum安装flannel" class="headerlink" title="使用yum安装flannel"></a>使用yum安装flannel</h4><p>yum -y  install flannel</p>
+<h4 id="添加两个文件，增加权限。"><a href="#添加两个文件，增加权限。" class="headerlink" title="添加两个文件，增加权限。"></a>添加两个文件，增加权限。</h4><p>chmod +x  ./<br>[root@ucloud-test-bd-k8s-master1 ~]# ll /opt/kubernetes/<br>total 8<br>-rwxr-xr-x 1 root root 2609 Sep  7  2016 mk-docker-opts.sh<br>-rwxr-xr-x 1 root root  870 Sep  7  2016 remove-docker0.sh</p>
+<h4 id="修改flannel的启动文件"><a href="#修改flannel的启动文件" class="headerlink" title="修改flannel的启动文件"></a>修改flannel的启动文件</h4><p>[root@ucloud-test-bd-k8s-master1 ~]# cat /usr/lib/systemd/system/flanneld.service<br>[Unit]<br>Description=Flanneld overlay address etcd agent<br>After=network.target<br>Before=docker.service<br>[Service]<br>EnvironmentFile=-/etc/sysconfig/flanneld<br>ExecStartPre=/opt/kubernetes/remove-docker0.sh<br>ExecStart=/bin/flanneld –ip-masq  -etcd-endpoints=”<a href="http://10.10.29.103:2379,http://10.10.48.162:2379,http://10.10.9.68:2379" target="_blank" rel="external">http://10.10.29.103:2379,http://10.10.48.162:2379,http://10.10.9.68:2379</a>“ -etcd-prefix=/coreos.com/network<br>ExecStartPost=/opt/kubernetes/mk-docker-opts.sh -d /run/flannel/docker<br>Type=notify<br>[Install]<br>WantedBy=multi-user.target<br>RequiredBy=docker.service</p>
+<h4 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h4><p>停止docker进程，根据启动顺序先启动flannel服务。<br>systemctl stop docker<br>systemctl deamon-reload<br>systemctl restart flannel</p>
+<h4 id="根据各个节点的ip范围，调整docker0的bip"><a href="#根据各个节点的ip范围，调整docker0的bip" class="headerlink" title="根据各个节点的ip范围，调整docker0的bip"></a>根据各个节点的ip范围，调整docker0的bip</h4><p>最新版本踩坑，需要将docker0网卡设置为down，安装完kubernetes之后发现会自动启动一个cni网卡。</p>
+<h4 id="监控配置部署"><a href="#监控配置部署" class="headerlink" title="监控配置部署"></a>监控配置部署</h4><p>在master主机上，找一个合适的位置：<br>git clone <a href="https://github.com/coreos/prometheus-operator.git" target="_blank" rel="external">https://github.com/coreos/prometheus-operator.git</a></p>
+<p>进入步骤1的项目中的kube-prometheus配置文件所在目录。<br>cd prometheus-operator/contrib/kube-prometheus<br>执行如下语句创建kube-prometheus pod<br>hack/cluster-monitoring/deploy<br>在执行下一步前，请使用如下语句检查是否所有pod都处于running状态，若均处于running状态即可执行下一步，否则请耐心等待其拉取镜像并完成配置。<br>注意：这些镜像的拉取十分的耗费时间，请耐心等待。</p>
+<h4 id="prometheus的访问部署"><a href="#prometheus的访问部署" class="headerlink" title="prometheus的访问部署"></a>prometheus的访问部署</h4><p>在浏览器中输入如下地址可访问 Prometheus 。<br>http://<ip-address>:30900</ip-address></p>
+<p><img src="/images/2017/06/4.png" alt="image"></p>
+<p>在浏览器中输入如下地址可访问Alertmanager 。<br>http://<ip-address>:30903<br><img src="/images/2017/06/5.png" alt="image"><br>在浏览器中输入如下地址可访问Grafana。<br>http://<ip-address>:30902<br><img src="/images/2017/06/6.png" alt="image"></ip-address></ip-address></p>
 
       
     </div>
@@ -534,7 +550,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-count">66</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -551,7 +567,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">46</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -608,7 +624,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#国内镜像源配置"><span class="nav-number">1.</span> <span class="nav-text">国内镜像源配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装docker"><span class="nav-number">2.</span> <span class="nav-text">安装docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改系统参数"><span class="nav-number">3.</span> <span class="nav-text">修改系统参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装kubeadm和kubelet"><span class="nav-number">4.</span> <span class="nav-text">安装kubeadm和kubelet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启用kubelet服务"><span class="nav-number">5.</span> <span class="nav-text">启用kubelet服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化集群"><span class="nav-number">6.</span> <span class="nav-text">初始化集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改docker私服地址"><span class="nav-number">7.</span> <span class="nav-text">修改docker私服地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#按照官方文档准备集群镜像文件："><span class="nav-number">8.</span> <span class="nav-text">按照官方文档准备集群镜像文件：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署pod-网络"><span class="nav-number">9.</span> <span class="nav-text">部署pod 网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#节点加入到集群"><span class="nav-number">10.</span> <span class="nav-text">节点加入到集群</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#国内镜像源配置"><span class="nav-number">1.</span> <span class="nav-text">国内镜像源配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装docker"><span class="nav-number">2.</span> <span class="nav-text">安装docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改系统参数"><span class="nav-number">3.</span> <span class="nav-text">修改系统参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装kubeadm和kubelet"><span class="nav-number">4.</span> <span class="nav-text">安装kubeadm和kubelet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启用kubelet服务"><span class="nav-number">5.</span> <span class="nav-text">启用kubelet服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化集群"><span class="nav-number">6.</span> <span class="nav-text">初始化集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改docker私服地址"><span class="nav-number">7.</span> <span class="nav-text">修改docker私服地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#按照官方文档准备集群镜像文件："><span class="nav-number">8.</span> <span class="nav-text">按照官方文档准备集群镜像文件：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署pod-网络"><span class="nav-number">9.</span> <span class="nav-text">部署pod 网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#节点加入到集群"><span class="nav-number">10.</span> <span class="nav-text">节点加入到集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#flannel网络踩坑续"><span class="nav-number">11.</span> <span class="nav-text">flannel网络踩坑续</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#在etcd集群上创建一个pod网段，使用如下命令："><span class="nav-number">11.1.</span> <span class="nav-text">在etcd集群上创建一个pod网段，使用如下命令：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用yum安装flannel"><span class="nav-number">11.2.</span> <span class="nav-text">使用yum安装flannel</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加两个文件，增加权限。"><span class="nav-number">11.3.</span> <span class="nav-text">添加两个文件，增加权限。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改flannel的启动文件"><span class="nav-number">11.4.</span> <span class="nav-text">修改flannel的启动文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动服务"><span class="nav-number">11.5.</span> <span class="nav-text">启动服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#根据各个节点的ip范围，调整docker0的bip"><span class="nav-number">11.6.</span> <span class="nav-text">根据各个节点的ip范围，调整docker0的bip</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#监控配置部署"><span class="nav-number">11.7.</span> <span class="nav-text">监控配置部署</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#prometheus的访问部署"><span class="nav-number">11.8.</span> <span class="nav-text">prometheus的访问部署</span></a></li></ol></li></ol></div>
             
 
           </div>

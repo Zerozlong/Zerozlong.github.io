@@ -260,6 +260,214 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/01/celery/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/01/celery/" itemprop="url">
+                  celery入门
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-01T10:28:35+08:00">
+                2017-03-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python开发/" itemprop="url" rel="index">
+                    <span itemprop="name">python开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/03/01/celery/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/01/celery/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/03/01/celery/" class="leancloud_visitors" data-flag-title="celery入门">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="celery简介"><a href="#celery简介" class="headerlink" title="celery简介"></a>celery简介</h3><p>Celery 是一个简单、灵活且可靠的，处理大量消息的分布式系统，并且提供维护这样一个系统的必需工具。<br>它是一个专注于实时处理的任务队列，同时也支持任务调度。Celery 是开源的，使用 BSD 许可证 授权。<br>Celery 是一个“自带电池”的的任务队列。它易于使用，所以你可以无视其所解决问题的复杂程度而轻松入门。它遵照最佳实践设计，所以你的产品可以扩展，或与其他语言集成，并且它自带了在生产环境中运行这样一个系统所需的工具和支持。<br>在此教程中，你会了解使用 Celery 的最基础部分。包括：<br>选择和安装消息传输方式（中间人）。<br>安装 Celery 并创建第一个任务<br>运行职程并调用任务。<br>追踪任务在不同状态间的迁移，并检视返回值。</p>
+<h3 id="celery使用场景"><a href="#celery使用场景" class="headerlink" title="celery使用场景"></a>celery使用场景</h3><ol>
+<li>Web应用。当用户触发的一个操作需要较长时间才能执行完成时，可以把它作为任务交给Celery去异步执行，执行完再返回给用户。<br>这段时间用户不需要等待，提高了网站的整体吞吐量和响应时间。</li>
+<li>定时任务。生产环境经常会跑一些定时任务。假如你有上千台的服务器、上千种任务，定时任务的管理很困难，Celery可以帮助我们<br>快速在不同的机器设定不同种任务。</li>
+<li>同步完成的附加工作都可以异步完成。比如发送短信/邮件、推送消息、清理/设置缓存等。</li>
+</ol>
+<h3 id="celery特性"><a href="#celery特性" class="headerlink" title="celery特性"></a>celery特性</h3><p>Celery还提供了如下的特性：</p>
+<ol>
+<li>方便地查看定时任务的执行情况，比如执行是否成功、当前状态、执行任务花费的时间等。</li>
+<li>可以使用功能齐备的管理后台或者命令行添加、更新、删除任务。</li>
+<li>方便把任务和配置管理相关联。</li>
+<li>可选多进程、Eventlet和Gevent三种模式并发执行。</li>
+<li>提供错误处理机制。</li>
+</ol>
+<ul>
+<li>提供多种任务原语，方便实现任务分组、拆分和调用链。</li>
+<li>支持多种消息代理和存储后端。</li>
+</ul>
+<h3 id="celery的架构"><a href="#celery的架构" class="headerlink" title="celery的架构"></a>celery的架构</h3><ol>
+<li>Celery Beat：任务调度器，Beat进程会读取配置文件的内容，周期性地将配置中到期需要执行的任务发送给任务队列。</li>
+<li>Celery Worker：执行任务的消费者，通常会在多台服务器运行多个消费者来提高执行效率。</li>
+<li>Broker：消息代理，或者叫作消息中间件，接受任务生产者发送过来的任务消息，存进队列再按序分发给任务消费方（通常是消息队列或者数据库）。</li>
+<li>Producer：调用了Celery提供的API、函数或者装饰器而产生任务并交给任务队列处理的都是任务生产者。</li>
+<li>Result Backend：任务处理完后保存状态信息和结果，以供查询。Celery默认已支持Redis、RabbitMQ、MongoDB、Django ORM、SQLAlchemy等方式。<br>celery的架构图如下所示：</li>
+</ol>
+<p>任务发布者(producer)               任务调度(celery beat)<br>          消息代理(broker)<br>任务消费者                 任务消费者       任务消费者<br>（celery worker）<br>                 存储结果</p>
+<h3 id="消息代理"><a href="#消息代理" class="headerlink" title="消息代理"></a>消息代理</h3><p>Celery目前支持RabbitMQ、Redis、MongoDB、Beanstalk、SQLAlchemy、Zookeeper等作为消息代理，<br>但适用于生产环境的只有RabbitMQ和Redis，至于其他的方式，一是支持有限，二是可能得不到更好的技术支持。</p>
+<p>Celery官方推荐的是RabbitMQ，Celery的作者Ask Solem Hoel最初在VMware就是为RabbitMQ工作的，Celery最初的设计就是基于RabbitMQ，<br>所以使用RabbitMQ会非常稳定，成功案例很多。如果使用Redis，则需要能接受发生突然断电之类的问题造成Redis突然终止后的数据丢失等后果。</p>
+<h3 id="celery序列化"><a href="#celery序列化" class="headerlink" title="celery序列化"></a>celery序列化</h3><p>在客户端和消费者之间传输数据需要序列化和反序列化，Celery支持如下所示的序列化方案：<br>1、pickle<br>2、json<br>3、yaml<br>4、msgpack</p>
+<h3 id="为了提供更高的性能，我们选择如下方案："><a href="#为了提供更高的性能，我们选择如下方案：" class="headerlink" title="为了提供更高的性能，我们选择如下方案："></a>为了提供更高的性能，我们选择如下方案：</h3><ol>
+<li>选择RabbitMQ作为消息代理。</li>
+<li>RabbitMQ的Python客户端选择librabbitmq这个C库。</li>
+<li>选择Msgpack做序列化。</li>
+<li>选择Redis做结果存储。</li>
+</ol>
+<h3 id="安装celery"><a href="#安装celery" class="headerlink" title="安装celery"></a>安装celery</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">pip install celery</div><div class="line">pip install  redis</div><div class="line">[root@ucloud-pro-bj2D-renmai-redis01 data]# cat task.py</div><div class="line">from celery import Celery</div><div class="line">app = Celery(&apos;task&apos;, broker=&apos;redis://:foobared@10.19.190.234:6379/0&apos;)</div><div class="line">@app.task</div><div class="line">def add(x, y):</div><div class="line">    return x + y</div></pre></td></tr></table></figure>
+<p>Celery 的第一个参数是当前模块的名称，这个参数是必须的，这样的话名称可以自动生成。第二个参数是中间人关键字参数，指定你所使用的消息中间人的 URL，<br>此处使用了 redis，也是默认的选项。定义了一个单一的任务称为add，返回两个数字的和。</p>
+<p>celery worker –help<br>启动celery:<br>celery -A task worker –loglevel=info </p>
+<h3 id="调用任务"><a href="#调用任务" class="headerlink" title="调用任务"></a>调用任务</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">from task import add</div><div class="line">add.delay(2,3)</div></pre></td></tr></table></figure>
+<h3 id="保存结果"><a href="#保存结果" class="headerlink" title="保存结果"></a>保存结果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-pro-bj2D-renmai-redis01 data]# cat task.py</div><div class="line">from celery import Celery</div><div class="line"></div><div class="line">app = Celery(&apos;task&apos;, backend=&apos;redis://:fooafafaafacccc@10.10.190.234:6379/0&apos;,broker=&apos;redis://:fafafafafafa@10.10.190.234:6379/0&apos;)</div><div class="line"></div><div class="line">@app.task</div><div class="line">def add(x, y):</div><div class="line">    return x + y</div></pre></td></tr></table></figure>
+<p>如果你想要保持追踪任务的状态，celery需要在某个地方存储或者发送这些状态，可以使用backed来制定。<br>配置好结果后端之后，让我们再次调用任务。这次你会得到调用任务后返回的AsyncResult实例。</p>
+<pre><code>from task import add
+result = add.delay(4, 4)
+result.ready()
+result.get(timeout=1)
+</code></pre><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>celery，如同家用电器一般,并不需要太多操作。它有一个输入和输出，你必须把输入连接到中间人上，如果想把输出连接到结果后端上。</p>
+<pre><code>cat  &gt;&gt; celeryconfig.py &lt;&lt;EOF
+app.conf.update(
+    CELERY_TASK_SERIALIZER=&apos;json&apos;,
+    CELERY_ACCEPT_CONTENT=[&apos;json&apos;],  # Ignore other content
+    CELERY_RESULT_SERIALIZER=&apos;json&apos;,
+    CELERY_TIMEZONE=&apos;Asia/Shanghai&apos;,
+    CELERY_ENABLE_UTC=True,
+)
+EOF
+</code></pre><p>对于大型项目，采用独立配置模块更为有效，事实上你会为硬编码周期任务间隔和任务路由选项感到沮丧，<br>因为中心化保存配置更合适。尤其是对于库而言，这使得用户控制任务行为成为可能，你也可以想象系统管理员在遇到系统故障时对配置做出简单修改。<br>你可以调用app.config_from_object(‘celeryconfig’).<br>配置模块通常称为celryconfig，你可以使用任意的模块名。</p>
+<p>CELERY_QUEUES = (<br>    Queue(“default”, routing_key=’task.#’),<br>    Queue(‘deploy_sc’, routing_key=’deploy_q’),<br>    Queue(‘test’, routing_key=’test’),<br>    )</p>
+<p>CELERY_ROUTES = {<br>    ‘tasks.git_pull’:{‘queue’:’deploy_sc’, ‘routing_key’:’deploy_q’},<br>    ‘tasks.package’:{‘queue’:’deploy_sc’, ‘routing_key’:’deploy_q’},<br>    ‘tasks.deployCall’:{‘queue’:’deploy_sc’, ‘routing_key’:’deploy_q’},<br>    ‘tasks.proj_backup’:{‘queue’:’deploy_sc’, ‘routing_key’:’deploy_q’},<br>    ‘tasks.add’:{‘queue’:’test’, ‘routing_key’:’test’},<br>}</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/28/tornado之三/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -889,167 +1097,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/24/python-ORM库介绍/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/24/python-ORM库介绍/" itemprop="url">
-                  python ORM库介绍
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-24T10:53:51+08:00">
-                2017-02-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python开发/" itemprop="url" rel="index">
-                    <span itemprop="name">python开发</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/02/24/python-ORM库介绍/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/24/python-ORM库介绍/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/02/24/python-ORM库介绍/" class="leancloud_visitors" data-flag-title="python ORM库介绍">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>python中提供orm支持的组件有很多，每个组件的应用领域稍有区别，但是数据操作的理论原理是相同的。下面对比较著名的<br>python数据库的orm框架介绍如下。</p>
-<h3 id="SQLALchemy"><a href="#SQLALchemy" class="headerlink" title="SQLALchemy"></a>SQLALchemy</h3><p>python中最成熟的ORM框架，资源和文档都很丰富。大多数Python web框架都有很好的支持。能够胜任大多数python开发的场合；</p>
-<h3 id="Django-ORM"><a href="#Django-ORM" class="headerlink" title="Django ORM"></a>Django ORM</h3><p>python世界中大名鼎鼎的Django web框架独用的ORM技术。DJANGO是一个大而全的框架，这使得其灵活性大大降低。其他python框架<br>可以随意更换orm，但django不能这样做，因为django内置的model是用django内置orm实现的。</p>
-<h3 id="peewee"><a href="#peewee" class="headerlink" title="peewee"></a>peewee</h3><p>小强灵活，是一个轻量级的ORM。peewee是基于sqlchemy内核开发的，整个框架只有一个文件构成。peewee提供了对多种数据库访问方式，<br>如sqllite/mysql/postsql，适用于功能简单的小型网站。</p>
-<h3 id="storm"><a href="#storm" class="headerlink" title="storm"></a>storm</h3><p>中型的ORM库，比sqlalchem和django等轻量，比peewee更丰富。storm要求开发者编写数据表的DDL代码，而不能直接从数据表定义中自生成表定义。</p>
-<h3 id="sqlobject"><a href="#sqlobject" class="headerlink" title="sqlobject"></a>sqlobject</h3><p>与sqlalchemy相似，也是一套大而全的ORM。sqlobject的特点是其设计借鉴了ruby on rails的ActiveRecord模型，使得熟悉RUBY的开发者能够快速上手。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1090,7 +1142,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-count">66</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1107,7 +1159,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">46</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
