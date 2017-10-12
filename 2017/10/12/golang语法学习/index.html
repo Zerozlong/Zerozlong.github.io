@@ -93,7 +93,7 @@ go语言环境安装go安装包安装安装包下载地址为：https://golang.o
 <meta property="og:site_name" content="Zero">
 <meta property="og:description" content="go语言用途Go 语言被设计成一门应用于搭载 Web 服务器，存储集群或类似用途的巨型中央服务器的系统编程语言。对于高性能分布式系统领域而言，Go 语言无疑比大多数其它语言有着更高的开发效率。它提供了海量并行的支持，这对于游戏服务端的开发而言是再好不过了。
 go语言环境安装go安装包安装安装包下载地址为：https://golang.org/dl/。或者到这个中文网站下载https://study">
-<meta property="og:updated_time" content="2017-10-12T11:19:13.052Z">
+<meta property="og:updated_time" content="2017-10-12T12:11:37.888Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="golang语法学习(一)">
 <meta name="twitter:description" content="go语言用途Go 语言被设计成一门应用于搭载 Web 服务器，存储集群或类似用途的巨型中央服务器的系统编程语言。对于高性能分布式系统领域而言，Go 语言无疑比大多数其它语言有着更高的开发效率。它提供了海量并行的支持，这对于游戏服务端的开发而言是再好不过了。
@@ -375,7 +375,10 @@ go语言环境安装go安装包安装安装包下载地址为：https://golang.o
 <p>使用 go 命令执行以上代码输出结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">C:\Go_WorkSpace&gt;go run test.go</div><div class="line">Hello, World!</div></pre></td></tr></table></figure></p>
 <p>Go 语言中变量的声明必须使用空格隔开，如：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var age int;</div></pre></td></tr></table></figure>
-<h5 id="go语言的数据结构"><a href="#go语言的数据结构" class="headerlink" title="go语言的数据结构"></a>go语言的数据结构</h5><p>变量来源于数学，是计算机语言中能储存计算结果或能表示值抽象概念。变量可以通过变量名访问。<br>Go 语言变量名由字母、数字、下划线组成，其中首个字母不能为数字。<br>声明变量的一般形式是使用 var 关键字。</p>
+<h4 id="go语言的数据结构"><a href="#go语言的数据结构" class="headerlink" title="go语言的数据结构"></a>go语言的数据结构</h4><p>变量来源于数学，是计算机语言中能储存计算结果或能表示值抽象概念。变量可以通过变量名访问。<br>Go 语言变量名由字母、数字、下划线组成，其中首个字母不能为数字。<br>声明变量的一般形式是使用 var 关键字。</p>
+<h5 id="方法一，指定变量类型"><a href="#方法一，指定变量类型" class="headerlink" title="方法一，指定变量类型"></a>方法一，指定变量类型</h5><p>var v_name v_type<br>v_name = value</p>
+<h5 id="方法二，根据值自行判定变量类型"><a href="#方法二，根据值自行判定变量类型" class="headerlink" title="方法二，根据值自行判定变量类型"></a>方法二，根据值自行判定变量类型</h5><p>var  v_name = value</p>
+<h5 id="方法三，省略var"><a href="#方法三，省略var" class="headerlink" title="方法三，省略var"></a>方法三，省略var</h5><p>注意：=左侧的变量不应该是已经声明过的；否则会导致编译错误。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">package main</div><div class="line">var a = &quot;菜鸟教程&quot;</div><div class="line">var b string = &quot;runoob.com&quot;</div><div class="line">var c bool</div><div class="line"></div><div class="line">func main()&#123;</div><div class="line">    println(a, b, c)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -583,7 +586,7 @@ go语言环境安装go安装包安装安装包下载地址为：https://golang.o
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#go语言用途"><span class="nav-number">1.</span> <span class="nav-text">go语言用途</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#go语言环境安装"><span class="nav-number">2.</span> <span class="nav-text">go语言环境安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#go安装包安装"><span class="nav-number">2.1.</span> <span class="nav-text">go安装包安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go安装测试"><span class="nav-number">2.2.</span> <span class="nav-text">go安装测试</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#go语言的数据结构"><span class="nav-number">2.2.1.</span> <span class="nav-text">go语言的数据结构</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#go语言用途"><span class="nav-number">1.</span> <span class="nav-text">go语言用途</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#go语言环境安装"><span class="nav-number">2.</span> <span class="nav-text">go语言环境安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#go安装包安装"><span class="nav-number">2.1.</span> <span class="nav-text">go安装包安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go安装测试"><span class="nav-number">2.2.</span> <span class="nav-text">go安装测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go语言的数据结构"><span class="nav-number">2.3.</span> <span class="nav-text">go语言的数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#方法一，指定变量类型"><span class="nav-number">2.3.1.</span> <span class="nav-text">方法一，指定变量类型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法二，根据值自行判定变量类型"><span class="nav-number">2.3.2.</span> <span class="nav-text">方法二，根据值自行判定变量类型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法三，省略var"><span class="nav-number">2.3.3.</span> <span class="nav-text">方法三，省略var</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
