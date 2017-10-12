@@ -260,6 +260,320 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/22/saltstack双主配置/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/22/saltstack双主配置/" itemprop="url">
+                  saltstack双主配置
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-22T11:18:08+08:00">
+                2016-12-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/自动化运维/" itemprop="url" rel="index">
+                    <span itemprop="name">自动化运维</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/12/22/saltstack双主配置/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/22/saltstack双主配置/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/12/22/saltstack双主配置/" class="leancloud_visitors" data-flag-title="saltstack双主配置">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>随着管理的项目越来越大，任何单点故障都是难以忍受的。下面说说saltstack的双主配置及维护。<br>在建立多Master的配置中，主要的一点就是所有的Master使用同样的private key. 这些key将在Master第一次启动时自动生成。 因此在多Master环境建立时，<br>需要从原始的(original) Master上拷贝其private key至第二个Master以提供它启动时自动生成的那个, 以此类推.<br>Master的private key存储在Master本地的 pki_dir 目录下. 默认的目录是 /etc/salt/pki/master/master.pem .<br>将该key拷贝到新增的master上. 需要注意的是，在拷贝的时候，需要确保新增的master上并没有minion连接进来.</p>
+<h3 id="配置多master时"><a href="#配置多master时" class="headerlink" title="配置多master时"></a>配置多master时</h3><p>当配置多Master时，Minion需要知道需要连接的每个Master的网络地址. 需要在Minion的配置文件中进行配置，默认的配置文件是 /etc/salt/minion 。<br>找到 master 配置项, 更新需要新增的Master.</p>
+<p>下边是一个多Master的配置例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">minion文件配置修改：</div><div class="line">[root@ucloud-pro-bj2D-renmai-redis01 saltclient]# cat files/minion |grep master</div><div class="line">master: </div><div class="line">  - &#123;&#123; master1 &#125;&#125;</div><div class="line">  - &#123;&#123; master2 &#125;&#125;</div><div class="line">  </div><div class="line">pillar配置文件修改：</div><div class="line">[root@ucloud-pro-bj2D-renmai-redis01 saltclient]# cat /srv/pillar/zl/sal.sls </div><div class="line">salt:</div><div class="line">  salt-master1: 10.19.42.33 </div><div class="line">  salt-master2: 10.19.99.195</div><div class="line">  </div><div class="line">minion配置文件修改：</div><div class="line">[root@ucloud-pro-bj2D-renmai-redis01 saltclient]# cat install.sls </div><div class="line">salt-yum-epel:</div><div class="line">  file.managed:</div><div class="line">    - name: /etc/yum.repos.d/salt5.8.repo</div><div class="line">    - source: salt://saltclient/files/salt5.8.repo</div><div class="line">    - user: root</div><div class="line">    - group: root</div><div class="line">    - mode: 644</div><div class="line">salt-rpm-install:</div><div class="line">   pkg.installed:</div><div class="line">    - name: salt-minion</div><div class="line">    - require:</div><div class="line">      - file: salt-yum-epel</div><div class="line">/etc/salt/minion:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://saltclient/files/minion</div><div class="line">    - mode: 640</div><div class="line">    - user: root</div><div class="line">    - template: jinja</div><div class="line">    - defaults:</div><div class="line">      master1: &#123;&#123; pillar[&apos;salt&apos;][&apos;salt-master1&apos;] &#125;&#125;</div><div class="line">      master2: &#123;&#123; pillar[&apos;salt&apos;][&apos;salt-master2&apos;] &#125;&#125;</div><div class="line">      id: &#123;&#123; grains[&apos;fqdn&apos;] &#125;&#125;</div><div class="line">  service:</div><div class="line">    - name: salt-minion</div><div class="line">    - running</div><div class="line">    - enable: True</div><div class="line">    - reload: True</div><div class="line">    - watch:</div><div class="line">      - file: /etc/salt/minion</div></pre></td></tr></table></figure></p>
+<p>配置完上面的所有文件之后，下一步要做的就是重启所有minion客户端。<br>验证配置的正确性，我就不出图了，生产上已经在跑着了。</p>
+<p>维护注意事项：</p>
+<h3 id="那些文件需要维护"><a href="#那些文件需要维护" class="headerlink" title="那些文件需要维护"></a>那些文件需要维护</h3><h4 id="Minion-Keys"><a href="#Minion-Keys" class="headerlink" title="Minion Keys"></a>Minion Keys</h4><p>minion的key需要在每个master进行accept，可以使用salt-key手动接受minion的key，也可以在master之间保持<br>key目录的同步。需要同步的目录有：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/etc/salt/pki/master/minions</div><div class="line">/etc/salt/pki/master/minions_pre</div><div class="line">/etc/salt/pki/master/minions_rejected</div></pre></td></tr></table></figure></p>
+<p>注意：直接共享/etc/salt/master目录是强烈反对的，别人拿到的话，将会带来严重的安全风险你懂得，就可以随意控制公司的服务器了。</p>
+<h4 id="file-roots"><a href="#file-roots" class="headerlink" title="file_roots"></a>file_roots</h4><p>方法一：git仓库中心，但是这个比较被动，每次都要更新git。<br>方法二：共享存储，将state.sls文件都放到共享存储上。我这里就全部放在glusterfs上了。项目中在用不用白不用呀。</p>
+<h3 id="pillar-roots"><a href="#pillar-roots" class="headerlink" title="pillar_roots"></a>pillar_roots</h3><p>同file_roots的同步方法。</p>
+<h4 id="salt的主配置文件-etc-salt-master"><a href="#salt的主配置文件-etc-salt-master" class="headerlink" title="salt的主配置文件/etc/salt/master"></a>salt的主配置文件/etc/salt/master</h4><p>这个配置文件你可以放到git仓库里面，也可以建个rsync。</p>
+<p>好了就说这么多了，祝好运。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/21/redis基本概念介绍/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/21/redis基本概念介绍/" itemprop="url">
+                  redis基本概念介绍(一)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-21T14:10:18+08:00">
+                2016-12-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/12/21/redis基本概念介绍/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/21/redis基本概念介绍/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/12/21/redis基本概念介绍/" class="leancloud_visitors" data-flag-title="redis基本概念介绍(一)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="What’s-Redis"><a href="#What’s-Redis" class="headerlink" title="What’s Redis"></a>What’s Redis</h3><p>Redis作为一个open source key-value store，与传统的k-v存储开源方案相比，其value类型支持各种常见数据类型（如strings, hashes, lists, sets, sorted-sets, etc.），<br>正因如此，其可被用于多种应用场景。特别需要明确的是：当需要处理的数据能被内存完全容纳时，Redis才能发挥其优异的性能，即Redis works with an in-memory dataset。<br>备注：从v2.0开始到v2.4，Redis支持vitual memory的概念，即当数据集比物理内存大时，会将冷key的value交换到磁盘上，当被请求时，再重新换回主存。不过由于VM机制弊大于利，<br>从redis v2.4之后的版本（不包括2.4）开始，VM特性已被Redis弃用，详细说明可以参考这里。<br>Redis支持数据持久化（persistence），以便Redis服务因各种原因重启后，可以load之前已有数据，从而恢复服务状态。用户可根据实际使用情况选择两种持久化策略：</p>
+<p>1) RDB方式：dump内存数据库至磁盘<br>2) AOF方式：将每个写操作记录到command log文件中，以便server重启时回放log以恢复数据状态（类似于MySQL的binlog）<br>Redis支持Master-Slave Replication，从库以全镜像方式同步主库数据，以防系统故障。<br>Redis目前还不支持集群，不过支持集群的版本已在作者开发计划中（cluster目前有alpha版本，尚未发布生产环境可用版本）。<br>虽无官方的集群实现，但业界主流做法是用Partitioning方式将数据集散列到不同的redis实例上，从而变相实现了对redis集群的支持，redis官网的这里对partitioning的实现思路<br>做了描述并推荐了twitter开源的一个支持redis的proxy - twemproxy（该proxy最初是作为memcached proxy开源的）。<br>有两个基本概念需要区分：Redis Master-Slave Replication和Redis Cluster，前者在两个库之间实现数据全镜像，后者则是将用户数据散列到不同机器上，<br>每个机器的Redis节点只hold一部分用户数据。    </p>
+<p>个人感觉，两种方法都可以起到单点故障容错作用，只是实现方式及应用场合不同而已。<br>Redis还可以被用作Message Queue，支持的指令集见这里<br>关于Redis的更多基础介绍，可直接查看其官网文档。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/21/运维感悟（二）/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -756,328 +1070,11 @@ volumes:
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/20/k8s日志管理-二/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/20/k8s日志管理-二/" itemprop="url">
-                  k8s日志管理(二)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-20T10:40:00+08:00">
-                2016-12-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/容器管理软件/" itemprop="url" rel="index">
-                    <span itemprop="name">容器管理软件</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2016/12/20/k8s日志管理-二/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/20/k8s日志管理-二/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/12/20/k8s日志管理-二/" class="leancloud_visitors" data-flag-title="k8s日志管理(二)">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="elasticsearch的概念详解"><a href="#elasticsearch的概念详解" class="headerlink" title="elasticsearch的概念详解"></a>elasticsearch的概念详解</h3><p>下文将要介绍的是elasticsearch的几个核心概念。理解这些概念将有助于你更好的掌握elasticsearch。</p>
-<h4 id="Near-Realtime（NRT）"><a href="#Near-Realtime（NRT）" class="headerlink" title="Near Realtime（NRT）"></a>Near Realtime（NRT）</h4><p>elasticsearch是一个接近实时的（延迟大概是一秒）search插件，这就意味着从你将数据放入到文档中到你搜索到数据的时间。</p>
-<h3 id="Cluster"><a href="#Cluster" class="headerlink" title="Cluster"></a>Cluster</h3><p>集群是指一个或者多个node共同工作来存储完整的数据，一块提供存储索引和搜索的功能。集群的区分是通过一个全局唯一的名字<br>它的名字默认是elasticsearch。这个名字非常重要，集群其它节点加入集群靠的就是这个名字。</p>
-<p>注意事项： 在不同的环境中，你必须确认使用不同的集群名字。例如你可以使用这些名字：<br>logging-dev, logging-stage, and logging-prod for the development。</p>
-<h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><p>node就是集群中的任意一台机器，存储数据。参与集群的索引和搜索功能。同集群一样，node的区分也是通过name来进行区分的。<br>node默认的名字是一个随机的uuid号码，你可以定义不同的node名字，如果你不想使用默认的名字。这个名字对管理员来说很重要<br>。node可以通过配置cluster name加入到集群里面。默认情况下，每一个node都会加入到一个叫做elasticsearch的集群中。</p>
-<h3 id="index"><a href="#index" class="headerlink" title="index"></a>index</h3><p>一个index是一类数据的集合。例如顾客信息，产品目录等。index的区分是通过名字来区分的（index必须是小写的）。</p>
-<h3 id="Type"><a href="#Type" class="headerlink" title="Type"></a>Type</h3><p>一个index中，可以定义一个或者多个types。一个type是一个逻辑的类或者部分是由用户定义的。通常情况下，type是文档中有一些共同属性的字段。<br>例如：有一个博客系统，里面存储了所有的信息在index中。在这个index中，你可以定义一个type存储用户数据，定义一个type存储博客数据，另外一个数据<br>存储评论数据。</p>
-<p>网上有人理解为index是个数据库，type是表。先这样理解吧。</p>
-<h3 id="Document"><a href="#Document" class="headerlink" title="Document"></a>Document</h3><p>document是一类信息可以被用来索引的。比如你可以有一个文档来存储顾客信息，另外一个文档来存储产品信息。这个document被通过index/type，你可以存储<br>任意多的documents。注意一个文档存储之后必须通过index和type可以取到。</p>
-<h3 id="shards-amp-replicas"><a href="#shards-amp-replicas" class="headerlink" title="shards &amp; replicas"></a>shards &amp; replicas</h3><p>一个index存储巨大的数据在一个单独的node上可能不太何时。例如一个单独的一类1t的数据存储在一个单独的盘上，我们在搜索的时候速度也会特别的慢。<br>为了解决这个问题，elasticsearch提供将index再分为多个部分称为shareds。当你创建索引的时候，可以手动制定要切割成多少份数据。每一份数据都会有一个全局<br>的index便于在任何一台机器上搜索。<br>shares有两个很重要的作用：</p>
-<h4 id="它允许你水平扩展你的容量"><a href="#它允许你水平扩展你的容量" class="headerlink" title="它允许你水平扩展你的容量"></a>它允许你水平扩展你的容量</h4><h4 id="分布式计算数据，速度快"><a href="#分布式计算数据，速度快" class="headerlink" title="分布式计算数据，速度快"></a>分布式计算数据，速度快</h4><p>由于shards之后，机器出现故障的可能性会n倍增加，所以为了解决故障率的问题，引入了replicas的概念。<br>replica的好处：</p>
-<h4 id="当shard或者节点故障的时候，提供高可用性。"><a href="#当shard或者节点故障的时候，提供高可用性。" class="headerlink" title="当shard或者节点故障的时候，提供高可用性。"></a>当shard或者节点故障的时候，提供高可用性。</h4><h4 id="提高读的性能"><a href="#提高读的性能" class="headerlink" title="提高读的性能"></a>提高读的性能</h4><p>下一节比较有意思终于该安装了。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/19/k8sss日志管理/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/12/19/k8sss日志管理/" itemprop="url">
-                  k8s日志管理（一）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-19T14:38:33+08:00">
-                2016-12-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/容器管理软件/" itemprop="url" rel="index">
-                    <span itemprop="name">容器管理软件</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2016/12/19/k8sss日志管理/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/19/k8sss日志管理/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/12/19/k8sss日志管理/" class="leancloud_visitors" data-flag-title="k8s日志管理（一）">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="下载地址：https-www-elastic-co-downloads"><a href="#下载地址：https-www-elastic-co-downloads" class="headerlink" title="下载地址：https://www.elastic.co/downloads"></a>下载地址：<a href="https://www.elastic.co/downloads" target="_blank" rel="external">https://www.elastic.co/downloads</a></h3><h3 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h3><h4 id="部署es-kibana-server"><a href="#部署es-kibana-server" class="headerlink" title="部署es-kibana server"></a>部署es-kibana server</h4><h5 id="参考文章https-www-elastic-co-guide-en-elasticsearch-reference-5-1-rpm-html"><a href="#参考文章https-www-elastic-co-guide-en-elasticsearch-reference-5-1-rpm-html" class="headerlink" title="参考文章https://www.elastic.co/guide/en/elasticsearch/reference/5.1/rpm.html"></a>参考文章<a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.1/rpm.html" target="_blank" rel="external">https://www.elastic.co/guide/en/elasticsearch/reference/5.1/rpm.html</a></h5><p>Elasticsearch是一个扩展性强的全文索引和分析的工具。它允许你近可能实时的存储/搜索/分析数据。<br>下面是几个使用的案例：</p>
-<h4 id="运行一个web来存储数据可以允许你的顾客进行搜索和查看。"><a href="#运行一个web来存储数据可以允许你的顾客进行搜索和查看。" class="headerlink" title="运行一个web来存储数据可以允许你的顾客进行搜索和查看。"></a>运行一个web来存储数据可以允许你的顾客进行搜索和查看。</h4><h4 id="运行一个日志收集和分析平台（趋势图-统计图-异常情况等）"><a href="#运行一个日志收集和分析平台（趋势图-统计图-异常情况等）" class="headerlink" title="运行一个日志收集和分析平台（趋势图/统计图/异常情况等）"></a>运行一个日志收集和分析平台（趋势图/统计图/异常情况等）</h4><p>在这种情况下，你可以使用logstash来收集/汇聚/分析数据；然后通过logstash将数据放入到elasticsearch，然后你可以通过<br>elasticsearch来查询/分析任何你感兴趣的信息。</p>
-<h4 id="运行一个价格预警系统"><a href="#运行一个价格预警系统" class="headerlink" title="运行一个价格预警系统"></a>运行一个价格预警系统</h4><p>当你想要运行一个价格告知系统的时候（这个系统能够帮助你分析顾客想购买一套东西在价格比较低于某个值的时候），如果价格<br>低于某个值，可以动态的给客户发推送消息。厉害了我的哥。</p>
-<h4 id="智能分析"><a href="#智能分析" class="headerlink" title="智能分析"></a>智能分析</h4><p>当你想从海量的数据中快速检索/分析数据的时候。在这种情况下，你可以使用elasticsearch来存储数据使用kibana的仪表盘来展示<br>你认为重要的数据。</p>
-<p>下文我将引导你搭建一套elasticsearch系统。你将学会什么是elasticsearch以及它是如何工作的，希望你能学会很好的使用它。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1118,7 +1115,7 @@ volumes:
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">69</span>
+              <span class="site-state-item-count">71</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1126,7 +1123,7 @@ volumes:
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1135,7 +1132,7 @@ volumes:
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">48</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
