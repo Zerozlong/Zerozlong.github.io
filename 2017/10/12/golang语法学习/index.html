@@ -93,7 +93,7 @@ go语言环境安装go安装包安装安装包下载地址为：https://golang.o
 <meta property="og:site_name" content="Zero">
 <meta property="og:description" content="go语言用途Go 语言被设计成一门应用于搭载 Web 服务器，存储集群或类似用途的巨型中央服务器的系统编程语言。对于高性能分布式系统领域而言，Go 语言无疑比大多数其它语言有着更高的开发效率。它提供了海量并行的支持，这对于游戏服务端的开发而言是再好不过了。
 go语言环境安装go安装包安装安装包下载地址为：https://golang.org/dl/。或者到这个中文网站下载https://study">
-<meta property="og:updated_time" content="2017-10-12T11:15:41.958Z">
+<meta property="og:updated_time" content="2017-10-12T11:19:13.052Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="golang语法学习(一)">
 <meta name="twitter:description" content="go语言用途Go 语言被设计成一门应用于搭载 Web 服务器，存储集群或类似用途的巨型中央服务器的系统编程语言。对于高性能分布式系统领域而言，Go 语言无疑比大多数其它语言有着更高的开发效率。它提供了海量并行的支持，这对于游戏服务端的开发而言是再好不过了。
@@ -371,9 +371,10 @@ go语言环境安装go安装包安装安装包下载地址为：https://golang.o
       
         <h3 id="go语言用途"><a href="#go语言用途" class="headerlink" title="go语言用途"></a>go语言用途</h3><p>Go 语言被设计成一门应用于搭载 Web 服务器，存储集群或类似用途的巨型中央服务器的系统编程语言。<br>对于高性能分布式系统领域而言，Go 语言无疑比大多数其它语言有着更高的开发效率。它提供了海量并行的支持，<br>这对于游戏服务端的开发而言是再好不过了。</p>
 <h3 id="go语言环境安装"><a href="#go语言环境安装" class="headerlink" title="go语言环境安装"></a>go语言环境安装</h3><h4 id="go安装包安装"><a href="#go安装包安装" class="headerlink" title="go安装包安装"></a>go安装包安装</h4><p>安装包下载地址为：<a href="https://golang.org/dl/。" target="_blank" rel="external">https://golang.org/dl/。</a><br>或者到这个中文网站下载<a href="https://studygolang.com/dl；" target="_blank" rel="external">https://studygolang.com/dl；</a><br>安装msi文件到windows电脑上面，默认情况下.msi文件会安装在 c:\Go 目录下。<br>你可以将 c:\Go\bin 目录添加到 PATH 环境变量中。添加后你需要重启命令窗口才能生效。</p>
-<h4 id="go安装测试"><a href="#go安装测试" class="headerlink" title="go安装测试"></a>go安装测试</h4><p>写一个文件起名叫test.go.<br>‘’’<br>package main</p>
-<p>import “fmt”</p>
-<p>func main() {<br>   fmt.Println(“Hello, World!”)<br>}<br>‘’’<br>使用 go 命令执行以上代码输出结果如下：<br>‘’’<br>C:\Go_WorkSpace&gt;go run test.go<br>Hello, World!<br>‘’’<br>Go 语言中变量的声明必须使用空格隔开，如：<br>‘’’<br>var age int;<br>‘’’</p>
+<h4 id="go安装测试"><a href="#go安装测试" class="headerlink" title="go安装测试"></a>go安装测试</h4><p>写一个文件起名叫test.go.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">package main</div><div class="line"></div><div class="line">import &quot;fmt&quot;</div><div class="line"></div><div class="line">func main() &#123;</div><div class="line">   fmt.Println(&quot;Hello, World!&quot;)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>使用 go 命令执行以上代码输出结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">C:\Go_WorkSpace&gt;go run test.go</div><div class="line">Hello, World!</div></pre></td></tr></table></figure></p>
+<p>Go 语言中变量的声明必须使用空格隔开，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var age int;</div></pre></td></tr></table></figure>
 <h5 id="go语言的数据结构"><a href="#go语言的数据结构" class="headerlink" title="go语言的数据结构"></a>go语言的数据结构</h5><p>变量来源于数学，是计算机语言中能储存计算结果或能表示值抽象概念。变量可以通过变量名访问。<br>Go 语言变量名由字母、数字、下划线组成，其中首个字母不能为数字。<br>声明变量的一般形式是使用 var 关键字。</p>
 
       
