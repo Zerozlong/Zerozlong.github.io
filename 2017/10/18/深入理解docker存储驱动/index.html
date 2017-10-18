@@ -93,7 +93,7 @@
 <meta property="og:site_name" content="Zero">
 <meta property="og:description" content="简介文深入探讨了Docker容器的存储驱动，内容包括graphdriver以及各个选项比如Vfs、Aufs、Overlay、Overlay2、Btrfs、ZFS、Devicemapper和Windows，还有具体如何选择的规则。
 如果你曾经上手用过Docker，你可能已经见过存储驱动（storage driver）这个词。或者你已经偶然听过graphdriver这个词，并心想这到底是个什么鬼？或者">
-<meta property="og:updated_time" content="2017-10-18T08:40:32.502Z">
+<meta property="og:updated_time" content="2017-10-18T08:43:25.368Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解docker存储驱动（转载）">
 <meta name="twitter:description" content="简介文深入探讨了Docker容器的存储驱动，内容包括graphdriver以及各个选项比如Vfs、Aufs、Overlay、Overlay2、Btrfs、ZFS、Devicemapper和Windows，还有具体如何选择的规则。
@@ -373,10 +373,7 @@
 <p>如果你曾经上手用过Docker，你可能已经见过存储驱动（storage driver）这个词。或者你已经偶然听过graphdriver这个词，并心想这到底是个什么鬼？或者你听过大牛们谈论的<br>话题中出现的aufs和devicemapper这样的词，你一定想知道他们都在讲的是什么? 我也很想知道。</p>
 <p>首先厘清一个事情：有很多的资源能帮你理解持久性存储，volume API和一些插件如ClusterHQ推出的Flocker，EMC的rexray/libstorage项目，Portworx等等，它们都是在处理Docker<br>生态中的持久性存储。但是这边文章仅仅关注的是当你运行docker run时，在将镜像分层组装进根文件系统过程中，目前有哪些选择可以做本地容器镜像存储。</p>
 <p>背景介绍就这么多，我想有必要关注并更加深入了解以下话题：<br>为什么Docker中存在graphdriver，它的角色是什么？<br>为什么一种graphdriver不够用，要有这么多种选择？<br>这么多种类的graphdriver，我该怎么选？</p>
-<h3 id="graphdriver是何物？"><a href="#graphdriver是何物？" class="headerlink" title="graphdriver是何物？"></a>graphdriver是何物？</h3><p>要开始理解graphdriver这个概念，我们首先得理解本地的Docker引擎有一个Docker镜像层的缓存。层叠镜像模型（layered image model）是Docker引擎最具特色的特性之一。<br>它能允许一个或者多个容器进程共享文件系统内容。这些分层的缓存会在docker pull或者docker build命令执行的时候，显式地进行构建。当docker run运行的时候，因为分层在本地<br>不存在需要从注册表中拉取的时候，也会向缓存中隐式地添加。要在运行的时候管理这些分层，需要一个支持一组特定能力的驱动 - 这组能力被抽象成接口可以在Docker引擎代码里找到 </p>
-<ul>
-<li>来将这些分层挂载到一个合并的根文件系统里面。因为分层内容的“镜像图（image graph）”代表了各种分层之间的关系，用来处理这些分层的驱动就被叫做“图驱动（graphdriver）”。</li>
-</ul>
+<h3 id="graphdriver是何物？"><a href="#graphdriver是何物？" class="headerlink" title="graphdriver是何物？"></a>graphdriver是何物？</h3><p>要开始理解graphdriver这个概念，我们首先得理解本地的Docker引擎有一个Docker镜像层的缓存。层叠镜像模型（layered image model）是Docker引擎最具特色的特性之一。<br>它能允许一个或者多个容器进程共享文件系统内容。这些分层的缓存会在docker pull或者docker build命令执行的时候，显式地进行构建。当docker run运行的时候，因为分层在本地<br>不存在需要从注册表中拉取的时候，也会向缓存中隐式地添加。要在运行的时候管理这些分层，需要一个支持一组特定能力的驱动 - 这组能力被抽象成接口可以在Docker引擎代码里找到<br>将这些分层挂载到一个合并的根文件系统里面。因为分层内容的“镜像图（image graph）”代表了各种分层之间的关系，用来处理这些分层的驱动就被叫做“图驱动（graphdriver）”。</p>
 <p>在运行的时候用来处理这个分层图有两个非常重要的概念。一个概念是联合文件系统（union filesystem），它最好的定义位于维基百科词条中。（译注：该维基词条说的是，“在操作系统<br>中，联合挂载（union mounting）是一种将多个目录结合成一个目录的方式，这个目录看起来就像包含了他们结合的内容一样。”） 联合文件系统的实现将这种文件系统内容合并来，<br>形成一个单一的挂载点。除非只读的根文件系统已经能满足你的需求，联合文件系统的实现通常辅有“写时复制（CoW）”的实现技术，这样任何对于底层文件系统分层的更改都会被“向上拷贝”<br>到文件系统的一个临时、工作、或高层的分层里面。这个可写的层然后可以被看做是一个“改动（diff）”，能将之应用到下层只读的层，而这些层很可能作为底层被很多容器的进程中共享。<br>这是一个很重要的点。一个Docker中使用分层文件系统的好处就是，1000个运行着bash的ubuntu:latest容器的副本，会共享一个底层的镜像，而并不会产生1000个文件系统的副本（vfs是个例外，请参考下边vfs部分）。<br>并且同样重要的是，对于aufs和overlay的实现，用来读取或执行共享库的共享内存也在所有运行的容器之间共享，大大的减少了通用库如’libc’的内存占用。这是一个分层策略的巨大优势，<br>同时也是Docker的graphdriver是引擎中相当重要的一部分的原因之一。</p>
 <p>现在诸君应该清楚了graphdriver是何物了，并且为什么Dokcer引擎要实现这个特性。现在让我们接着看看为什么Docker中有众多graphdriver的选择吧。</p>
 <h3 id="都有哪些graphdriver"><a href="#都有哪些graphdriver" class="headerlink" title="都有哪些graphdriver?"></a>都有哪些graphdriver?</h3><p>在最近的Docker引擎1.12版本中，会发现如下的graphdriver：vfs、aufs、overlay、overlay2、btrfs、zfs、devicemapper和windows。将这个列表归一下类有助于对它们进行更好地定义。</p>
