@@ -414,7 +414,7 @@
 <p>优点：ZFS正在受到越来越多的欢迎，在Ubuntu 16.04中，在Ubuntu的LXC/LXD中已经被使用。最初由Sun创建，ZFS已经存在很长的时间了，并且在Solaris和很多BSD的衍生版中使用，并且它的Linux移植版实现看起来也比较稳定<br>，对于容器文件系统的场景也有足够合理性能。ZFSgraphdriver也很及时的在Dockr 1.12中通过PR #21946添加了配额的支持，这让它在配额支持方面和btrfs、devicemapper站在了同一起跑线上。</p>
 <p>缺点：除了没有基于文件（inode）的共享达到内库共享之外，很难说ZFS和其它同样基于块设备的实现相比有什么缺点。通过比较，ZFS看起来欢迎程度越来越高。对于那些完全支持或者正在使用ZFS的Linux发行版或者UNIX衍生版而言，<br>zfs graphdriver可以是一个非常好的选择。</p>
 <p>总结：ZFS的支持为Docker引擎中稳定的graphdriver加了分。对于那些ZFS的使用者，或者那些ZFS扮演了更要角色的发行版来说，Docker能直接支持该文件系统，对这些社区来说是一个好消息。对于那些默认文件系统是ext4和xfs的发行版，<br>默认采用overlay驱动的用户来说，时间会告诉我们他们是否会对zfs驱动产生更多的兴趣。</p>
-<p>###更深层次的细节<br>要真的需要深挖每一个文件系统如何通过graphdriver来运作的需要更多的篇幅。更重要的是，Docker社区已经将一部分写成了文档，可以在官方的存储驱动文档查看。<br>如果对任何graphdriver的细节有不清楚的，可以点过去看一下。这里是官方文档中有关每个graphdriver的链接：aufs，devicemapper，overlay，zfs和btrfs。</p>
+<h3 id="更深层次的细节"><a href="#更深层次的细节" class="headerlink" title="更深层次的细节"></a>更深层次的细节</h3><p>要真的需要深挖每一个文件系统如何通过graphdriver来运作的需要更多的篇幅。更重要的是，Docker社区已经将一部分写成了文档，可以在官方的存储驱动文档查看。<br>如果对任何graphdriver的细节有不清楚的，可以点过去看一下。这里是官方文档中有关每个graphdriver的链接：aufs，devicemapper，overlay，zfs和btrfs。</p>
 <p>细心的读者会发现，我在开头提到了“windows”的graphdriver，但是之后再也没有提到。很显然windows graphdriver是最近Docker向Windows Sever 2016移植中使用的graphdriver，这个消息是这周<br>在Atlanta的MS Ignite宣布的。我本人没有足够多的细节，但希望以后我们能写一篇相关的文章或者链接到微软团队讲述该驱动是如何在Windows上运作的。</p>
 
           
