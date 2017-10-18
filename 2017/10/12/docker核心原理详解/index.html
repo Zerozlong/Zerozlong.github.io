@@ -86,18 +86,18 @@
 
 
 <meta name="description" content="docker背后的内核知识docker通过namespace实现了资源隔离，通过cgroup实现了资源限制，通过写时复制实现了高效的文件操作。但是当更进一步讲解cgroup和namespace时候大部分人都不了解。
-namespace资源隔离">
+namespace资源隔离linux内核实现namespace的主要目的之一是实现轻量级虚拟化（容器）服务。在同一个namespace下的进程可以感知彼此的变化，而对外界进程一无所知。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="docker核心原理详解">
 <meta property="og:url" content="http://yoursite.com/2017/10/12/docker核心原理详解/index.html">
 <meta property="og:site_name" content="Zero">
 <meta property="og:description" content="docker背后的内核知识docker通过namespace实现了资源隔离，通过cgroup实现了资源限制，通过写时复制实现了高效的文件操作。但是当更进一步讲解cgroup和namespace时候大部分人都不了解。
-namespace资源隔离">
-<meta property="og:updated_time" content="2017-10-12T10:43:07.990Z">
+namespace资源隔离linux内核实现namespace的主要目的之一是实现轻量级虚拟化（容器）服务。在同一个namespace下的进程可以感知彼此的变化，而对外界进程一无所知。">
+<meta property="og:updated_time" content="2017-10-13T03:55:21.452Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker核心原理详解">
 <meta name="twitter:description" content="docker背后的内核知识docker通过namespace实现了资源隔离，通过cgroup实现了资源限制，通过写时复制实现了高效的文件操作。但是当更进一步讲解cgroup和namespace时候大部分人都不了解。
-namespace资源隔离">
+namespace资源隔离linux内核实现namespace的主要目的之一是实现轻量级虚拟化（容器）服务。在同一个namespace下的进程可以感知彼此的变化，而对外界进程一无所知。">
 
 
 
@@ -370,7 +370,8 @@ namespace资源隔离">
 
       
         <h3 id="docker背后的内核知识"><a href="#docker背后的内核知识" class="headerlink" title="docker背后的内核知识"></a>docker背后的内核知识</h3><p>docker通过namespace实现了资源隔离，通过cgroup实现了资源限制，通过写时复制实现了高效的文件操作。但是当更进一步讲解cgroup和namespace时候大部分人都不了解。</p>
-<h4 id="namespace资源隔离"><a href="#namespace资源隔离" class="headerlink" title="namespace资源隔离"></a>namespace资源隔离</h4>
+<h4 id="namespace资源隔离"><a href="#namespace资源隔离" class="headerlink" title="namespace资源隔离"></a>namespace资源隔离</h4><p>linux内核实现namespace的主要目的之一是实现轻量级虚拟化（容器）服务。在同一个namespace下的进程可以感知彼此的变化，而对外界进程一无所知。这样就可以让容器中的进程产生错觉，<br>仿佛自己置身于一个独立的系统环境中，以达到独立和隔离的目的。<br>| namespace        | 系统调用参数           | 隔离内容  |<br>| ————- |:————-:| —–:|<br>| UTS      | CLONE_NEWUTS| 主机名与域名 |<br>| IPC     | CLONE_NEWIPC      |   信号量，消息队列和共享内存 |<br>| PID | CLONE_NEWPID      |    进程编号 |<br>|  Network   |  CLONE_NEWNET             |   网络设备，网络栈，端口等           |<br>| Mount  | CLONE_NEWNS  | 挂载点（文件系统）|<br>|User | CLONE_NEWUSER  | 用户和用户组 |</p>
+
       
     </div>
 
@@ -507,7 +508,7 @@ namespace资源隔离">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">71</span>
+              <span class="site-state-item-count">72</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -524,7 +525,7 @@ namespace资源隔离">
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-count">51</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
