@@ -260,6 +260,182 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/05/celery多个worker/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/06/05/celery多个worker/" itemprop="url">
+                  celery多个worker(原创)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-05T17:51:29+08:00">
+                2017-06-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python开发/" itemprop="url" rel="index">
+                    <span itemprop="name">python开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/06/05/celery多个worker/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/05/celery多个worker/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/06/05/celery多个worker/" class="leancloud_visitors" data-flag-title="celery多个worker(原创)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Celery 是一个简单、灵活且可靠的，处理大量消息的分布式系统，并且提供维护这样一个系统的必需工具。<br>由于在工作的平台中用到Celery系统（用于发送邮件、发送短信、发送上线等任务），记录一下学习的知识。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>使用RabbitMQ作为Celery Broker的优点：<br>Highly customizable routing（高度定制路由）<br>Persistent queues（一致性队列）</p>
+<p>使用redis作为celery brocker的优点：<br>high speed due to in memory datastore（速度极快的内存数据库）<br>can double up as both key-value datastore and job queue(可以保证key-value 数据存储及job序列)</p>
+<p>celery官网首推rabbitmq，不过我开发过程中一致使用的是redis。</p>
+<h3 id="redis安装"><a href="#redis安装" class="headerlink" title="redis安装"></a>redis安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-pro-bj2D-renmai-redis01 redis]# more install.sls </div><div class="line">redis-source-install:</div><div class="line">  file.managed:</div><div class="line">  - source: salt://redis/files/redis-3.2.0.tar.gz</div><div class="line">  - name: /usr/local/src/redis-3.2.0.tar.gz</div><div class="line">  - user: root</div><div class="line">  - group: root</div><div class="line">  - mode: 644</div><div class="line">  cmd.run:</div><div class="line">  - name: cd /usr/local/src &amp;&amp;  tar -xzvf redis-3.2.0.tar.gz -C /usr/local  &amp;&amp; cd /usr/local/redis-3.2.0  &amp;&amp; make &amp;&amp; make install </div><div class="line">  - require:</div><div class="line">    - file: redis-source-install</div><div class="line">  - unless: test -d  /usr/local/redis-3.2.0</div><div class="line">  </div><div class="line"> ./redis-server IP:PORT   启动服务</div></pre></td></tr></table></figure>
+<h3 id="celery安装"><a href="#celery安装" class="headerlink" title="celery安装"></a>celery安装</h3><p>celery要求python版本最低2.7.8，自己注意下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install celery</div></pre></td></tr></table></figure>
+<h3 id="celery-web监控"><a href="#celery-web监控" class="headerlink" title="celery web监控"></a>celery web监控</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install flower</div></pre></td></tr></table></figure>
+<h3 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h3><p>如下为流程图：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">任务--&gt;celery路由（broker）--&gt;队列--&gt;队列对应的worker处理问题</div></pre></td></tr></table></figure></p>
+<p>解释：<br>某个方法的消息请求celery执行，首先celery根据绑定的规则把任务消息放到制定的路由队列中去，此队列<br>对应的worker节点取出执行。<br>说明：<br>为什么要定义多个worker？每个worker都会新建一个进程，充分利用服务器资源，提高执行效率。<br>同一个服务器可以启动多个worker节点？可以，启动参数里面写上不同的–hostname即可。<br>celery默认会创建一个celery任务队列，没有任何绑定的任务将会发送到此消息队列中。</p>
+<h3 id="celery多worker实验"><a href="#celery多worker实验" class="headerlink" title="celery多worker实验"></a>celery多worker实验</h3><h4 id="worker节点规划"><a href="#worker节点规划" class="headerlink" title="worker节点规划"></a>worker节点规划</h4><p>celery加redis的多节点配置实例，由于资源限制只找了两台机器做测试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">10.10.42.33</div><div class="line">10.10.190.234</div></pre></td></tr></table></figure></p>
+<p>我们把redis服务放在10.10.190.234那台服务器上<br>我们把flower服务也启动在10.10.42.33那台服务器上<br>代码中定义的队列有queue_add、queue_sum （还有个默认队列celery）<br>33、234服务器用于启动worker节点<br>33服务器上启动处理celery和queue_add队列的worker节点<br>234服务器上启动处理celery和queue_sum队列的worker节点</p>
+<h4 id="配置展示"><a href="#配置展示" class="headerlink" title="配置展示"></a>配置展示</h4><p>暂定都在同一个目录下：</p>
+<h5 id="celeryconfig配置文件："><a href="#celeryconfig配置文件：" class="headerlink" title="celeryconfig配置文件："></a>celeryconfig配置文件：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">cat celeryconfig.py</div><div class="line">#!/usr/bin/python</div><div class="line">#coding:utf-8</div><div class="line">from kombu import Queue</div><div class="line">CELERY_TIMEZONE = &apos;Asia/Shanghai&apos;</div><div class="line">####################################</div><div class="line"># 一般配置 #</div><div class="line">####################################</div><div class="line">CELERY_TASK_SERIALIZER = &apos;json&apos;</div><div class="line">CELERY_RESULT_SERIALIZER = &apos;json&apos;</div><div class="line">CELERY_ACCEPT_CONTENT=[&apos;json&apos;]</div><div class="line">CELERY_TIMEZONE = &apos;Asia/Shanghai&apos;</div><div class="line">CELERY_ENABLE_UTC = True</div><div class="line"># List of modules to import when celery starts.</div><div class="line">CELERY_IMPORTS = (&apos;tasks&apos;, )</div><div class="line">CELERYD_MAX_TASKS_PER_CHILD = 40 #  每个worker执行了多少任务就会死掉</div><div class="line">BROKER_POOL_LIMIT = 10 #默认celery与broker连接池连接数</div><div class="line">CELERY_DEFAULT_QUEUE=&apos;default&apos;</div><div class="line">CELERY_DEFAULT_ROUTING_KEY=&apos;task.default&apos;</div><div class="line">CELERY_RESULT_BACKEND=&apos;redis://:fafafa@10.10.190.234:6379/0&apos;  </div><div class="line">BROKER_URL=&apos;redis://:fafafa@10.19.190.234:6379/0&apos;  </div><div class="line">#默认队列</div><div class="line">CELERY_DEFAULT_QUEUE = &apos;celery&apos;</div><div class="line">CELERY_DEFAULT_ROUTING_KEY = &apos;celery&apos;</div><div class="line">CELERYD_LOG_FILE=&quot;./logs/celery.log&quot;</div><div class="line">CELERY_QUEUEs = (</div><div class="line">    Queue(&quot;queue_add&quot;, routing_key=&apos;queue_add&apos;),</div><div class="line">    Queue(&apos;queue_reduce&apos;, routing_key=&apos;queue_sum&apos;),</div><div class="line">    Queue(&apos;celery&apos;, routing_key=&apos;celery&apos;),</div><div class="line">    )</div><div class="line"></div><div class="line">CELERY_ROUTES = &#123;</div><div class="line">    &apos;task.add&apos;:&#123;&apos;queue&apos;:&apos;queue_add&apos;, &apos;routing_key&apos;:&apos;queue_add&apos;&#125;,</div><div class="line">    &apos;task.reduce&apos;:&#123;&apos;queue&apos;:&apos;queue_reduce&apos;, &apos;routing_key&apos;:&apos;queue_sum&apos;&#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="查看任务配置文件："><a href="#查看任务配置文件：" class="headerlink" title="查看任务配置文件："></a>查看任务配置文件：</h5><p>cat task.py</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">import os</div><div class="line">import sys</div><div class="line">import datetime</div><div class="line">BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</div><div class="line">sys.path.append(BASE_DIR)</div><div class="line">from celery import Celery</div><div class="line">from celery import chain, group, chord, Task</div><div class="line">from celeryservice import celeryconfig</div><div class="line">app = Celery()</div><div class="line">app.config_from_object(celeryconfig)</div><div class="line">__all__ = [&apos;add&apos;, &apos;reduce&apos;,&apos;sum_all&apos;, &apos;other&apos;]</div><div class="line">####################################</div><div class="line"># task定义 #</div><div class="line">####################################</div><div class="line">@app.task</div><div class="line">def add(x, y):</div><div class="line">    return x + y</div><div class="line">@app.task</div><div class="line">def reduce(x, y):</div><div class="line">    return x - y</div><div class="line">@app.task</div><div class="line">def sum(values):</div><div class="line">    return sum([int(value) for value in values])</div><div class="line">@app.task</div><div class="line">def other(x, y):</div><div class="line">    return x * y</div></pre></td></tr></table></figure>
+<h5 id="flower任务配置文件"><a href="#flower任务配置文件" class="headerlink" title="flower任务配置文件"></a>flower任务配置文件</h5><p>cat flower.py<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python</div><div class="line">#coding:utf-8</div><div class="line">broker_api = &apos;redis://:afafafafa@10.10.190.234:6379/0&apos;</div><div class="line">logging = &apos;DEBUG&apos;</div><div class="line">address = &apos;0.0.0.0&apos;</div><div class="line">port = 5555</div><div class="line">basic_auth = [&apos;zero:zero&apos;]  #外部访问密码</div><div class="line">persistent=True  #持久化celery tasks（如果为false的话，重启flower之后，监控的task就消失了)</div><div class="line">db=&quot;./flower/flower_db&quot;</div></pre></td></tr></table></figure></p>
+<h4 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h4><p>33上启动服务：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">celery worker -A  task --loglevel=info --queues=celery,queue_add --hostname=celery_worker33  &gt;/dev/null 2&gt;&amp;1 &amp;</div></pre></td></tr></table></figure></p>
+<p>234上启动服务：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">celery worker -A  task --loglevel=info --queues=celery,queue_reduce --hostname=celery_worker234  &gt;/dev/null 2&gt;&amp;1 &amp;</div></pre></td></tr></table></figure>
+<p>33上启动监控服务：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-pro-bj2D-renmai-redis01 data]# celery flower </div><div class="line">[D 170606 17:14:18 events:76] Loading state from &apos;./flower/flower_db&apos;...</div><div class="line">[I 170606 17:14:18 command:136] Visit me at http://0.0.0.0:5555</div><div class="line">[I 170606 17:14:18 command:141] Broker: redis://:**@10.10.190.234:6379/0</div><div class="line">[I 170606 17:14:18 command:144] Registered tasks: </div><div class="line">    [u&apos;celery.accumulate&apos;,</div><div class="line">     u&apos;celery.backend_cleanup&apos;,</div><div class="line">     u&apos;celery.chain&apos;,</div><div class="line">     u&apos;celery.chord&apos;,</div><div class="line">     u&apos;celery.chord_unlock&apos;,</div><div class="line">     u&apos;celery.chunks&apos;,</div><div class="line">     u&apos;celery.group&apos;,</div><div class="line">     u&apos;celery.map&apos;,</div><div class="line">     u&apos;celery.starmap&apos;]</div><div class="line">[D 170606 17:14:18 command:146] Settings: &#123;&apos;cookie_secret&apos;: &apos;k8U5uXFmRWiuchyDVmFklg1qrX6ZSEpNpQjqZNkeb0M=&apos;,</div><div class="line">     &apos;debug&apos;: False,</div><div class="line">     &apos;login_url&apos;: &apos;/login&apos;,</div><div class="line">     &apos;static_path&apos;: &apos;/usr/local/lib/python2.7/site-packages/flower/static&apos;,</div><div class="line">     &apos;static_url_prefix&apos;: &apos;/static/&apos;,</div><div class="line">     &apos;template_path&apos;: &apos;/usr/local/lib/python2.7/site-packages/flower/templates&apos;&#125;</div><div class="line">[D 170606 17:14:18 control:29] Updating all worker&apos;s cache...</div><div class="line">[I 170606 17:14:18 mixins:224] Connected to redis://:**@10.10.190.234:6379/0</div><div class="line">[D 170606 17:14:20 app:62] Successfully updated worker cache</div></pre></td></tr></table></figure>
+<h4 id="服务验证"><a href="#服务验证" class="headerlink" title="服务验证"></a>服务验证</h4><p>在任一台有celeryservice项目代码的服务器上，运行add、reduce、sum、other任务（测试可简单使用add.delay(1,2)等）<br>add只会在33上运行，<br>sum任务，可能会在33或234服务器的worker节点运行<br>reduce任务,只会在234上运行。<br>other任务可能会在33或者234上运行。<br>验证结果截图如下所示：<br><img src="/images/2017/06/1.png" alt="image"></p>
+<h3 id="关于使用过程中的优化"><a href="#关于使用过程中的优化" class="headerlink" title="关于使用过程中的优化"></a>关于使用过程中的优化</h3><h4 id="使用celery的错误处理机制"><a href="#使用celery的错误处理机制" class="headerlink" title="使用celery的错误处理机制"></a>使用celery的错误处理机制</h4><p>如下内容来自于网站，还没实践，存档用。<br>大多数任务并没有使用错误处理，如果任务失败，那就失败了。在一些情况下这很不错，但是作者见到的多数失败任务都是去调用第三方API然后出现了网络错误，<br>或者资源不可用这些错误，而对于这些错误，最简单的方式就是重试一下，也许就是第三方API临时服务或者网络出现问题，没准马上就好了，那么为什么不试着加个重试测试一下呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">@app.task(bind=True, default_retry_delay=300, max_retries=5)</div><div class="line">def my_task_A():</div><div class="line">    try:</div><div class="line">        print(&quot;doing stuff here...&quot;)</div><div class="line">    except SomeNetworkException as e:</div><div class="line">        print(&quot;maybe do some clenup here....&quot;)</div><div class="line">        self.retry(e)</div></pre></td></tr></table></figure></p>
+<h3 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h3><p>   牛人并不可怕，可怕的是牛人比我们还努力！</p>
+<h3 id="参考文章："><a href="#参考文章：" class="headerlink" title="参考文章："></a>参考文章：</h3><p><a href="https://denibertovic.com/posts/celery-best-practices/" target="_blank" rel="external">https://denibertovic.com/posts/celery-best-practices/</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/01/敏捷概念/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -852,171 +1028,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/19/思维转换/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/05/19/思维转换/" itemprop="url">
-                  思维转换（转）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-19T16:09:18+08:00">
-                2017-05-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/05/19/思维转换/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/05/19/思维转换/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/05/19/思维转换/" class="leancloud_visitors" data-flag-title="思维转换（转）">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>文章来源：<a href="http://blog.csdn.net/ityouknow/article/details/72457086" target="_blank" rel="external">http://blog.csdn.net/ityouknow/article/details/72457086</a><br>我相信大家都可能听到过这样一个故事，一名记者看见农村的一个正在放羊的小孩</p>
-<p>问他“你的理想是什么？”<br>小孩回答说：“放羊！”<br>“羊儿喂大了干什么？”<br>“卖钱！”<br>“有了卖羊儿的钱干什么？”<br>“娶老婆！”<br>“娶老婆干什么？”<br>“生小孩！”<br>“生小孩来干什么？”<br>“放羊！”<br>……</p>
-<p>这段流传甚广的段子，但是我们想想这个故事背后的原因是什么。放羊的小孩对世界的理解也就是：放羊挣钱娶老婆生小孩再放羊。对外面世界的了解可能趋向于了零，在他的世界里，这就是美好的一切，幸福的生活。对世界认识的局限性会导致思维的局限性，思维的局限性会导致目标的局限性，目标的局限性最终导致行为的局限性，从而影响你人生中的各种选择。</p>
-<p>关于贫穷</p>
-<p>故事一</p>
-<p>我在知乎看到的这个故事你在哪一刻体验到了真正的贫富差距？,故事情节大概是这个样子的。</p>
-<p>13年的夏天，作者偶然遇到了一个小伙子，一副农民工的打扮，问去从这里到xx城市应该怎么走？作者有点诧异，因为这里距离XX城市要有100百多公里，给他指了指方向，告诉他往西大约一百多公里。小伙子点点头说了声谢谢大哥就往前走了，以为会是个乞讨者或者流浪汉，讨点钱或要点吃的。可他只是问问路，而且看上去是要徒步过去的意思。小伙子走出去几十米，在人行道边坐下，拿出一瓶水喝了几口，然后低着头摆弄着地下的什么玩意，像是在休息。</p>
-<p>好奇心驱使作者去了解情况，才知道他是要去xx市找自己的老乡，老乡在xx市的一个厂里面工作，工资比现在的高一些，老乡给他拖了一个口信，他现在工作的地方老板不给他发工资并且扣了他的身份证。于是他就准备徒步两百多公里去投靠老乡。小伙子没受过教育，家在云南山区，没有电话，打工是为了补贴家用，同村出来的几个人如今都分散了，没有朋友，没有依靠。小伙子在讲这些的时候，在他的眼睛里没看到赶去见同乡的盼望，没看到被工头欺负后的愤怒，在他看来好像一切都很正常，像是在叙述别人的故事，低垂的眼里空洞无意，就像个老人在等待明天。</p>
-<p>故事二</p>
-<p>有次看中央电视台的一个节目，是采访居住在交通闭塞的大山里村民的生活。有一个画面我记忆特别深刻，中央电视台采访一个小伙子，记者问他：你为什么不出去打工来挣钱呢，那个小伙子说了一句，我听不懂你说啥。这句话深深的震撼了我，那个小伙子和我应该是同龄吧，大概也是三十岁左右，几十年没有走出去过小山村，竟然都听不懂普通话，更不敢出去看看外面的世界。那一刻我感觉这个世界在他的眼里充满了迷茫。</p>
-<p>后来村长说，这个村子常年不通公路，村里面的人要出去需要先坐牛车，再坐拖拉机两天后才能到达小县城，村里面就一个小学，一个教室里面坐了六个年级的学生，很多孩子上到一半就回家干活了。这两年有一些年轻人走出了村子去深圳、东莞打工，慢慢的也带动了一些人，但还是有一些年轻人因为不会说普通话，不能直接和人交流，就一直都没有出去，在村里面种地生活。这是21世纪呀，非常有可能他们一辈子就走不去了。</p>
-<p>贫穷在这个年代仍然是存在的，只是可能你不了解。但贫穷其实不是最可怕的，最可怕的是贫穷的人不知道贫穷的可怕，不了解外面的世界，所以对他们来讲没有走出去的动力和勇气，只有让他们了解外面的世界，认识外面的世界，从思想上有了改变的动力和目标，才能真正的走出贫穷。</p>
-<p>教育有时候就是开智，明事理 ，认识世界，可以有一个和外界交流的窗口。到现在为止，高考仍然是很多人走出老家，跨越阶级的最公平，最重要的一条道路，虽然它仍然有很多的弊端。</p>
-<p>思维误区</p>
-<p>我上初中的时候，大家都羡慕不上学去外面世界闯荡的人们。去南方打工、当兵、学一门技术的都觉得挺时髦，可以不用上无用的学，勇敢的走出小县城，自己赚钱自己花，再也没有了上学的约束。我初中的五个好兄弟，两个当了兵，一个去学了理发，一个去学了厨师，只有我一个考上高中，继续求学，每年他们回来都会聊聊他们在外面的故事，一番啤酒下肚之后，我是既羡慕又被吸引，对外面的世界充满了憧憬，多年以后我才知道他们在外面受了多少的苦，但是回老家了，必须要搞的在外面很精彩。</p>
-<p>其实上过大学的就比没有上过大学的能力好很多吗？有可能只是在开始的时候选择对了而已。我们都处在一个大的洪流之中，不是说选择了不读书以后就混不好，选择了读书就肯定会有不错的生活。但是整体的机遇来讲，读过大学的比没有读过大学的会更多一点，没有读过大学的人大多从事了体力劳动或者技能类的一些工作，读过大学不管怎么样，大都是白领类的工作。</p>
-<p>我们这里不讨论极个别厉害人的情况，研究一下为什么会出现这种情况。上大学让你在那些方面有了提升，很多人大学四年几乎没有好好学习过，玩了四年照样出来找了不错的工作，所以说大学对人能力的提升不一定会比没有上学的强，在外面对能力的提升反而是更快。我个人认为最本质的是认知的提升会不一样，那怕你的四年什么都没有做，但是你至少看到很多人做的事情，别人做事情的经验也会成为你的的经验，毕业后大家都去找了工作，你肯定也会跟着找了工作，大不了差了一点。都是在认知上，对世界的认识上有了很大的不同，才最终影响了你未来的选择和目标。</p>
-<p>说到这里想起了波仔的那条理论，你的生活水平就是你身边最亲近的五个人的平均值。我就不信你和奥巴马是哥们，还和我一起在敲代码。其实仔细观察你身边的高管，高层，起步就没在一个层级里面。</p>
-<p>程序员呢，其实也是一样。大家有没有一种感觉，刚毕业一年左右的时候是最自信的，觉得自己已经掌握了程序开发的基本规律，应付工作没有问题，简历上写的各种精通，精通前端，精通数据库，精通core Java等等。反而工作多年以后越发觉得，研究不够深入涉猎不够广泛，很多的新老技术还都停留在使用阶段。为了解释这个问题我画了两个图。</p>
-<p>把整个的IT知识领域用一个圆圈来表示，黑色实体部分就是我们刚开始认知的区域，因为我们刚开始知道的少，了解的少，里面的圆的周长就会小很多，我们感觉到自己需要了解的东西也相对小</p>
-<p>当我们通过不断的学习、扩宽自己知识的边界，就像里面的小圆不断的长大一些，我们感受到的未知也越来越多，认识到自己了解的内容占整个体系只是很小的一部分。</p>
-<p>很多人，不是不想学习，是不知道如何去学习，很多时候遇到问题，不知道外界有很多解决方案。另外，不进步不学习不可怕，最可怕的是，比我们厉害的人比我们更努力。</p>
-<p>如何打破</p>
-<p>1、要跳出你的圈子，我从西安到北京，IT行业工作氛围，技术特征完全没有在一个水平线上。要时常的跳出自己的圈子，站到外面去看原来的自己。</p>
-<p>2、读书，不断的读书，不断的读好书，其实读书是了解作者怎么看这个世界，读好书更是了解很多大师人物对世界的理解。通过读书打开自己对世界认识的另一扇窗，技术人除了看技术书籍，更应该看一些其它领域的书，来扩宽自己的视野。</p>
-<p>3、对于技术，多逛逛技术性网站，了解一下最新的前沿知识，比如vue活跃的时候，技术网站就出了很多关于vue的教程，微服务火的时候，技术网站首页经常有关于微服务的文章，时常关注让你了解有这么个东西，在解决问题的时候或者定方案的时候知道会有这么一个选项。</p>
-<p>4、多走出自己的视角，做为程序员总是以程序的思维去思考问题。比如遇到了问题，这个问题对产品、客户意味着什么，领导是如何考虑的，当领导让你干某件事的时候他关心的什么。刚好我这里有一个职场真实的小故事，分享给大家。</p>
-<p>某一线互联网电商平台，空降了一名技术高管，要求紧急上线一个项目，必须三个月上线，安排下去，技术总监认真的分析了需求和现有公司的资源，告知这个项目最少需要四个月加班才能完成，高管说实在没有办法吗，总监说，已经是极限了。高管直接就把这位总监给开了，然后问下一个总监周期需要多久，这位总监考虑了一下说：2个月，高管说，项目你来负责，最后这个项目整整做了六个月，但是大家也都相安无事。<br>5、培养一个行业之外的爱好，最好是运动类的，只有身体好了，精神才更好，才能体会挥汗之后的畅快之感。具体的，比如坚持每周去户外，在北京的话像绿野这种就可以，参加几次就可以融入组织。程序员的话，建议打羽毛球，感觉这类运动对程序员是最有益处，避免各种颈椎病，游泳也是很好的一个选择。经常保持运动的人，整个人的精神状态是不一样的，我们大多数办公室工作者都处于亚健康状态，锻炼真的很重要。</p>
-<p>6、github对程序员来讲真是一个宝库，提交分享代码都是最基础的，建博客、建网站、建工具github都可以免费让你搞定，可以作为你创意或者实践的一个绝佳场所，也可以好好看看其他牛人的杰作，也有很多github第三方的网站可以帮你找到优秀的开源项目。</p>
-<p>最后</p>
-<p>很多时候的改变，不是我们不想改变，不愿意改变，是不知道如何改变，不知道什么才是好的选择，或者在深刻一点，很多人到现在都不知道什么是好的什么是坏的。<br>所以说很多时候的改变，最先是思维的改变，思维的改变转换成行动，然后达到真正的改变。</p>
-<p>希望我们都不是这个版本</p>
-<p>“你做程序员干什么？”<br>“找个体面又高薪的工作。”<br>“找到理想的工作后呢？”<br>“再寻觅一个温柔漂亮的好老婆。”<br>“找到好老婆后呢？”<br>“生一个聪明智慧的孩子！”<br>“生了孩子后呢？”<br>“从小就好好教育孩子努力学习，考个好大学，最好再做一名程序员！”</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1062,7 +1073,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">72</span>
+              <span class="site-state-item-count">73</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1070,7 +1081,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1079,7 +1090,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">51</span>
+                <span class="site-state-item-count">52</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
