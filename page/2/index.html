@@ -260,6 +260,161 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/11/celery和flask集成二 /">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/09/11/celery和flask集成二 /" itemprop="url">
+                  celery和flask集成(二)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-11T14:16:58+08:00">
+                2017-09-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python-flask-celery/" itemprop="url" rel="index">
+                    <span itemprop="name">python flask  celery</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/09/11/celery和flask集成二 /#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/11/celery和flask集成二 /" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/09/11/celery和flask集成二 /" class="leancloud_visitors" data-flag-title="celery和flask集成(二)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="flask与celery的集成"><a href="#flask与celery的集成" class="headerlink" title="flask与celery的集成"></a>flask与celery的集成</h3><p>首先看下项目文档架构图如下所示：<br><img src="/images/2017/09/4.png" alt="image"></p>
+<h3 id="查看init-py文件"><a href="#查看init-py文件" class="headerlink" title="查看init.py文件"></a>查看<strong>init</strong>.py文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">#coding:utf-8</div><div class="line">#Author:Zero</div><div class="line"></div><div class="line">import os</div><div class="line"></div><div class="line">from flask import Flask</div><div class="line"></div><div class="line">from flask.ext.celery import Celery</div><div class="line">import celeryconfig</div><div class="line"></div><div class="line">BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</div><div class="line">app=Flask(&apos;&apos;)</div><div class="line">celery=Celery()</div><div class="line">def create_app():</div><div class="line">    app=Flask(&apos;&apos;)</div><div class="line">    print app</div><div class="line">    app.config[&apos;CELERY_BROKER_URL&apos;]=celeryconfig.BROKER_URL</div><div class="line">    app.config.from_object(celeryconfig)</div><div class="line">    celery.conf.update(app.config)</div><div class="line">    celery.init_app(app)</div><div class="line">    return app</div><div class="line">app=create_app()</div><div class="line">from .controller import test</div></pre></td></tr></table></figure>
+<h3 id="查看controller下面的test-py文件"><a href="#查看controller下面的test-py文件" class="headerlink" title="查看controller下面的test.py文件"></a>查看controller下面的test.py文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">import json</div><div class="line">from web import app,celery</div><div class="line">from flask import request,jsonify, render_template</div><div class="line">def test():</div><div class="line">    try:</div><div class="line">        kwargs=[1,2]</div><div class="line">    # r = app.send_task(&quot;task2.add&quot;,kwargs,routing_key=&quot;celery&quot;, queue=&quot;celery&quot;)</div><div class="line">        r = celery.send_task(&quot;task2.add&quot;,kwargs)</div><div class="line">        print r.get()</div><div class="line">        print r.result</div><div class="line">        print r.ready()</div><div class="line">    except Exception,e:</div><div class="line"></div><div class="line">        print &quot;----------------&quot;</div><div class="line">    return &quot;test&quot;</div></pre></td></tr></table></figure>
+<h3 id="启动celery客户端"><a href="#启动celery客户端" class="headerlink" title="启动celery客户端"></a>启动celery客户端</h3><p>将task2.add进行注册即可，注册命令如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">celery worker -A task2 --loglevel=info --queues=celery,queue_add</div></pre></td></tr></table></figure></p>
+<p>下一步将这个跑通的代码在框架里面进行展示使用即可。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/08/gitbook在本地的搭建/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -861,178 +1016,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/06/web性能优化之-深入理解Tcp-Socket/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/06/06/web性能优化之-深入理解Tcp-Socket/" itemprop="url">
-                  web性能优化之-深入理解Tcp Socket（转载）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-06T18:52:47+08:00">
-                2017-06-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TCP-IP/" itemprop="url" rel="index">
-                    <span itemprop="name">TCP/IP</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/06/06/web性能优化之-深入理解Tcp-Socket/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/06/web性能优化之-深入理解Tcp-Socket/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/06/06/web性能优化之-深入理解Tcp-Socket/" class="leancloud_visitors" data-flag-title="web性能优化之-深入理解Tcp Socket（转载）">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>内容来源：运维社区<a href="https://www.unixhot.com/article/65" target="_blank" rel="external">https://www.unixhot.com/article/65</a></p>
-<h3 id="什么是Socket？"><a href="#什么是Socket？" class="headerlink" title="什么是Socket？"></a>什么是Socket？</h3><p>大家都用电脑上网，当我们访问运维社区<a href="https://www.unixhot.com的时候，我们的电脑和运维社区的服务器就会创建一条Socket，" target="_blank" rel="external">https://www.unixhot.com的时候，我们的电脑和运维社区的服务器就会创建一条Socket，</a><br>我们称之为网络套接字。那么既然是网络通信，肯定是成对的。至少有一个客户端和服务端，我们称之为套接字对。</p>
-<p>一个套接字对（socket pair）是一个定义该网络连接的两个端点的五元组，包括：<br>   源IP地址<br>   源端口<br>   目的IP地址<br>   目的端口<br>类型：TCP or UDP</p>
-<h3 id="客户端的随机端口"><a href="#客户端的随机端口" class="headerlink" title="客户端的随机端口"></a>客户端的随机端口</h3><p>那么针对于HTTP请求来说，我们知道底层是建立了一条TCP的Socket，那么TCP的套接字对就是一个四元组，因为协议已经确定了：<br>   1.源IP地址、2.源端口、3.目的IP地址、4.目的端口。<br>客户端的随机端口<br>为了更直观的认识这个TCP Socket，我们做一个小实验，我这里准备了两台服务器：<br><img src="/images/2017/06/2.png" alt="image"><br>当客户端192.168.56.11访问192.168.56.12的9999端口的时候，那么会选择一个随机端口来进行通信，那么这个随机端口，<br>到底是从什么范围随机出来了呢，端口总有一个范围不可能无穷多的。<br>那么对于TCP套接字来说客户端的一个IP地址，到底能有多少个端口呢？由于TCP协议头部使用16位来保存端口号，所以端口的个数最多为65536个，<br>2^16=65536<br><img src="/images/2017/06/3.png" alt="image"><br>没错，是65536个。但是为什么我们经常看到网上说可用端口最大65535个呢，也就是2^16-1个。因为端口号是从0开始算的，0-65535那就是65536个。<br>而0端口是保留端口，无论是TCP还是UDP都是不用使用的，当然这个是标准，那到底能不能监听端口0呢，下面我用一个python脚本，监听本地的端口0来试试。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">[root@test ~]# cat test.py</div><div class="line">#!/usr/bin/env python</div><div class="line"># -*- coding: utf-8 -*-</div><div class="line">&apos;&apos;&apos;本脚本监听本地的127.0.0.1的端口0，</div><div class="line">探索端口0的奥秘&apos;&apos;&apos;</div><div class="line">import socket</div><div class="line">def bind_port_zero():</div><div class="line">    ss = socket.socket(socket.AF_INET,socket.SOCK_STREAM)</div><div class="line">    ss.bind((&apos;127.0.0.0&apos;, 0))</div><div class="line">    addr, port = ss.getsockname()</div><div class="line">    ss.close()</div><div class="line">    print(addr, port)</div><div class="line">bind_port_zero()</div></pre></td></tr></table></figure>
-<p>执行脚本，看看到底能不能正常监听</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[root@renmai-rizhi data]# python test.py </div><div class="line">(&apos;127.0.0.0&apos;, 50514)</div><div class="line">[root@renmai-rizhi data]# python test.py </div><div class="line">(&apos;127.0.0.0&apos;, 53451)</div><div class="line">[root@renmai-rizhi data]# python test.py </div><div class="line">(&apos;127.0.0.0&apos;, 54358)</div><div class="line">[root@renmai-rizhi data]# python test.py </div><div class="line">(&apos;127.0.0.0&apos;, 35095)</div><div class="line">[root@renmai-rizhi data]#</div></pre></td></tr></table></figure>
-<p>可以发现，可以正常监听，但是呢并没有监听到端口0。实验证明在Linux下如果在bind的时候指定端口0，那么由系统随机选择一个可用端口来bind。<br>好的，我们现在知道了端口的范围0-65535，那么作为客户端访问其它服务端的时候，能用多少呢？并不是这个范围都可以用的。那么在Linux下我们可以这么获取本地的随机端口范围：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@test ~]# cat/proc/sys/net/ipv4/ip_local_port_range </div><div class="line">32768     61000</div></pre></td></tr></table></figure>
-<p>不要惊讶答案确实是32768到61000，现在你应该明白，别人说的发10万并发进行压力测试代表什么意思了吧。至少默认情况下是无法实现的，读完这句话，是否有启发呢？并不是不能实现哦。</p>
-<h3 id="瓶颈真的只有随机端口范围吗？"><a href="#瓶颈真的只有随机端口范围吗？" class="headerlink" title="瓶颈真的只有随机端口范围吗？"></a>瓶颈真的只有随机端口范围吗？</h3><p>刚才我们也看了，我们访问其它服务器，作为客户端，我们要使用一个随机端口，32768-61000，貌似也不少，当然你还可以修改它，扩大随机端口范围。<br>例如我们使用Nginx做反向代理负载均衡的时候，用户端和Nginx建立Socket进行通信，Nginx还需要和后端真实服务器也建立Socket进行通信，在高并发的场景下，这个随机端口肯定是一个瓶颈。但是真的只有随机端口范围是瓶颈吗？下面我们使用ab命令来对百度进行一次压力测试。</p>
-<p>ab是Apache的性能测试工具，可以模拟并发进行Web性能测试。在CenotOS下，你可以这样来安装:<br>[root@test ~]# yum  install -y httpd-devel<br>按照咱们之前的认识，随机端口61000-32768=28232，那么我实验的机器是一台刚安装的系统，没有什么网络传输，即便有，我们创建2万个套接字对应该是没问题吧。事实真的如此吗？我们用实验来证明：</p>
-<p>我们模拟发送2万个请求，2000的并发来测试百度：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">[root@test ~]#ab -n 20000 -c 2000 https://www.baidu.com/</div><div class="line">This isApacheBench, Version 2.3 &lt;$Revision: 1430300 $&gt;</div><div class="line">Copyright 1996Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/</div><div class="line">Licensed to TheApache Software Foundation, http://www.apache.org/</div><div class="line"></div><div class="line">Benchmarkingwww.baidu.com (be patient)</div><div class="line">socket: Toomany open files (24)</div></pre></td></tr></table></figure></p>
-<p>这不可能，为什么报错了？不要担心，报错我们很容易看懂了socket: Too many open files (24)</p>
-<p>，不能打开太多的文件。我们使用ulimit来看看系统资源限限制。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[root@test ~]# ulimit -a</div><div class="line">core file size          (blocks, -c) 0</div><div class="line">data seg size           (kbytes, -d) unlimited</div><div class="line">scheduling priority             (-e) 0</div><div class="line">file size               (blocks, -f) unlimited</div><div class="line">pending signals                 (-i) 31219</div><div class="line">max locked memory       (kbytes, -l) 64</div><div class="line">max memory size         (kbytes, -m) unlimited</div><div class="line">open files                      (-n) 1024</div></pre></td></tr></table></figure></p>
-<p>(省略部分输出)<br>没错，默认情况下，当前用户能够打开的文件数量最大是1024，但是这个和我们使用ab测试有什么关系呢？ab测试创建的不是socket吗？如果你不理解，那就要回归本质，<br>想想我们刚刚学习Linux的时候，经常听到的一句Linux的思想“一切皆文件”！谁说socket不是一个文件呢？<br>我相信你知道怎么做了，你可以使用ulimit –n来修改当前用户、当前session的限制，也可以修改配置文件/etc/security/limits.conf来彻底解决这个问题，<br>这也是进行系统性能调优的必备基础。</p>
-<h3 id="创建一条tcp-Socket"><a href="#创建一条tcp-Socket" class="headerlink" title="创建一条tcp Socket"></a>创建一条tcp Socket</h3><p>好的，刚才只是一个小插曲，我们继续探索TCP Socket，光说不练是个棒槌。我们来创建一个套接字对看看：</p>
-<h4 id="服务端："><a href="#服务端：" class="headerlink" title="服务端："></a>服务端：</h4><p>首先，我们在192.168.56.12上使用nc命令，来监听9999端口。<br>[root@192.168.56.12 ~]#nc -l  9999<br>[root@192.168.56.12 ~]#netstat -ntlp | grep 9999<br>tcp        0     0 0.0.0.0:9999     0.0.0.0:*      LISTEN     26789/n</p>
-<h4 id="客户端："><a href="#客户端：" class="headerlink" title="客户端："></a>客户端：</h4><p>在客户端，同样使用nc命令来连接到服务端的9999端口。<br>[root@192.168.56.11 ~]#nc 192.168.56.12 9999<br>好的，现在你可以在客户端上输入任何的语言和服务端愉快的聊天了?不过这不是重点。<br>我们先来看看客户端的TCPSocket。<br>[root@192.168.56.11 ~]#netstat -na | grep 9999<br>tcp    0     0 192.168.56.11:11525    192.168.56.12:9999     ESTABLISHED<br>服务端的TCP Socket<br>[root@192.168.56.12 ~]#netstat -na | grep 9999<br>tcp    0     0 0.0.0.0:9999           0.0.0.0:*               LISTEN<br>tcp    0     0 192.168.56.12:9999     192.168.56.11:11525    ESTABLISHED<br>我相信你已经真正理解了Socket，剩下的就是无尽的想象，还记得TIME_WAIT吗？如果有大量的TIME_WAIT存在，那么这个套接字对是不释放的，不释放也就代表着占用一个，资源嘛，<br>占用一个就少一个。怎么优化呢？且听下回分解！<br>不过，如果你真的理解了Socket的概念，你已经有了一个终极解决方案。既然一个TCP Socket是一个四元组，那如果我这台机器有多个IP地址呢？哈哈，这是一句画龙点睛之语，<br>你懂的！</p>
-<h3 id="使用伪终端发送数据"><a href="#使用伪终端发送数据" class="headerlink" title="使用伪终端发送数据"></a>使用伪终端发送数据</h3><pre><code>最后，留一个小彩蛋，除了使用nc进行数据发送之外，其实Linux还提供了一种称之为伪设备的方式，让我们来体验下/dev下面的tcp伪设备。/dev下面提供了很多的伪设备，比如tcp就可以用来直接进行远程端口的访问。
-[root@192.168.56.11 ~]# echo&quot;886&quot; &gt; /dev/tcp/192.168.56.12/9999
-</code></pre><p>赶紧看看服务端有没有收到886。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1078,7 +1061,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">73</span>
+              <span class="site-state-item-count">74</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
