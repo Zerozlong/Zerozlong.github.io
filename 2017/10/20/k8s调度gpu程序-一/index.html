@@ -93,7 +93,7 @@
 <meta property="og:site_name" content="Zero">
 <meta property="og:description" content="正常gpu服务调度测试参考文章：https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/Kubernetes包括用于管理跨节点分布的NVIDIA GPU的实验支持。本文将描述用户如何使用GPU以及当前的限制
 准备工作运行gpu的kubernetes节点必须预先安装nvida的驱动。否则kubelet将检测不到nvidia的gpu。如">
-<meta property="og:updated_time" content="2017-10-20T10:17:51.064Z">
+<meta property="og:updated_time" content="2017-10-25T07:09:14.977Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="k8s调度gpu程序(一)">
 <meta name="twitter:description" content="正常gpu服务调度测试参考文章：https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/Kubernetes包括用于管理跨节点分布的NVIDIA GPU的实验支持。本文将描述用户如何使用GPU以及当前的限制
@@ -372,6 +372,7 @@
         <h3 id="正常gpu服务调度测试"><a href="#正常gpu服务调度测试" class="headerlink" title="正常gpu服务调度测试"></a>正常gpu服务调度测试</h3><p>参考文章：<a href="https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/" target="_blank" rel="external">https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/</a><br>Kubernetes包括用于管理跨节点分布的NVIDIA GPU的实验支持。本文将描述用户如何使用GPU以及当前的限制</p>
 <h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>运行gpu的kubernetes节点必须预先安装nvida的驱动。否则kubelet将检测不到nvidia的gpu。如果kubelet调度nvidia gpu失败，尝试重新安装<br>nvidia驱动程序；</p>
 <h4 id="如何确保nvidia驱动程序是否安装成功"><a href="#如何确保nvidia驱动程序是否安装成功" class="headerlink" title="如何确保nvidia驱动程序是否安装成功"></a>如何确保nvidia驱动程序是否安装成功</h4><p>可以通过运行如下命令：nvidia-docker-plugin来确保所有的驱动程序都已经加载了。<br>docker pull  tensorflow/tensorflow:latest-gpu</p>
+<p><a href="https://zhuanlan.zhihu.com/p/22410507" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/22410507</a><br><a href="https://github.com/ContinUSE/kubernetes-coreos-cluster/tree/master/examples/mpich" target="_blank" rel="external">https://github.com/ContinUSE/kubernetes-coreos-cluster/tree/master/examples/mpich</a><br><a href="https://hub.docker.com/r/tensorflow/tensorflow/" target="_blank" rel="external">https://hub.docker.com/r/tensorflow/tensorflow/</a></p>
 <p>docker pull  tensorflow/tensorflow:latest-gpu</p>
 
       
@@ -435,6 +436,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/10/前端基础知识复习/" rel="prev" title="前端基础知识复习">
+                前端基础知识复习 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -506,7 +511,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">74</span>
+              <span class="site-state-item-count">75</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -514,7 +519,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -523,7 +528,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">52</span>
+                <span class="site-state-item-count">53</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
