@@ -260,7 +260,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/07/hadoop集群搭建/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/12/docker核心原理详解/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Zero">
@@ -285,8 +285,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/06/07/hadoop集群搭建/" itemprop="url">
-                  hadoop（三个节点集群搭建）
+                <a class="post-title-link" href="/2017/10/12/docker核心原理详解/" itemprop="url">
+                  docker核心原理详解
                 </a>
               
             
@@ -300,8 +300,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-07T16:05:41+08:00">
-                2017-06-07
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-12T18:36:06+08:00">
+                2017-10-12
               </time>
             
 
@@ -319,8 +319,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hadoop集群搭建/" itemprop="url" rel="index">
-                    <span itemprop="name">hadoop集群搭建</span>
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
                   </a>
                 </span>
 
@@ -334,8 +334,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2017/06/07/hadoop集群搭建/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/07/hadoop集群搭建/" itemprop="commentCount"></span>
+                <a href="/2017/10/12/docker核心原理详解/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/10/12/docker核心原理详解/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -345,7 +345,7 @@
 
           
           
-             <span id="/2017/06/07/hadoop集群搭建/" class="leancloud_visitors" data-flag-title="hadoop（三个节点集群搭建）">
+             <span id="/2017/10/12/docker核心原理详解/" class="leancloud_visitors" data-flag-title="docker核心原理详解">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -372,32 +372,8 @@
       
         
           
-            <h3 id="主机规划"><a href="#主机规划" class="headerlink" title="主机规划"></a>主机规划</h3><p>三台机器（注）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cat /etc/hosts</div><div class="line">10.10.48.162   ucloud-test-bd-etcd01   </div><div class="line">10.10.9.68     ucloud-test-bd-etcd02</div><div class="line">10.10.29.103   ucloud-test-bd-etcd03</div></pre></td></tr></table></figure>
-<p>其中主机etcd01作为master节点；etcd02和etcd03作为slave02和slave03节点。</p>
-<h3 id="建用户"><a href="#建用户" class="headerlink" title="建用户"></a>建用户</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">groupadd hadoop</div><div class="line">useradd hadoop  -g  hadoop</div></pre></td></tr></table></figure>
-<h3 id="目录规划"><a href="#目录规划" class="headerlink" title="目录规划"></a>目录规划</h3><p>依次，对master、slave1、slave2进行目录规划，</p>
-<p>名称                                路径        </p>
-<p>所有集群安装的软件目录            /home/hadoop/app/</p>
-<p>所有临时目录                      /data/tmp</p>
-<p>这个是，系统会默认的临时目录是在/tmp下，而这个目录在每次重启后都会被删掉，必须重新执行format才行，否则会出错。在hadoop搭建过程中使用了/data/tmp目录。</p>
-<p>所以需要创建一个临时目录 mkdir -pv /data/tmp</p>
-<p>所有namenode节点产生的日志：/data/dfs/name<br>所有datanode节点产生的日志： /data/dfs/data</p>
-<h3 id="开始安装"><a href="#开始安装" class="headerlink" title="开始安装"></a>开始安装</h3><p>切换到hadoop用户，创建集群安装目录。<br>[hadoop@ucloud-test-bd-etcd01 ~]$ mkdir app</p>
-<p>下面为这三台机器的ip及角色<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">10.10.48.162    master，namenode,jobtracker</div><div class="line">10.10.9.68      slave1,datanode,tasktracker</div><div class="line">10.10.29.103    slave2,datanode,tasktracker</div></pre></td></tr></table></figure></p>
-<h4 id="搭建一个3节点的hadoop分布式小集群–预备工作（master、slave1、slave2的环境检查）"><a href="#搭建一个3节点的hadoop分布式小集群–预备工作（master、slave1、slave2的环境检查）" class="headerlink" title="搭建一个3节点的hadoop分布式小集群–预备工作（master、slave1、slave2的环境检查）"></a>搭建一个3节点的hadoop分布式小集群–预备工作（master、slave1、slave2的环境检查）</h4><p>集群安装前的环境检查<br>在集群安装之前，我们需要一个对其环境的一个检查.<br>1、ntp时间同步；<br>2、hosts文件检查</p>
-<p>分别检查master slave1  slave2的hosts文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cat /etc/hosts</div><div class="line">10.10.48.162   ucloud-test-bd-etcd01   </div><div class="line">10.10.9.68     ucloud-test-bd-etcd02</div><div class="line">10.10.29.103   ucloud-test-bd-etcd03</div></pre></td></tr></table></figure></p>
-<p>3、关闭防火墙及selinux</p>
-<h4 id="预备工作（master、slave1、slave2的SSH免密码通信的配置）"><a href="#预备工作（master、slave1、slave2的SSH免密码通信的配置）" class="headerlink" title="预备工作（master、slave1、slave2的SSH免密码通信的配置）"></a>预备工作（master、slave1、slave2的SSH免密码通信的配置）</h4><p>1、每台机器本身的无密码访问<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[hadoop@ucloud-test-bd-etcd01 ~]$ ssh-keygen -t rsa</div><div class="line">cat id_rsa.pub &gt;&gt; authorzied_keys</div><div class="line">chmod -R 7000 .ssh</div></pre></td></tr></table></figure></p>
-<p>2、实现三台机器之间hadoop用户各自的无密码访问。</p>
-<h4 id="搭建一个3节点的hadoop分布式小集群–预备工作（jdk安装与配置）"><a href="#搭建一个3节点的hadoop分布式小集群–预备工作（jdk安装与配置）" class="headerlink" title="搭建一个3节点的hadoop分布式小集群–预备工作（jdk安装与配置）"></a>搭建一个3节点的hadoop分布式小集群–预备工作（jdk安装与配置）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">cat /etc/profile</div><div class="line">JAVA_HOME=/usr/local/jdk</div><div class="line">CLASS_PATH=$JAVA_HOME/lib:$JAVA_HOME/jre/lib</div><div class="line">PATH=$PATH:$JAVA_HOME/bin</div><div class="line">HADOOP_HOME=/home/hadoop/app/hadoop-2.8.0</div><div class="line">PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin:$PATH</div><div class="line">export PATH</div></pre></td></tr></table></figure>
-<h4 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h4><h5 id="修改master主机配置文件："><a href="#修改master主机配置文件：" class="headerlink" title="修改master主机配置文件："></a>修改master主机配置文件：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">cd home/hadoop/app/hadoop-2.8.0/etc/hadoop</div><div class="line">cat core-site.xml </div><div class="line">&lt;configuration&gt;</div><div class="line">&lt;property&gt;</div><div class="line">                &lt;name&gt;fs.default.name&lt;/name&gt;</div><div class="line">                &lt;value&gt;hdfs://ucloud-test-bd-etcd01:9000&lt;/value&gt;</div><div class="line">                &lt;description&gt;The name of the default file system, using 9000 port.&lt;/description&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">        &lt;property&gt;</div><div class="line">                &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</div><div class="line">                &lt;value&gt;/data/tmp&lt;/value&gt;</div><div class="line">                &lt;description&gt;A base for other temporary directories.&lt;/description&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
-<h5 id="修改副本数"><a href="#修改副本数" class="headerlink" title="修改副本数"></a>修改副本数</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">cat hdfs-site.xml</div><div class="line">&lt;configuration&gt;</div><div class="line">  &lt;property&gt;</div><div class="line">                &lt;name&gt;dfs.namenode.rpc-address&lt;/name&gt;</div><div class="line">                &lt;value&gt;ucloud-test-bd-etcd01:9000&lt;/value&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">        &lt;property&gt;</div><div class="line">                &lt;name&gt;dfs.replication&lt;/name&gt;</div><div class="line">                &lt;value&gt;2&lt;/value&gt;</div><div class="line">                &lt;description&gt;Set to 1 for pseudo-distributed mode,Set to 2 for distributed mode,Set to 3 for distributed mode.&lt;/description&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line"></div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
-<h5 id="定义jobtracker"><a href="#定义jobtracker" class="headerlink" title="定义jobtracker"></a>定义jobtracker</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">[hadoop@ucloud-test-bd-etcd01 hadoop]$ cp mapred-site.xml.template mapred-site.xml</div><div class="line">cat mapred-site.xml</div><div class="line">&lt;configuration&gt;</div><div class="line">&lt;property&gt;</div><div class="line">                &lt;name&gt;mapred.job.tracker&lt;/name&gt;</div><div class="line">                &lt;value&gt;ucloud-test-bd-etcd01:9001&lt;/value&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">        &lt;property&gt;</div><div class="line">                &lt;name&gt;mapreduce.framework.name&lt;/name&gt;</div><div class="line">                &lt;value&gt;yarn&lt;/value&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">cat yarn-site.xml </div><div class="line">&lt;configuration&gt;</div><div class="line">&lt;property&gt;</div><div class="line">            &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</div><div class="line">            &lt;value&gt;mapreduce_shuffle&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div><div class="line"></div><div class="line">[hadoop@ucloud-test-bd-etcd01 hadoop]$ cat masters </div><div class="line">ucloud-test-bd-etcd01 </div><div class="line"></div><div class="line">[hadoop@ucloud-test-bd-etcd01 hadoop]$ cat slaves </div><div class="line">ucloud-test-bd-etcd02</div><div class="line">ucloud-test-bd-etcd03</div></pre></td></tr></table></figure>
-<p>到此master节点配置修改完毕。<br>将hadoop master节点修改完的配置，拷贝到slave1和slave2.</p>
-<h5 id="master节点启动namenode"><a href="#master节点启动namenode" class="headerlink" title="master节点启动namenode"></a>master节点启动namenode</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[hadoop@ucloud-test-bd-etcd01 bin]$ ./hadoop namenode -format</div><div class="line">之后启动主机。</div><div class="line"> 在master节点启动hadoop即可。</div><div class="line"> ./start-all.sh</div></pre></td></tr></table></figure>
-<h3 id="hadoop访问"><a href="#hadoop访问" class="headerlink" title="hadoop访问"></a>hadoop访问</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">http://10.10.48.162:50070</div><div class="line">http://10.10.48.162:8088/cluster</div></pre></td></tr></table></figure>
+            <h3 id="docker背后的内核知识"><a href="#docker背后的内核知识" class="headerlink" title="docker背后的内核知识"></a>docker背后的内核知识</h3><p>docker通过namespace实现了资源隔离，通过cgroup实现了资源限制，通过写时复制实现了高效的文件操作。但是当更进一步讲解cgroup和namespace时候大部分人都不了解。</p>
+<h4 id="namespace资源隔离"><a href="#namespace资源隔离" class="headerlink" title="namespace资源隔离"></a>namespace资源隔离</h4><p>linux内核实现namespace的主要目的之一是实现轻量级虚拟化（容器）服务。在同一个namespace下的进程可以感知彼此的变化，而对外界进程一无所知。这样就可以让容器中的进程产生错觉，<br>仿佛自己置身于一个独立的系统环境中，以达到独立和隔离的目的。<br>| namespace        | 系统调用参数           | 隔离内容  |<br>| ————- |:————-:| —–:|<br>| UTS      | CLONE_NEWUTS| 主机名与域名 |<br>| IPC     | CLONE_NEWIPC      |   信号量，消息队列和共享内存 |<br>| PID | CLONE_NEWPID      |    进程编号 |<br>|  Network   |  CLONE_NEWNET             |   网络设备，网络栈，端口等           |<br>| Mount  | CLONE_NEWNS  | 挂载点（文件系统）|<br>|User | CLONE_NEWUSER  | 用户和用户组 |</p>
 
           
         
@@ -436,7 +412,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/06/web性能优化之-深入理解Tcp-Socket/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/11/celery和flask集成二 /">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Zero">
@@ -461,8 +437,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/06/06/web性能优化之-深入理解Tcp-Socket/" itemprop="url">
-                  web性能优化之-深入理解Tcp Socket（转载）
+                <a class="post-title-link" href="/2017/09/11/celery和flask集成二 /" itemprop="url">
+                  celery和flask集成(二)
                 </a>
               
             
@@ -476,8 +452,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-06T18:52:47+08:00">
-                2017-06-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-11T14:16:58+08:00">
+                2017-09-11
               </time>
             
 
@@ -495,8 +471,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TCP-IP/" itemprop="url" rel="index">
-                    <span itemprop="name">TCP/IP</span>
+                  <a href="/categories/python-flask-celery/" itemprop="url" rel="index">
+                    <span itemprop="name">python flask  celery</span>
                   </a>
                 </span>
 
@@ -510,8 +486,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2017/06/06/web性能优化之-深入理解Tcp-Socket/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/06/web性能优化之-深入理解Tcp-Socket/" itemprop="commentCount"></span>
+                <a href="/2017/09/11/celery和flask集成二 /#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/11/celery和flask集成二 /" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -521,7 +497,7 @@
 
           
           
-             <span id="/2017/06/06/web性能优化之-深入理解Tcp-Socket/" class="leancloud_visitors" data-flag-title="web性能优化之-深入理解Tcp Socket（转载）">
+             <span id="/2017/09/11/celery和flask集成二 /" class="leancloud_visitors" data-flag-title="celery和flask集成(二)">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -548,28 +524,11 @@
       
         
           
-            <p>内容来源：运维社区<a href="https://www.unixhot.com/article/65" target="_blank" rel="external">https://www.unixhot.com/article/65</a></p>
-<h3 id="什么是Socket？"><a href="#什么是Socket？" class="headerlink" title="什么是Socket？"></a>什么是Socket？</h3><p>大家都用电脑上网，当我们访问运维社区<a href="https://www.unixhot.com的时候，我们的电脑和运维社区的服务器就会创建一条Socket，" target="_blank" rel="external">https://www.unixhot.com的时候，我们的电脑和运维社区的服务器就会创建一条Socket，</a><br>我们称之为网络套接字。那么既然是网络通信，肯定是成对的。至少有一个客户端和服务端，我们称之为套接字对。</p>
-<p>一个套接字对（socket pair）是一个定义该网络连接的两个端点的五元组，包括：<br>   源IP地址<br>   源端口<br>   目的IP地址<br>   目的端口<br>类型：TCP or UDP</p>
-<h3 id="客户端的随机端口"><a href="#客户端的随机端口" class="headerlink" title="客户端的随机端口"></a>客户端的随机端口</h3><p>那么针对于HTTP请求来说，我们知道底层是建立了一条TCP的Socket，那么TCP的套接字对就是一个四元组，因为协议已经确定了：<br>   1.源IP地址、2.源端口、3.目的IP地址、4.目的端口。<br>客户端的随机端口<br>为了更直观的认识这个TCP Socket，我们做一个小实验，我这里准备了两台服务器：<br><img src="/images/2017/06/2.png" alt="image"><br>当客户端192.168.56.11访问192.168.56.12的9999端口的时候，那么会选择一个随机端口来进行通信，那么这个随机端口，<br>到底是从什么范围随机出来了呢，端口总有一个范围不可能无穷多的。<br>那么对于TCP套接字来说客户端的一个IP地址，到底能有多少个端口呢？由于TCP协议头部使用16位来保存端口号，所以端口的个数最多为65536个，<br>2^16=65536<br><img src="/images/2017/06/3.png" alt="image"><br>没错，是65536个。但是为什么我们经常看到网上说可用端口最大65535个呢，也就是2^16-1个。因为端口号是从0开始算的，0-65535那就是65536个。<br>而0端口是保留端口，无论是TCP还是UDP都是不用使用的，当然这个是标准，那到底能不能监听端口0呢，下面我用一个python脚本，监听本地的端口0来试试。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">[root@test ~]# cat test.py</div><div class="line">#!/usr/bin/env python</div><div class="line"># -*- coding: utf-8 -*-</div><div class="line">&apos;&apos;&apos;本脚本监听本地的127.0.0.1的端口0，</div><div class="line">探索端口0的奥秘&apos;&apos;&apos;</div><div class="line">import socket</div><div class="line">def bind_port_zero():</div><div class="line">    ss = socket.socket(socket.AF_INET,socket.SOCK_STREAM)</div><div class="line">    ss.bind((&apos;127.0.0.0&apos;, 0))</div><div class="line">    addr, port = ss.getsockname()</div><div class="line">    ss.close()</div><div class="line">    print(addr, port)</div><div class="line">bind_port_zero()</div></pre></td></tr></table></figure>
-<p>执行脚本，看看到底能不能正常监听</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[root@renmai-rizhi data]# python test.py </div><div class="line">(&apos;127.0.0.0&apos;, 50514)</div><div class="line">[root@renmai-rizhi data]# python test.py </div><div class="line">(&apos;127.0.0.0&apos;, 53451)</div><div class="line">[root@renmai-rizhi data]# python test.py </div><div class="line">(&apos;127.0.0.0&apos;, 54358)</div><div class="line">[root@renmai-rizhi data]# python test.py </div><div class="line">(&apos;127.0.0.0&apos;, 35095)</div><div class="line">[root@renmai-rizhi data]#</div></pre></td></tr></table></figure>
-<p>可以发现，可以正常监听，但是呢并没有监听到端口0。实验证明在Linux下如果在bind的时候指定端口0，那么由系统随机选择一个可用端口来bind。<br>好的，我们现在知道了端口的范围0-65535，那么作为客户端访问其它服务端的时候，能用多少呢？并不是这个范围都可以用的。那么在Linux下我们可以这么获取本地的随机端口范围：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@test ~]# cat/proc/sys/net/ipv4/ip_local_port_range </div><div class="line">32768     61000</div></pre></td></tr></table></figure>
-<p>不要惊讶答案确实是32768到61000，现在你应该明白，别人说的发10万并发进行压力测试代表什么意思了吧。至少默认情况下是无法实现的，读完这句话，是否有启发呢？并不是不能实现哦。</p>
-<h3 id="瓶颈真的只有随机端口范围吗？"><a href="#瓶颈真的只有随机端口范围吗？" class="headerlink" title="瓶颈真的只有随机端口范围吗？"></a>瓶颈真的只有随机端口范围吗？</h3><p>刚才我们也看了，我们访问其它服务器，作为客户端，我们要使用一个随机端口，32768-61000，貌似也不少，当然你还可以修改它，扩大随机端口范围。<br>例如我们使用Nginx做反向代理负载均衡的时候，用户端和Nginx建立Socket进行通信，Nginx还需要和后端真实服务器也建立Socket进行通信，在高并发的场景下，这个随机端口肯定是一个瓶颈。但是真的只有随机端口范围是瓶颈吗？下面我们使用ab命令来对百度进行一次压力测试。</p>
-<p>ab是Apache的性能测试工具，可以模拟并发进行Web性能测试。在CenotOS下，你可以这样来安装:<br>[root@test ~]# yum  install -y httpd-devel<br>按照咱们之前的认识，随机端口61000-32768=28232，那么我实验的机器是一台刚安装的系统，没有什么网络传输，即便有，我们创建2万个套接字对应该是没问题吧。事实真的如此吗？我们用实验来证明：</p>
-<p>我们模拟发送2万个请求，2000的并发来测试百度：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">[root@test ~]#ab -n 20000 -c 2000 https://www.baidu.com/</div><div class="line">This isApacheBench, Version 2.3 &lt;$Revision: 1430300 $&gt;</div><div class="line">Copyright 1996Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/</div><div class="line">Licensed to TheApache Software Foundation, http://www.apache.org/</div><div class="line"></div><div class="line">Benchmarkingwww.baidu.com (be patient)</div><div class="line">socket: Toomany open files (24)</div></pre></td></tr></table></figure></p>
-<p>这不可能，为什么报错了？不要担心，报错我们很容易看懂了socket: Too many open files (24)</p>
-<p>，不能打开太多的文件。我们使用ulimit来看看系统资源限限制。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[root@test ~]# ulimit -a</div><div class="line">core file size          (blocks, -c) 0</div><div class="line">data seg size           (kbytes, -d) unlimited</div><div class="line">scheduling priority             (-e) 0</div><div class="line">file size               (blocks, -f) unlimited</div><div class="line">pending signals                 (-i) 31219</div><div class="line">max locked memory       (kbytes, -l) 64</div><div class="line">max memory size         (kbytes, -m) unlimited</div><div class="line">open files                      (-n) 1024</div></pre></td></tr></table></figure></p>
-<p>(省略部分输出)<br>没错，默认情况下，当前用户能够打开的文件数量最大是1024，但是这个和我们使用ab测试有什么关系呢？ab测试创建的不是socket吗？如果你不理解，那就要回归本质，<br>想想我们刚刚学习Linux的时候，经常听到的一句Linux的思想“一切皆文件”！谁说socket不是一个文件呢？<br>我相信你知道怎么做了，你可以使用ulimit –n来修改当前用户、当前session的限制，也可以修改配置文件/etc/security/limits.conf来彻底解决这个问题，<br>这也是进行系统性能调优的必备基础。</p>
-<h3 id="创建一条tcp-Socket"><a href="#创建一条tcp-Socket" class="headerlink" title="创建一条tcp Socket"></a>创建一条tcp Socket</h3><p>好的，刚才只是一个小插曲，我们继续探索TCP Socket，光说不练是个棒槌。我们来创建一个套接字对看看：</p>
-<h4 id="服务端："><a href="#服务端：" class="headerlink" title="服务端："></a>服务端：</h4><p>首先，我们在192.168.56.12上使用nc命令，来监听9999端口。<br>[root@192.168.56.12 ~]#nc -l  9999<br>[root@192.168.56.12 ~]#netstat -ntlp | grep 9999<br>tcp        0     0 0.0.0.0:9999     0.0.0.0:*      LISTEN     26789/n</p>
-<h4 id="客户端："><a href="#客户端：" class="headerlink" title="客户端："></a>客户端：</h4><p>在客户端，同样使用nc命令来连接到服务端的9999端口。<br>[root@192.168.56.11 ~]#nc 192.168.56.12 9999<br>好的，现在你可以在客户端上输入任何的语言和服务端愉快的聊天了?不过这不是重点。<br>我们先来看看客户端的TCPSocket。<br>[root@192.168.56.11 ~]#netstat -na | grep 9999<br>tcp    0     0 192.168.56.11:11525    192.168.56.12:9999     ESTABLISHED<br>服务端的TCP Socket<br>[root@192.168.56.12 ~]#netstat -na | grep 9999<br>tcp    0     0 0.0.0.0:9999           0.0.0.0:*               LISTEN<br>tcp    0     0 192.168.56.12:9999     192.168.56.11:11525    ESTABLISHED<br>我相信你已经真正理解了Socket，剩下的就是无尽的想象，还记得TIME_WAIT吗？如果有大量的TIME_WAIT存在，那么这个套接字对是不释放的，不释放也就代表着占用一个，资源嘛，<br>占用一个就少一个。怎么优化呢？且听下回分解！<br>不过，如果你真的理解了Socket的概念，你已经有了一个终极解决方案。既然一个TCP Socket是一个四元组，那如果我这台机器有多个IP地址呢？哈哈，这是一句画龙点睛之语，<br>你懂的！</p>
-<h3 id="使用伪终端发送数据"><a href="#使用伪终端发送数据" class="headerlink" title="使用伪终端发送数据"></a>使用伪终端发送数据</h3><pre><code>最后，留一个小彩蛋，除了使用nc进行数据发送之外，其实Linux还提供了一种称之为伪设备的方式，让我们来体验下/dev下面的tcp伪设备。/dev下面提供了很多的伪设备，比如tcp就可以用来直接进行远程端口的访问。
-[root@192.168.56.11 ~]# echo&quot;886&quot; &gt; /dev/tcp/192.168.56.12/9999
-</code></pre><p>赶紧看看服务端有没有收到886。</p>
+            <h3 id="flask与celery的集成"><a href="#flask与celery的集成" class="headerlink" title="flask与celery的集成"></a>flask与celery的集成</h3><p>首先看下项目文档架构图如下所示：<br><img src="/images/2017/09/4.png" alt="image"></p>
+<h3 id="查看init-py文件"><a href="#查看init-py文件" class="headerlink" title="查看init.py文件"></a>查看<strong>init</strong>.py文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">#coding:utf-8</div><div class="line">#Author:Zero</div><div class="line"></div><div class="line">import os</div><div class="line"></div><div class="line">from flask import Flask</div><div class="line"></div><div class="line">from flask.ext.celery import Celery</div><div class="line">import celeryconfig</div><div class="line"></div><div class="line">BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</div><div class="line">app=Flask(&apos;&apos;)</div><div class="line">celery=Celery()</div><div class="line">def create_app():</div><div class="line">    app=Flask(&apos;&apos;)</div><div class="line">    print app</div><div class="line">    app.config[&apos;CELERY_BROKER_URL&apos;]=celeryconfig.BROKER_URL</div><div class="line">    app.config.from_object(celeryconfig)</div><div class="line">    celery.conf.update(app.config)</div><div class="line">    celery.init_app(app)</div><div class="line">    return app</div><div class="line">app=create_app()</div><div class="line">from .controller import test</div></pre></td></tr></table></figure>
+<h3 id="查看controller下面的test-py文件"><a href="#查看controller下面的test-py文件" class="headerlink" title="查看controller下面的test.py文件"></a>查看controller下面的test.py文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">import json</div><div class="line">from web import app,celery</div><div class="line">from flask import request,jsonify, render_template</div><div class="line">def test():</div><div class="line">    try:</div><div class="line">        kwargs=[1,2]</div><div class="line">    # r = app.send_task(&quot;task2.add&quot;,kwargs,routing_key=&quot;celery&quot;, queue=&quot;celery&quot;)</div><div class="line">        r = celery.send_task(&quot;task2.add&quot;,kwargs)</div><div class="line">        print r.get()</div><div class="line">        print r.result</div><div class="line">        print r.ready()</div><div class="line">    except Exception,e:</div><div class="line"></div><div class="line">        print &quot;----------------&quot;</div><div class="line">    return &quot;test&quot;</div></pre></td></tr></table></figure>
+<h3 id="启动celery客户端"><a href="#启动celery客户端" class="headerlink" title="启动celery客户端"></a>启动celery客户端</h3><p>将task2.add进行注册即可，注册命令如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">celery worker -A task2 --loglevel=info --queues=celery,queue_add</div></pre></td></tr></table></figure></p>
+<p>下一步将这个跑通的代码在框架里面进行展示使用即可。</p>
 
           
         
@@ -608,7 +567,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/05/celery多个worker/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/08/gitbook在本地的搭建/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Zero">
@@ -633,8 +592,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/06/05/celery多个worker/" itemprop="url">
-                  celery多个worker(原创)
+                <a class="post-title-link" href="/2017/09/08/gitbook在本地的搭建/" itemprop="url">
+                  gitbook与github联调
                 </a>
               
             
@@ -648,8 +607,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-05T17:51:29+08:00">
-                2017-06-05
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-08T10:09:45+08:00">
+                2017-09-08
               </time>
             
 
@@ -659,31 +618,13 @@
           </span>
 
           
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python开发/" itemprop="url" rel="index">
-                    <span itemprop="name">python开发</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
 
           
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2017/06/05/celery多个worker/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/05/celery多个worker/" itemprop="commentCount"></span>
+                <a href="/2017/09/08/gitbook在本地的搭建/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/08/gitbook在本地的搭建/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -693,7 +634,7 @@
 
           
           
-             <span id="/2017/06/05/celery多个worker/" class="leancloud_visitors" data-flag-title="celery多个worker(原创)">
+             <span id="/2017/09/08/gitbook在本地的搭建/" class="leancloud_visitors" data-flag-title="gitbook与github联调">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -720,32 +661,176 @@
       
         
           
-            <p>Celery 是一个简单、灵活且可靠的，处理大量消息的分布式系统，并且提供维护这样一个系统的必需工具。<br>由于在工作的平台中用到Celery系统（用于发送邮件、发送短信、发送上线等任务），记录一下学习的知识。</p>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>使用RabbitMQ作为Celery Broker的优点：<br>Highly customizable routing（高度定制路由）<br>Persistent queues（一致性队列）</p>
-<p>使用redis作为celery brocker的优点：<br>high speed due to in memory datastore（速度极快的内存数据库）<br>can double up as both key-value datastore and job queue(可以保证key-value 数据存储及job序列)</p>
-<p>celery官网首推rabbitmq，不过我开发过程中一致使用的是redis。</p>
-<h3 id="redis安装"><a href="#redis安装" class="headerlink" title="redis安装"></a>redis安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-pro-bj2D-renmai-redis01 redis]# more install.sls </div><div class="line">redis-source-install:</div><div class="line">  file.managed:</div><div class="line">  - source: salt://redis/files/redis-3.2.0.tar.gz</div><div class="line">  - name: /usr/local/src/redis-3.2.0.tar.gz</div><div class="line">  - user: root</div><div class="line">  - group: root</div><div class="line">  - mode: 644</div><div class="line">  cmd.run:</div><div class="line">  - name: cd /usr/local/src &amp;&amp;  tar -xzvf redis-3.2.0.tar.gz -C /usr/local  &amp;&amp; cd /usr/local/redis-3.2.0  &amp;&amp; make &amp;&amp; make install </div><div class="line">  - require:</div><div class="line">    - file: redis-source-install</div><div class="line">  - unless: test -d  /usr/local/redis-3.2.0</div><div class="line">  </div><div class="line"> ./redis-server IP:PORT   启动服务</div></pre></td></tr></table></figure>
-<h3 id="celery安装"><a href="#celery安装" class="headerlink" title="celery安装"></a>celery安装</h3><p>celery要求python版本最低2.7.8，自己注意下。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install celery</div></pre></td></tr></table></figure>
-<h3 id="celery-web监控"><a href="#celery-web监控" class="headerlink" title="celery web监控"></a>celery web监控</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install flower</div></pre></td></tr></table></figure>
-<h3 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h3><p>如下为流程图：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">任务--&gt;celery路由（broker）--&gt;队列--&gt;队列对应的worker处理问题</div></pre></td></tr></table></figure></p>
-<p>解释：<br>某个方法的消息请求celery执行，首先celery根据绑定的规则把任务消息放到制定的路由队列中去，此队列<br>对应的worker节点取出执行。<br>说明：<br>为什么要定义多个worker？每个worker都会新建一个进程，充分利用服务器资源，提高执行效率。<br>同一个服务器可以启动多个worker节点？可以，启动参数里面写上不同的–hostname即可。<br>celery默认会创建一个celery任务队列，没有任何绑定的任务将会发送到此消息队列中。</p>
-<h3 id="celery多worker实验"><a href="#celery多worker实验" class="headerlink" title="celery多worker实验"></a>celery多worker实验</h3><h4 id="worker节点规划"><a href="#worker节点规划" class="headerlink" title="worker节点规划"></a>worker节点规划</h4><p>celery加redis的多节点配置实例，由于资源限制只找了两台机器做测试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">10.10.42.33</div><div class="line">10.10.190.234</div></pre></td></tr></table></figure></p>
-<p>我们把redis服务放在10.10.190.234那台服务器上<br>我们把flower服务也启动在10.10.42.33那台服务器上<br>代码中定义的队列有queue_add、queue_sum （还有个默认队列celery）<br>33、234服务器用于启动worker节点<br>33服务器上启动处理celery和queue_add队列的worker节点<br>234服务器上启动处理celery和queue_sum队列的worker节点</p>
-<h4 id="配置展示"><a href="#配置展示" class="headerlink" title="配置展示"></a>配置展示</h4><p>暂定都在同一个目录下：</p>
-<h5 id="celeryconfig配置文件："><a href="#celeryconfig配置文件：" class="headerlink" title="celeryconfig配置文件："></a>celeryconfig配置文件：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">cat celeryconfig.py</div><div class="line">#!/usr/bin/python</div><div class="line">#coding:utf-8</div><div class="line">from kombu import Queue</div><div class="line">CELERY_TIMEZONE = &apos;Asia/Shanghai&apos;</div><div class="line">####################################</div><div class="line"># 一般配置 #</div><div class="line">####################################</div><div class="line">CELERY_TASK_SERIALIZER = &apos;json&apos;</div><div class="line">CELERY_RESULT_SERIALIZER = &apos;json&apos;</div><div class="line">CELERY_ACCEPT_CONTENT=[&apos;json&apos;]</div><div class="line">CELERY_TIMEZONE = &apos;Asia/Shanghai&apos;</div><div class="line">CELERY_ENABLE_UTC = True</div><div class="line"># List of modules to import when celery starts.</div><div class="line">CELERY_IMPORTS = (&apos;tasks&apos;, )</div><div class="line">CELERYD_MAX_TASKS_PER_CHILD = 40 #  每个worker执行了多少任务就会死掉</div><div class="line">BROKER_POOL_LIMIT = 10 #默认celery与broker连接池连接数</div><div class="line">CELERY_DEFAULT_QUEUE=&apos;default&apos;</div><div class="line">CELERY_DEFAULT_ROUTING_KEY=&apos;task.default&apos;</div><div class="line">CELERY_RESULT_BACKEND=&apos;redis://:fafafa@10.10.190.234:6379/0&apos;  </div><div class="line">BROKER_URL=&apos;redis://:fafafa@10.19.190.234:6379/0&apos;  </div><div class="line">#默认队列</div><div class="line">CELERY_DEFAULT_QUEUE = &apos;celery&apos;</div><div class="line">CELERY_DEFAULT_ROUTING_KEY = &apos;celery&apos;</div><div class="line">CELERYD_LOG_FILE=&quot;./logs/celery.log&quot;</div><div class="line">CELERY_QUEUEs = (</div><div class="line">    Queue(&quot;queue_add&quot;, routing_key=&apos;queue_add&apos;),</div><div class="line">    Queue(&apos;queue_reduce&apos;, routing_key=&apos;queue_sum&apos;),</div><div class="line">    Queue(&apos;celery&apos;, routing_key=&apos;celery&apos;),</div><div class="line">    )</div><div class="line"></div><div class="line">CELERY_ROUTES = &#123;</div><div class="line">    &apos;task.add&apos;:&#123;&apos;queue&apos;:&apos;queue_add&apos;, &apos;routing_key&apos;:&apos;queue_add&apos;&#125;,</div><div class="line">    &apos;task.reduce&apos;:&#123;&apos;queue&apos;:&apos;queue_reduce&apos;, &apos;routing_key&apos;:&apos;queue_sum&apos;&#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h5 id="查看任务配置文件："><a href="#查看任务配置文件：" class="headerlink" title="查看任务配置文件："></a>查看任务配置文件：</h5><p>cat task.py</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">import os</div><div class="line">import sys</div><div class="line">import datetime</div><div class="line">BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</div><div class="line">sys.path.append(BASE_DIR)</div><div class="line">from celery import Celery</div><div class="line">from celery import chain, group, chord, Task</div><div class="line">from celeryservice import celeryconfig</div><div class="line">app = Celery()</div><div class="line">app.config_from_object(celeryconfig)</div><div class="line">__all__ = [&apos;add&apos;, &apos;reduce&apos;,&apos;sum_all&apos;, &apos;other&apos;]</div><div class="line">####################################</div><div class="line"># task定义 #</div><div class="line">####################################</div><div class="line">@app.task</div><div class="line">def add(x, y):</div><div class="line">    return x + y</div><div class="line">@app.task</div><div class="line">def reduce(x, y):</div><div class="line">    return x - y</div><div class="line">@app.task</div><div class="line">def sum(values):</div><div class="line">    return sum([int(value) for value in values])</div><div class="line">@app.task</div><div class="line">def other(x, y):</div><div class="line">    return x * y</div></pre></td></tr></table></figure>
-<h5 id="flower任务配置文件"><a href="#flower任务配置文件" class="headerlink" title="flower任务配置文件"></a>flower任务配置文件</h5><p>cat flower.py<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python</div><div class="line">#coding:utf-8</div><div class="line">broker_api = &apos;redis://:afafafafa@10.10.190.234:6379/0&apos;</div><div class="line">logging = &apos;DEBUG&apos;</div><div class="line">address = &apos;0.0.0.0&apos;</div><div class="line">port = 5555</div><div class="line">basic_auth = [&apos;zero:zero&apos;]  #外部访问密码</div><div class="line">persistent=True  #持久化celery tasks（如果为false的话，重启flower之后，监控的task就消失了)</div><div class="line">db=&quot;./flower/flower_db&quot;</div></pre></td></tr></table></figure></p>
-<h4 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h4><p>33上启动服务：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">celery worker -A  task --loglevel=info --queues=celery,queue_add --hostname=celery_worker33  &gt;/dev/null 2&gt;&amp;1 &amp;</div></pre></td></tr></table></figure></p>
-<p>234上启动服务：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">celery worker -A  task --loglevel=info --queues=celery,queue_reduce --hostname=celery_worker234  &gt;/dev/null 2&gt;&amp;1 &amp;</div></pre></td></tr></table></figure>
-<p>33上启动监控服务：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">[root@ucloud-pro-bj2D-renmai-redis01 data]# celery flower </div><div class="line">[D 170606 17:14:18 events:76] Loading state from &apos;./flower/flower_db&apos;...</div><div class="line">[I 170606 17:14:18 command:136] Visit me at http://0.0.0.0:5555</div><div class="line">[I 170606 17:14:18 command:141] Broker: redis://:**@10.10.190.234:6379/0</div><div class="line">[I 170606 17:14:18 command:144] Registered tasks: </div><div class="line">    [u&apos;celery.accumulate&apos;,</div><div class="line">     u&apos;celery.backend_cleanup&apos;,</div><div class="line">     u&apos;celery.chain&apos;,</div><div class="line">     u&apos;celery.chord&apos;,</div><div class="line">     u&apos;celery.chord_unlock&apos;,</div><div class="line">     u&apos;celery.chunks&apos;,</div><div class="line">     u&apos;celery.group&apos;,</div><div class="line">     u&apos;celery.map&apos;,</div><div class="line">     u&apos;celery.starmap&apos;]</div><div class="line">[D 170606 17:14:18 command:146] Settings: &#123;&apos;cookie_secret&apos;: &apos;k8U5uXFmRWiuchyDVmFklg1qrX6ZSEpNpQjqZNkeb0M=&apos;,</div><div class="line">     &apos;debug&apos;: False,</div><div class="line">     &apos;login_url&apos;: &apos;/login&apos;,</div><div class="line">     &apos;static_path&apos;: &apos;/usr/local/lib/python2.7/site-packages/flower/static&apos;,</div><div class="line">     &apos;static_url_prefix&apos;: &apos;/static/&apos;,</div><div class="line">     &apos;template_path&apos;: &apos;/usr/local/lib/python2.7/site-packages/flower/templates&apos;&#125;</div><div class="line">[D 170606 17:14:18 control:29] Updating all worker&apos;s cache...</div><div class="line">[I 170606 17:14:18 mixins:224] Connected to redis://:**@10.10.190.234:6379/0</div><div class="line">[D 170606 17:14:20 app:62] Successfully updated worker cache</div></pre></td></tr></table></figure>
-<h4 id="服务验证"><a href="#服务验证" class="headerlink" title="服务验证"></a>服务验证</h4><p>在任一台有celeryservice项目代码的服务器上，运行add、reduce、sum、other任务（测试可简单使用add.delay(1,2)等）<br>add只会在33上运行，<br>sum任务，可能会在33或234服务器的worker节点运行<br>reduce任务,只会在234上运行。<br>other任务可能会在33或者234上运行。<br>验证结果截图如下所示：<br><img src="/images/2017/06/1.png" alt="image"></p>
-<h3 id="关于使用过程中的优化"><a href="#关于使用过程中的优化" class="headerlink" title="关于使用过程中的优化"></a>关于使用过程中的优化</h3><h4 id="使用celery的错误处理机制"><a href="#使用celery的错误处理机制" class="headerlink" title="使用celery的错误处理机制"></a>使用celery的错误处理机制</h4><p>如下内容来自于网站，还没实践，存档用。<br>大多数任务并没有使用错误处理，如果任务失败，那就失败了。在一些情况下这很不错，但是作者见到的多数失败任务都是去调用第三方API然后出现了网络错误，<br>或者资源不可用这些错误，而对于这些错误，最简单的方式就是重试一下，也许就是第三方API临时服务或者网络出现问题，没准马上就好了，那么为什么不试着加个重试测试一下呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">@app.task(bind=True, default_retry_delay=300, max_retries=5)</div><div class="line">def my_task_A():</div><div class="line">    try:</div><div class="line">        print(&quot;doing stuff here...&quot;)</div><div class="line">    except SomeNetworkException as e:</div><div class="line">        print(&quot;maybe do some clenup here....&quot;)</div><div class="line">        self.retry(e)</div></pre></td></tr></table></figure></p>
-<h3 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h3><p>   牛人并不可怕，可怕的是牛人比我们还努力！</p>
-<h3 id="参考文章："><a href="#参考文章：" class="headerlink" title="参考文章："></a>参考文章：</h3><p><a href="https://denibertovic.com/posts/celery-best-practices/" target="_blank" rel="external">https://denibertovic.com/posts/celery-best-practices/</a></p>
+            <h3 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h3><p>本地电脑安装完node之后，使用如下命令进行安装。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install gitbook -g</div></pre></td></tr></table></figure></p>
+<p>如下图所示，安装时间可能比较长，请耐心等待。<br><img src="/images/2017/09/1.png" alt="image"></p>
+<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><h4 id="初始化书籍目录"><a href="#初始化书籍目录" class="headerlink" title="初始化书籍目录"></a>初始化书籍目录</h4><p>创建两个文件，README.md和SUMMARY.md,其中README.md里面加入一行内容，做测试使用，如下图所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cat README.md</div><div class="line"># README</div><div class="line">zero</div></pre></td></tr></table></figure></p>
+<h4 id="初始化目录结构"><a href="#初始化目录结构" class="headerlink" title="初始化目录结构"></a>初始化目录结构</h4><p>创建完这两个目录之后，使用gitbook init，格式化书籍目录结构。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gitbook init</div></pre></td></tr></table></figure></p>
+<h4 id="本地服务测试"><a href="#本地服务测试" class="headerlink" title="本地服务测试"></a>本地服务测试</h4><p>初始化完成之后，可以使用运行如下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ gitbook serve</div><div class="line">Live reload server started on port: 35729</div><div class="line">Press CTRL+C to quit ...</div><div class="line"></div><div class="line">info: 7 plugins are installed</div><div class="line">info: loading plugin &quot;livereload&quot;... OK</div><div class="line">info: loading plugin &quot;highlight&quot;... OK</div><div class="line">info: loading plugin &quot;search&quot;... OK</div><div class="line">info: loading plugin &quot;lunr&quot;... OK</div><div class="line">info: loading plugin &quot;sharing&quot;... OK</div><div class="line">info: loading plugin &quot;fontsettings&quot;... OK</div><div class="line">info: loading plugin &quot;theme-default&quot;... OK</div><div class="line">info: found 1 pages</div><div class="line">info: found 0 asset files</div><div class="line">info: &gt;&gt; generation finished with success in 0.6s !</div><div class="line"></div><div class="line">Starting server ...</div><div class="line">Serving book on http://localhost:4000</div></pre></td></tr></table></figure></p>
+<p>现在可以通过打开浏览器<a href="http://127.0.0.1:4000查看书籍效果，如下图所示：" target="_blank" rel="external">http://127.0.0.1:4000查看书籍效果，如下图所示：</a><br><img src="/images/2017/09/2.png" alt="image"></p>
+<h3 id="输出方式介绍"><a href="#输出方式介绍" class="headerlink" title="输出方式介绍"></a>输出方式介绍</h3><p>如果你想将自己制作的书籍文件，进行输出，比如输出成pdf怎么做呢？</p>
+<h4 id="安装pdf插件"><a href="#安装pdf插件" class="headerlink" title="安装pdf插件"></a>安装pdf插件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install gitbook-pdf -g</div></pre></td></tr></table></figure>
+<p>这次安装的过程中发现发生了安装报错，怎么办呢？<br><img src="/images/2017/09/3.png" alt="image"><br>有报错信息可知，某个js下载有问题。去<a href="http://phantomjs.org下载进行安装即可。" target="_blank" rel="external">http://phantomjs.org下载进行安装即可。</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-windows.zip</div></pre></td></tr></table></figure></p>
+<p>安装完成之后，可以使用下面的命令，生成pdf文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gitbook pdf  zero</div></pre></td></tr></table></figure></p>
+<h3 id="将书籍发布到github上"><a href="#将书籍发布到github上" class="headerlink" title="将书籍发布到github上"></a>将书籍发布到github上</h3><p>在github上创建一个分支，我这里使用的分支名字叫做book。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/Zerozlong/book.git</div></pre></td></tr></table></figure></p>
+<p>创建一个新分支：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git checkout -b pages</div></pre></td></tr></table></figure></p>
+<p>将我们之前的项目内容复制过来，git add和git commit之后，直接push到远端的github服务器。紧接着，我们使用git push -u origin pages。之后再到github页面进行查看发现多了个分支，且<br>里面有我们刚刚提交的内容。<br>你可以使用github page功能去浏览你的书籍，由于本人博客已经使用了github page的功能，所以这里为了展示书籍的功能，特使用gitbook将其与我的github进行关联，然后将我的书籍在gitbook上进行展示。</p>
+<h3 id="将gitbook和我们刚刚创建的github图书关联起来"><a href="#将gitbook和我们刚刚创建的github图书关联起来" class="headerlink" title="将gitbook和我们刚刚创建的github图书关联起来"></a>将gitbook和我们刚刚创建的github图书关联起来</h3><h4 id="使用github账号登陆gitbook"><a href="#使用github账号登陆gitbook" class="headerlink" title="使用github账号登陆gitbook"></a>使用github账号登陆gitbook</h4>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/06/flask嵌套celery/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/09/06/flask嵌套celery/" itemprop="url">
+                  flask里面嵌套celery（一）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-06T18:47:20+08:00">
+                2017-09-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python开发-celery/" itemprop="url" rel="index">
+                    <span itemprop="name">python开发 celery</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/09/06/flask嵌套celery/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/06/flask嵌套celery/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/09/06/flask嵌套celery/" class="leancloud_visitors" data-flag-title="flask里面嵌套celery（一）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="什么是Celery"><a href="#什么是Celery" class="headerlink" title="什么是Celery"></a>什么是Celery</h3><p>Celery 是一个异步任务队列。你可以使用它在你的应用上下文之外执行任务。总的想法就是你的应用程序可能需要执行任何<br>消耗资源的任务都可以交给任务队列，让你的应用程序自由和快速地响应客户端请求。<br>使用 Celery 运行后台任务并不像在线程中这样做那么简单。但是好处多多，Celery 具有分布式架构，使你的应用易于扩展。<br>一个 Celery 安装有三个核心组件：</p>
+<h4 id="flask之celery客户端"><a href="#flask之celery客户端" class="headerlink" title="flask之celery客户端"></a>flask之celery客户端</h4><p>Celery 客户端: 用于发布后台作业。当与 Flask 一起工作的时候，客户端与 Flask 应用一起运行。</p>
+<h4 id="flask之celery-workers"><a href="#flask之celery-workers" class="headerlink" title="flask之celery workers"></a>flask之celery workers</h4><p>Celery workers: 这些是运行后台作业的进程。Celery 支持本地和远程的 workers，因此你就可以在 Flask 服务器上启动<br>一个单独的 worker，随后随着你的应用需求的增加而新增更多的 workers。</p>
+<h4 id="flask之消息代理"><a href="#flask之消息代理" class="headerlink" title="flask之消息代理"></a>flask之消息代理</h4><p>消息代理: 客户端通过消息队列和 workers 进行通信，Celery 支持多种方式来实现这些队列。最常用的代理就是 RabbitMQ 和redis。 </p>
+<h3 id="flask和celery一起工作"><a href="#flask和celery一起工作" class="headerlink" title="flask和celery一起工作"></a>flask和celery一起工作</h3><h4 id="直接调用celery脚本"><a href="#直接调用celery脚本" class="headerlink" title="直接调用celery脚本"></a>直接调用celery脚本</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">#coding:utf-8</div><div class="line">#Author:Zero</div><div class="line"># example.py</div><div class="line">from flask import Flask</div><div class="line">from flask.ext.celery import Celery</div><div class="line"></div><div class="line">a = Flask(&apos;task&apos;)</div><div class="line">a.config[&apos;CELERY_BROKER_URL&apos;] = &apos;redis://:密码@ip:端口/库&apos;</div><div class="line">a.config[&apos;CELERY_RESULT_BACKEND&apos;] = &apos;redis://:密码@ip:端口/库&apos;</div><div class="line">app = Celery(a)</div><div class="line"></div><div class="line">@app.task()</div><div class="line">def add(a, b):</div><div class="line">    print &quot;-----&quot;</div><div class="line">    print &quot;---------&quot;</div><div class="line">    return a + b</div><div class="line"></div><div class="line">@a.route(&quot;/app&quot;)</div><div class="line">def app():</div><div class="line">    add.delay(2,3)</div><div class="line">    return &quot;hehe&quot;</div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">    a.run()</div></pre></td></tr></table></figure>
+<p>看下celery脚本：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python</div><div class="line"># -*- coding:utf-8 -*-</div><div class="line">import os</div><div class="line">import sys</div><div class="line">import datetime</div><div class="line">BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</div><div class="line">sys.path.append(BASE_DIR)</div><div class="line">sys.path.append(&quot;harbor-ha&quot;)</div><div class="line">from test_docker import *</div><div class="line">from celery import Celery</div><div class="line">from celery import chain, group, chord, Task</div><div class="line">import celeryconfig</div><div class="line">from flask import Flask</div><div class="line">a=Flask(&apos;example&apos;)</div><div class="line">app= Celery(a)</div><div class="line">app.config_from_object(celeryconfig)</div><div class="line">__all__ = [&apos;add&apos;, &apos;reduce&apos;,&apos;sum&apos;, &apos;other&apos;,&apos;docker_build&apos;]</div><div class="line">@app.task</div><div class="line">def add(x, y):</div><div class="line">    return x + y</div><div class="line">@app.task</div><div class="line">def reduce(x, y):</div><div class="line">    return x - y</div><div class="line">@app.task</div><div class="line">def sum(values):</div><div class="line">    return sum([int(value) for value in values])</div><div class="line">@app.task</div><div class="line">def other(x, y):</div><div class="line">    return x * y</div><div class="line">@app.task</div><div class="line">def docker_build(path,tag,dockerfile):</div><div class="line">    a=&quot;test&quot;</div><div class="line">    docker_build_images(path,tag,dockerfile)</div><div class="line">    return a</div></pre></td></tr></table></figure>
 
           
         
@@ -784,7 +869,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/01/敏捷概念/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/09/小代码实现/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Zero">
@@ -809,8 +894,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/06/01/敏捷概念/" itemprop="url">
-                  敏捷概念
+                <a class="post-title-link" href="/2017/06/09/小代码实现/" itemprop="url">
+                  小代码实现
                 </a>
               
             
@@ -824,8 +909,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-01T17:14:44+08:00">
-                2017-06-01
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-09T23:10:00+08:00">
+                2017-06-09
               </time>
             
 
@@ -835,31 +920,13 @@
           </span>
 
           
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/敏捷文化/" itemprop="url" rel="index">
-                    <span itemprop="name">敏捷文化</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
 
           
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2017/06/01/敏捷概念/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/01/敏捷概念/" itemprop="commentCount"></span>
+                <a href="/2017/06/09/小代码实现/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/09/小代码实现/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -869,7 +936,7 @@
 
           
           
-             <span id="/2017/06/01/敏捷概念/" class="leancloud_visitors" data-flag-title="敏捷概念">
+             <span id="/2017/06/09/小代码实现/" class="leancloud_visitors" data-flag-title="小代码实现">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -896,175 +963,7 @@
       
         
           
-            <h3 id="敏捷核心思维"><a href="#敏捷核心思维" class="headerlink" title="敏捷核心思维"></a>敏捷核心思维</h3><p>价值驱动-关注高优先级目标、要事<br>适应变化-频繁的交付可见成果，频繁确认，确保交付正确的成果<br>自组织团队-目标驱动、共享责任</p>
-<h3 id="敏捷宣言"><a href="#敏捷宣言" class="headerlink" title="敏捷宣言"></a>敏捷宣言</h3><p>个体和交互 重于 过程和工具（Individuals and interactions over processes and tools）<br>可用的软件 重于 完备的文档（Working software over comprehensive documentation）<br>客户协作 重于 合同谈判（Customer collaboration over contract negotiation）<br>响应变化 重于 遵循计划（Responding to change over following a plan）<br>虽然右项也具有价值，但我们认为左项具有更大的价值。<br>更进一步的解读参见：<a href="http://www.tuicool.com/articles/ziqIN3Y" target="_blank" rel="external">http://www.tuicool.com/articles/ziqIN3Y</a></p>
-<h3 id="敏捷宣言遵循的原则"><a href="#敏捷宣言遵循的原则" class="headerlink" title="敏捷宣言遵循的原则"></a>敏捷宣言遵循的原则</h3><p>我们遵循以下原则：<br>我们最重要的目标，是通过持续不断地及早交付有价值的软件使客户满意。<br>欣然面对需求变化，即使在开发后期也一样。为了客户的竞争优势，敏捷过程掌控变化。<br>经常地交付可工作的软件，相隔几星期或一两个月，倾向于采取较短的周期。<br>业务人员和开发人员必须相互合作，项目中的每一天都不例外。<br>激发个体的斗志，以他们为核心搭建项目。提供所需的环境和支援，辅以信任，从而达成目标。<br>不论团队内外，传递信息效果最好效率也最高的方式是面对面的交谈。<br>可工作的软件是进度的首要度量标准。<br>敏捷过程倡导可持续开发。责任人、开发人员和用户要能够共同维持其步调稳定延续。<br>坚持不懈地追求技术卓越和良好设计，敏捷能力由此增强。<br>以简洁为本，它是极力减少不必要工作量的艺术。<br>最好的架构、需求和设计出自自组织团队。<br>团队定期地反思如何能提高成效，并依此调整自身的举止表现。</p>
-<h3 id="scrum的价值观"><a href="#scrum的价值观" class="headerlink" title="scrum的价值观"></a>scrum的价值观</h3><p>承诺：自组织团队开始的时候做出承诺，并在迭代期间尽全力完成履行承诺。<br>专注：一段时间内只专注于少数几件事情。Stop Starting, Start Finishing。团队的能力（精力）是有限的，在有限能力和有限时间范围内，专注于最有价值的事情，<br>以取得更好的成果。<br>公开：在团队中公开进展（Progress），即可视化、透明，这样可以很容易的暴露出风险问题和障碍。并且透明也是尊重、信任的基础。<br>尊重：团队是坐在一起的，长期稳定的，这有助于加深彼此的尊重和了解。<br>勇气：（最缺的）我们需要勇气去迎接各种挑战，以及有足够的勇气去说NO。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/24/持续集成/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
             
-            
-              
-                
-                <a class="post-title-link" href="/2017/05/24/持续集成/" itemprop="url">
-                  持续集成
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-24T16:23:01+08:00">
-                2017-05-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/jenkins-持续集成/" itemprop="url" rel="index">
-                    <span itemprop="name">jenkins 持续集成</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/05/24/持续集成/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/05/24/持续集成/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/05/24/持续集成/" class="leancloud_visitors" data-flag-title="持续集成">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在公司内部wiki看到的一篇分享，感谢！<br>CI(Continuous Integration)持续集成，CD(Continuous Delivery) 持续交付</p>
-<h3 id="为什么做CI"><a href="#为什么做CI" class="headerlink" title="为什么做CI"></a>为什么做CI</h3><p>1、分支偏离主干<br>2、未知项目进度<br>3、发现bug较晚<br>4、定位问题复杂</p>
-<h3 id="CI价值"><a href="#CI价值" class="headerlink" title="CI价值"></a>CI价值</h3><p>1、降低风险：静态代码分析，尽早发现bug<br>2、自动化：自动化编译、自动化测试、自动部署、自动审查、自动反馈<br>3、随时发布</p>
-<h3 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h3><p>为了提高代码质量已经每次发布到beta环境服务的稳定性，要提高自动化测试覆盖率（不仅限于接口自动化测试）</p>
-<h3 id="CI系统流程"><a href="#CI系统流程" class="headerlink" title="CI系统流程"></a>CI系统流程</h3><p>流程图如下：<br><img src="/images/2017/05/1.png" alt="image"></p>
-<h3 id="CI详细流程图如下"><a href="#CI详细流程图如下" class="headerlink" title="CI详细流程图如下"></a>CI详细流程图如下</h3><p><img src="/images/2017/05/2.png" alt="image"></p>
-<h3 id="代码提交流程"><a href="#代码提交流程" class="headerlink" title="代码提交流程"></a>代码提交流程</h3><p><img src="/images/2017/05/3.png" alt="image"></p>
-<h3 id="自测环境发布流程"><a href="#自测环境发布流程" class="headerlink" title="自测环境发布流程"></a>自测环境发布流程</h3><p><img src="/images/2017/05/4.png" alt="image"></p>
-<p>1、当git lab上有代码向dev_test分支发起merge请求，触发自测环境的jenkins sonar扫描；<br>2、sonar扫描–针对dev_test分支<br>3、单元测试–针对dev_test分支<br>4、构建自测环境，并运行自测环境–针对dev_test分支<br>5、执行接口自动化测试；<br>6、接口自动化测试通过后，在自测环境中进行功能测试、新增接口测试，并将新增测试点新增到自动化测试案例库中。</p>
-<h3 id="Beta环境发布流程（分支：dev）"><a href="#Beta环境发布流程（分支：dev）" class="headerlink" title="Beta环境发布流程（分支：dev）"></a>Beta环境发布流程（分支：dev）</h3><p><img src="/images/2017/05/5.png" alt="image"><br>1、当git lab上有代码向dev分支发起merge请求，触发jenkins sonar扫描；<br>2、sonar扫描–针对dev分支<br>3、单元测试–针对dev分支<br>4、构建自测环境，并运行自测环境–针对dev分支<br>5、执行接口自动化测试；<br>6、接口自动化测试通过后，将测试通过的dev分支发布并部署到beta环境。</p>
-<h3 id="流程触发机制"><a href="#流程触发机制" class="headerlink" title="流程触发机制"></a>流程触发机制</h3><p>1、使用gitlab webhooks<br><img src="/images/2017/05/6.png" alt="image"><br>2、URL处输入构建的url地址，需增加token信息；<br><a href="http://jenkins.cn/view/decision/job/decision-sonar/build" target="_blank" rel="external">http://jenkins.cn/view/decision/job/decision-sonar/build</a><br>3、Secret Token 输入jenkins中需由gitlab merge请求触发的工程中配置身份令牌<br><img src="/images/2017/05/7.png" alt="image"></p>
-<h3 id="触发机制配置merge请求时触发"><a href="#触发机制配置merge请求时触发" class="headerlink" title="触发机制配置merge请求时触发"></a>触发机制配置merge请求时触发</h3><p><img src="/images/2017/05/8.png" alt="image"><br>5、提交merge请求，触发流程</p>
-<h3 id="操作说明"><a href="#操作说明" class="headerlink" title="操作说明"></a>操作说明</h3><p>1、新建jenkins项目<br>新建sonar扫描、单元测试、构建、自动化测试、beta环境构建五个项目。<br>2、配置meta data<br><img src="/images/2017/05/9.png" alt="image"><br>3、新建pipeline视图<br><img src="/images/2017/05/10.png" alt="image"><br>4、设置CI初始项目名称<br><img src="/images/2017/05/11.png" alt="image"><br>5、CI初始项目设置依赖关系.注意：依赖关系一定要顺序执行，避免形成环形依赖<br><img src="/images/2017/05/12.png" alt="image"><br>6、设置预警声音(可自定义声音，音频格式的文件为wav格式，并且将音频文件打包好给叶柄添加到jenkins服务器上即可)<br><img src="/images/2017/05/13.png" alt="image"><br>7、Sonar扫描项目配置<br>mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent<br>mvn sonar:sonar<br>8、单元测试项目配置<br>-Dmaven.test.skip=false<br>9、自动化项目配置<br><a href="http://jenkins.puhuitech.cn/view/decision/job/puhui-decision-autotest/" target="_blank" rel="external">http://jenkins.puhuitech.cn/view/decision/job/puhui-decision-autotest/</a><br>10、发送测试报告<br>1）、安装jenkins插件，Editable Email Notification<br>2）、选择构建后操作，Editable Email Notification；<br>3）、Project Recipient List：输入收件人的邮箱地址，收件人之间使用逗号隔开；<br>4）、Default Subject：邮件主题<br>5）、Default Content：邮件内容自定义<br><img src="/images/2017/05/14.png" alt="image"><br>预热内容–使用Groovy脚本新建pipeline流程<br>1、新建一个项目类型为Pipeline的jenkins工程<br><img src="/images/2017/05/15.png" alt="image"><br>2、配置groovy脚本<br><img src="/images/2017/05/16.png" alt="image"><br>3、pipeline 模板脚本生成<br><img src="/images/2017/05/17.png" alt="image"><br>4、pipeline进程查看<br><img src="/images/2017/05/18.png" alt="image"></p>
-<p>jenkins 2.0建自动化构建之pipeline语法：<br><img src="/images/2017/05/19.png" alt="image"></p>
-
           
         
       
@@ -1097,7 +996,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1138,7 +1037,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">75</span>
+              <span class="site-state-item-count">80</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1146,7 +1045,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">24</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1155,7 +1054,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">53</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

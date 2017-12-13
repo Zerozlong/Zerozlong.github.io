@@ -93,7 +93,7 @@
 <meta property="og:site_name" content="Zero">
 <meta property="og:description" content="注意事项每个标签都有class和id这两个属性，class可以重复，id不可以重复；通过id我们可以在js中拿到这个id的值或者属性等；
 如何在html中引入javascript标签？引入javascript代码可以放到header里面也可以放在body里面；dom是操作div、input的一个标签；可以理解为浏览器提供的一种标准库；在html中，将script标签放到body的最后面；在js里面">
-<meta property="og:updated_time" content="2017-11-10T08:38:52.500Z">
+<meta property="og:updated_time" content="2017-11-10T10:09:19.883Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="前端基础知识复习">
 <meta name="twitter:description" content="注意事项每个标签都有class和id这两个属性，class可以重复，id不可以重复；通过id我们可以在js中拿到这个id的值或者属性等；
@@ -379,6 +379,7 @@
 <h4 id="html中插入元素"><a href="#html中插入元素" class="headerlink" title="html中插入元素"></a>html中插入元素</h4><p>var a = document.querySelector(‘#id-button-login)<br>    // 第一个参数表示插入的位置, ‘beforeend’ 表示插入在结束之前(也就是添加到标签末尾)<br>    // 第二个参数是你想插入的 html 内容<br>a.insertAdjacentHTML(‘beforeend’, ‘</p><h1 class="gua-h1">你好</h1>‘)<br>第二个位置是afterend，在之后添加；<br>删除元素:<br>var pwd = document.querySelector(‘#id-input-password’)<br>pwd.remove()<br>修改元素的 html 值<br>var msg = document.querySelector(‘#id-msg’)<br>msg.innerHTML = ‘<button>你好</button>‘<br>innerHTML 不会转义字符串<br>innerText 会转义字符串<br>msg.innerText = ‘<button>text</button>‘<p></p>
 <h3 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h3><p>事件是用来处理响应的一个机制，这个响应可以来自于用户(点击, 鼠标移动, 滚动), 也可以来自于浏览器。<br>下面的链接描述了所有事件<a href="https://developer.mozilla.org/en-US/docs/Web/Events；" target="_blank" rel="external">https://developer.mozilla.org/en-US/docs/Web/Events；</a><br>常用例子, 给按钮添加一个点击的事件。<br>1、获得按钮 var loginButton = document.querySelector(‘#id-button-login’)<br>2, 声明一个函数, 用于在按钮点击后执行<br>     var clicked = function() {<br>        alert(‘按钮被点击到了’)<br>    }<br>3, 添加事件, 使用 addEventListener 函数.它有两个参数,<br>   第一个是事件的名字, ‘click’ 表示点击,第二个是事件发生后会被自动调用的函数<br>   loginButton.addEventListener(‘click’, clicked)<br>添加完成, 可以自己在浏览器试试, 记得打开 console.</p>
 <h3 id="js的序列化和反序列化"><a href="#js的序列化和反序列化" class="headerlink" title="js的序列化和反序列化"></a>js的序列化和反序列化</h3><p>有一个常见的需求是在 字典/数组 和字符串 之间相互转换，这个过程叫做 序列化/反序列化在 js 中, 序列化使用 JSON 数据格式。<br>全称 JavaScript Object Notation (js 对象标记)。这个格式已经是现在用于互联网数据交换的事实标准格式了；python 也有内置的标准库进行这种转换。<br>js 中转换方式如下。注意 typeof 语句可以查看一个变量的类型<br>    var s = JSON.stringify([1, 2, 3, 4])<br>    log(‘序列化后的字符串’, typeof s, s)<br>    var a = JSON.parse(s)<br>    在 js 中, 由于历史遗留的 bug，typeof [] 会显示 object, 这是正常的<br>    log(‘反序列化后的数组’, typeof a, a)</p>
+<h3 id="css中的元素分类"><a href="#css中的元素分类" class="headerlink" title="css中的元素分类"></a>css中的元素分类</h3><p>block元素默认占一行；<br>div p ul ol li h1 h2 h3 h4 h5 h6<br>inline 元素，只占 content 的尺寸<br>inline-block 是 inline 布局 block 模式<br>inline-block 对外表现为 inline，所以可以和别的 inline 放在一行<br>对内表现为 block，所以可以设置自身的宽高</p>
 
       
     </div>
@@ -441,6 +442,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/15/jquery事件/" rel="prev" title="事件">
+                事件 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -512,7 +517,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">75</span>
+              <span class="site-state-item-count">80</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -520,7 +525,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">24</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -529,7 +534,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">53</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -586,7 +591,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#注意事项"><span class="nav-number">1.</span> <span class="nav-text">注意事项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何在html中引入javascript标签？"><span class="nav-number">2.</span> <span class="nav-text">如何在html中引入javascript标签？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dom"><span class="nav-number">3.</span> <span class="nav-text">Dom</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dom查找元素"><span class="nav-number">4.</span> <span class="nav-text">dom查找元素</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#元素选择器"><span class="nav-number">4.1.</span> <span class="nav-text">元素选择器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#class选择器"><span class="nav-number">4.2.</span> <span class="nav-text">class选择器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#id选择器"><span class="nav-number">4.3.</span> <span class="nav-text">id选择器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#html中插入元素"><span class="nav-number">4.4.</span> <span class="nav-text">html中插入元素</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number"></span> <span class="nav-text">你好</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#事件"><span class="nav-number">1.</span> <span class="nav-text">事件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#js的序列化和反序列化"><span class="nav-number">2.</span> <span class="nav-text">js的序列化和反序列化</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#注意事项"><span class="nav-number">1.</span> <span class="nav-text">注意事项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何在html中引入javascript标签？"><span class="nav-number">2.</span> <span class="nav-text">如何在html中引入javascript标签？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dom"><span class="nav-number">3.</span> <span class="nav-text">Dom</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dom查找元素"><span class="nav-number">4.</span> <span class="nav-text">dom查找元素</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#元素选择器"><span class="nav-number">4.1.</span> <span class="nav-text">元素选择器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#class选择器"><span class="nav-number">4.2.</span> <span class="nav-text">class选择器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#id选择器"><span class="nav-number">4.3.</span> <span class="nav-text">id选择器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#html中插入元素"><span class="nav-number">4.4.</span> <span class="nav-text">html中插入元素</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number"></span> <span class="nav-text">你好</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#事件"><span class="nav-number">1.</span> <span class="nav-text">事件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#js的序列化和反序列化"><span class="nav-number">2.</span> <span class="nav-text">js的序列化和反序列化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#css中的元素分类"><span class="nav-number">3.</span> <span class="nav-text">css中的元素分类</span></a></li></ol></div>
             
 
           </div>
