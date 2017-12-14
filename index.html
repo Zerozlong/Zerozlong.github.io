@@ -260,6 +260,161 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/14/k8s通过环境变量在pod内取到容器属性/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/12/14/k8s通过环境变量在pod内取到容器属性/" itemprop="url">
+                  k8s通过环境变量在pod内取到容器属性
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Дата создания записи" itemprop="dateCreated datePublished" datetime="2017-12-14T10:58:27+08:00">
+                2017-12-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/k8/" itemprop="url" rel="index">
+                    <span itemprop="name">k8</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/12/14/k8s通过环境变量在pod内取到容器属性/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/12/14/k8s通过环境变量在pod内取到容器属性/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/12/14/k8s通过环境变量在pod内取到容器属性/" class="leancloud_visitors" data-flag-title="k8s通过环境变量在pod内取到容器属性">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>这个章节展示如何使用环境变量公开pod的信息到它自己运行的容器里面，环境变量可以公开pod字段和容器字段。<br>如：nodename，podname,namespace,podip等。</p>
+<h1 id="创建pod"><a href="#创建pod" class="headerlink" title="创建pod"></a>创建pod</h1><h2 id="1、使用yaml文件创建"><a href="#1、使用yaml文件创建" class="headerlink" title="1、使用yaml文件创建"></a>1、使用yaml文件创建</h2><p>在这个配置文件，可以看到五个环境变量。env字段是个数组。数组里面的第一个元素指定了MY_NODE_NAME环境变量，<br>它的值是从Pod的spec.nodeName里面获取的。类似的其他的环境变量获取pod的字段名称。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div></pre></td><td class="code"><pre><div class="line">apiVersion: extensions/v1beta1</div><div class="line">kind: Deployment</div><div class="line">metadata:</div><div class="line">  name: test-gpu</div><div class="line">spec:</div><div class="line">  replicas: 1</div><div class="line">  template:</div><div class="line">    metadata:</div><div class="line">      labels:</div><div class="line">        name: test-gpu</div><div class="line">    spec:</div><div class="line">      containers:</div><div class="line">      - name: test-gpu</div><div class="line">        image: idockerhub.jd.com/k8s/tensorflow/tensorflow:latest-gpu</div><div class="line">        ports:</div><div class="line">        - containerPort: 8888</div><div class="line">        env:</div><div class="line">          - name: NODE_NAME</div><div class="line">            valueFrom:</div><div class="line">              fieldRef:</div><div class="line">                fieldPath: spec.nodeName</div><div class="line">          - name: POD_NAME</div><div class="line">            valueFrom:</div><div class="line">              fieldRef:</div><div class="line">                fieldPath: metadata.name</div><div class="line">          - name: NAMESPACE</div><div class="line">            valueFrom:</div><div class="line">              fieldRef:</div><div class="line">                fieldPath: metadata.namespace</div><div class="line">          - name: POD_IP</div><div class="line">            valueFrom:</div><div class="line">              fieldRef:</div><div class="line">                fieldPath: status.podIP</div><div class="line">          - name: MY_POD_SERVICE_ACCOUNT</div><div class="line">            valueFrom:</div><div class="line">              fieldRef:</div><div class="line">                fieldPath: spec.serviceAccountName</div><div class="line">        resources:</div><div class="line">          limits:</div><div class="line">            alpha.kubernetes.io/nvidia-gpu: 2</div><div class="line">        volumeMounts:</div><div class="line">            - mountPath: /usr/local/nvidia</div><div class="line">              name: nvidia-driver</div><div class="line">            - mountPath: /dev/nvidia0</div><div class="line">              name: nvidia0</div><div class="line">            - mountPath: /dev/nvidia-uvm</div><div class="line">              name: nvidia-uvm</div><div class="line">            - mountPath: /dev/nvidia-uvm-tools</div><div class="line">              name: nvidia-uvm-tools</div><div class="line">            - mountPath: /dev/nvidiactl</div><div class="line">              name: nvidiactl</div><div class="line">      volumes:</div><div class="line">        - name: nvidia-driver</div><div class="line">          hostPath:</div><div class="line">            path: /var/lib/nvidia-docker/volumes/nvidia_driver/384.81</div><div class="line">        - name: nvidia0</div><div class="line">          hostPath:</div><div class="line">            path: /dev/nvidia0</div><div class="line">        - name: nvidia-uvm</div><div class="line">          hostPath:</div><div class="line">            path: /dev/nvidia-uvm</div><div class="line">        - name: nvidia-uvm-tools</div><div class="line">          hostPath:</div><div class="line">            path: /dev/nvidia-uvm-tools</div><div class="line">        - name: nvidiactl</div><div class="line">          hostPath:</div><div class="line">            path: /dev/nvidiactl</div></pre></td></tr></table></figure></p>
+<p>在这个配置文件中，可以看到五个环境变量。env字段是个数组，数组里面的第一个元素指定了NODE_NAME环境变量，它的值从pod的<br>spec.nodeName里面获取的。<br>创建pod：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@JXQ-23-58-39 gpu]# kubectl create -f gpu.yaml </div><div class="line">deployment &quot;test-gpu&quot; created</div></pre></td></tr></table></figure></p>
+<h1 id="验证pod里面的环境变量"><a href="#验证pod里面的环境变量" class="headerlink" title="验证pod里面的环境变量"></a>验证pod里面的环境变量</h1><p>查看pod是否正常启动；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@JXQ-23-58-39 gpu]# kubectl get pod </div><div class="line">NAME                        READY     STATUS    RESTARTS   AGE</div><div class="line">test-gpu-3068776095-2cg58   1/1       Running   0          1m</div></pre></td></tr></table></figure></p>
+<p>登陆到docker内部获取环境变量信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">kubectl exec -it test-gpu-3068776095-2cg58 -- sh</div><div class="line">root@test-gpu-3068776095-2cg58:/notebooks# echo $NODE_NAME $PODIP $NAMESPACE</div><div class="line">172.23.196.3 172.30.78.2 default</div></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/14/kubernetes亲和性调度/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -300,7 +455,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-14T10:25:18+08:00">
+              <time title="Дата создания записи" itemprop="dateCreated datePublished" datetime="2017-12-14T10:25:18+08:00">
                 2017-12-14
               </time>
             
@@ -503,7 +658,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-13T18:28:20+08:00">
+              <time title="Дата создания записи" itemprop="dateCreated datePublished" datetime="2017-12-13T18:28:20+08:00">
                 2017-12-13
               </time>
             
@@ -676,7 +831,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-13T18:19:51+08:00">
+              <time title="Дата создания записи" itemprop="dateCreated datePublished" datetime="2017-12-13T18:19:51+08:00">
                 2017-12-13
               </time>
             
@@ -808,7 +963,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-20T11:31:26+08:00">
+              <time title="Дата создания записи" itemprop="dateCreated datePublished" datetime="2017-11-20T11:31:26+08:00">
                 2017-11-20
               </time>
             
@@ -891,158 +1046,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/17/k8s现阶段分享/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/11/17/k8s现阶段分享/" itemprop="url">
-                  k8s现阶段分享（转载)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-17T10:07:17+08:00">
-                2017-11-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/k8s-分享/" itemprop="url" rel="index">
-                    <span itemprop="name">k8s  分享</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/11/17/k8s现阶段分享/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/11/17/k8s现阶段分享/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/11/17/k8s现阶段分享/" class="leancloud_visitors" data-flag-title="k8s现阶段分享（转载)">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>文章来源：<a href="http://mp.weixin.qq.com/s?__biz=MzI4NDYxOTgwMw==&amp;mid=2247484659&amp;idx=1&amp;sn=403a250e5d0d0905815adaac0854bec9&amp;chksm=ebf9e187dc8e68919d8129ccf40576d2c5c8699f46c3a9f2f041b53944916184a25965cd571d&amp;mpshare=1&amp;scene=1&amp;srcid=1116RC1xD47qL9x43BViywdp#rd" target="_blank" rel="external">http://mp.weixin.qq.com/s?__biz=MzI4NDYxOTgwMw==&amp;mid=2247484659&amp;idx=1&amp;sn=403a250e5d0d0905815adaac0854bec9&amp;chksm=ebf9e187dc8e68919d8129ccf40576d2c5c8699f46c3a9f2f041b53944916184a25965cd571d&amp;mpshare=1&amp;scene=1&amp;srcid=1116RC1xD47qL9x43BViywdp#rd</a></p>
-<h3 id="全文摘要"><a href="#全文摘要" class="headerlink" title="全文摘要"></a>全文摘要</h3><p>一是整个的架构；二是很多人关心集群的HA和安全方面的配置；三是网络方案是什么样的；<br>四是Ingress的方案；四是灰度发布方案；五是集群设置的最佳配置；<br>六是tensorflow on Kubernetes；七是经验踩坑.如下图所示：</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1088,7 +1091,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">81</span>
+              <span class="site-state-item-count">82</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1096,7 +1099,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1105,7 +1108,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">57</span>
+                <span class="site-state-item-count">58</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
