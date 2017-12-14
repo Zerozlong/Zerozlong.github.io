@@ -85,19 +85,16 @@
 
 
 
-<meta name="description" content="[toc]
-Kubernetes pod调度简介除了让 kubernetes 集群调度器自动为 pod 资源选择某个节点（默认调度考虑的是资源足够，并且 load 尽量平均），有些情况我们希望能更多地控制 pod 应该如何调度。比如，集群中有些机器的配置更好（ SSD，更好的内存等），我们希望比较核心的服务（比如说数据库）运行在上面；或者某两个服务的网络传输很频繁，我们希望它们最好在同一台机器上，">
+<meta name="description" content="Kubernetes pod调度简介除了让 kubernetes 集群调度器自动为 pod 资源选择某个节点（默认调度考虑的是资源足够，并且 load 尽量平均），有些情况我们希望能更多地控制 pod 应该如何调度。比如，集群中有些机器的配置更好（ SSD，更好的内存等），我们希望比较核心的服务（比如说数据库）运行在上面；或者某两个服务的网络传输很频繁，我们希望它们最好在同一台机器上，或者同一个机">
 <meta property="og:type" content="article">
 <meta property="og:title" content="kubernetes亲和性调度（朋友文章）">
 <meta property="og:url" content="http://yoursite.com/2017/12/14/kubernetes亲和性调度/index.html">
 <meta property="og:site_name" content="Zero">
-<meta property="og:description" content="[toc]
-Kubernetes pod调度简介除了让 kubernetes 集群调度器自动为 pod 资源选择某个节点（默认调度考虑的是资源足够，并且 load 尽量平均），有些情况我们希望能更多地控制 pod 应该如何调度。比如，集群中有些机器的配置更好（ SSD，更好的内存等），我们希望比较核心的服务（比如说数据库）运行在上面；或者某两个服务的网络传输很频繁，我们希望它们最好在同一台机器上，">
-<meta property="og:updated_time" content="2017-12-14T02:41:05.168Z">
+<meta property="og:description" content="Kubernetes pod调度简介除了让 kubernetes 集群调度器自动为 pod 资源选择某个节点（默认调度考虑的是资源足够，并且 load 尽量平均），有些情况我们希望能更多地控制 pod 应该如何调度。比如，集群中有些机器的配置更好（ SSD，更好的内存等），我们希望比较核心的服务（比如说数据库）运行在上面；或者某两个服务的网络传输很频繁，我们希望它们最好在同一台机器上，或者同一个机">
+<meta property="og:updated_time" content="2017-12-14T03:57:30.864Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kubernetes亲和性调度（朋友文章）">
-<meta name="twitter:description" content="[toc]
-Kubernetes pod调度简介除了让 kubernetes 集群调度器自动为 pod 资源选择某个节点（默认调度考虑的是资源足够，并且 load 尽量平均），有些情况我们希望能更多地控制 pod 应该如何调度。比如，集群中有些机器的配置更好（ SSD，更好的内存等），我们希望比较核心的服务（比如说数据库）运行在上面；或者某两个服务的网络传输很频繁，我们希望它们最好在同一台机器上，">
+<meta name="twitter:description" content="Kubernetes pod调度简介除了让 kubernetes 集群调度器自动为 pod 资源选择某个节点（默认调度考虑的是资源足够，并且 load 尽量平均），有些情况我们希望能更多地控制 pod 应该如何调度。比如，集群中有些机器的配置更好（ SSD，更好的内存等），我们希望比较核心的服务（比如说数据库）运行在上面；或者某两个服务的网络传输很频繁，我们希望它们最好在同一台机器上，或者同一个机">
 
 
 
@@ -369,8 +366,7 @@ Kubernetes pod调度简介除了让 kubernetes 集群调度器自动为 pod 资�
       
 
       
-        <p>[toc]</p>
-<h1 id="Kubernetes-pod调度简介"><a href="#Kubernetes-pod调度简介" class="headerlink" title="Kubernetes pod调度简介"></a>Kubernetes pod调度简介</h1><p>除了让 kubernetes 集群调度器自动为 pod 资源选择某个节点（默认调度考虑的是资源足够，并且 load 尽量平均），有些情况我们希望能更多地控制 pod 应该如何调度。比如，集群中有些机器的配置更好（ SSD，更好的内存等），我们希望比较核心的服务（比如说数据库）运行在上面；或者某两个服务的网络传输很频繁，我们希望它们最好在同一台机器上，或者同一个机房。</p>
+        <h1 id="Kubernetes-pod调度简介"><a href="#Kubernetes-pod调度简介" class="headerlink" title="Kubernetes pod调度简介"></a>Kubernetes pod调度简介</h1><p>除了让 kubernetes 集群调度器自动为 pod 资源选择某个节点（默认调度考虑的是资源足够，并且 load 尽量平均），有些情况我们希望能更多地控制 pod 应该如何调度。比如，集群中有些机器的配置更好（ SSD，更好的内存等），我们希望比较核心的服务（比如说数据库）运行在上面；或者某两个服务的网络传输很频繁，我们希望它们最好在同一台机器上，或者同一个机房。</p>
 <p>这种调度在kubernetes中分为两类：node affinity和pod affinity</p>
 <h1 id="Node选择器"><a href="#Node选择器" class="headerlink" title="Node选择器"></a>Node选择器</h1><p>这种方式其实就是我们最常用的使用label的方式，给某一个node打上特定的标签，然后在启动pod的时候，通过nodeSelector指定要调度到的node节点的标签。</p>
 <p>给node打标签：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kubectl label nodes &lt;node-name&gt; &lt;label-key&gt;=&lt;label-value&gt;</div></pre></td></tr></table></figure></p>
