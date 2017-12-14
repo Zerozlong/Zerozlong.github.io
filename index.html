@@ -260,6 +260,209 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/14/kubernetes亲和性调度/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/12/14/kubernetes亲和性调度/" itemprop="url">
+                  kubernetes亲和性调度（朋友文章二）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-14T10:25:18+08:00">
+                2017-12-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/k8-k8s/" itemprop="url" rel="index">
+                    <span itemprop="name">k8  k8s</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/12/14/kubernetes亲和性调度/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/12/14/kubernetes亲和性调度/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/12/14/kubernetes亲和性调度/" class="leancloud_visitors" data-flag-title="kubernetes亲和性调度（朋友文章二）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>[toc]</p>
+<h1 id="Kubernetes-pod调度简介"><a href="#Kubernetes-pod调度简介" class="headerlink" title="Kubernetes pod调度简介"></a>Kubernetes pod调度简介</h1><p>除了让 kubernetes 集群调度器自动为 pod 资源选择某个节点（默认调度考虑的是资源足够，并且 load 尽量平均），有些情况我们希望能更多地控制 pod 应该如何调度。比如，集群中有些机器的配置更好（ SSD，更好的内存等），我们希望比较核心的服务（比如说数据库）运行在上面；或者某两个服务的网络传输很频繁，我们希望它们最好在同一台机器上，或者同一个机房。</p>
+<p>这种调度在kubernetes中分为两类：node affinity和pod affinity</p>
+<h1 id="Node选择器"><a href="#Node选择器" class="headerlink" title="Node选择器"></a>Node选择器</h1><p>这种方式其实就是我们最常用的使用label的方式，给某一个node打上特定的标签，然后在启动pod的时候，通过nodeSelector指定要调度到的node节点的标签。</p>
+<p>给node打标签：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kubectl label nodes &lt;node-name&gt; &lt;label-key&gt;=&lt;label-value&gt;</div></pre></td></tr></table></figure></p>
+<p>示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kubectl label nodes k8s-node1 envir=live</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">apiVersion: v1</div><div class="line">kind: Pod</div><div class="line">metadata:</div><div class="line">  name: nginx</div><div class="line">  labels:</div><div class="line">    env: test</div><div class="line">spec:</div><div class="line">  containers:</div><div class="line">  - name: nginx</div><div class="line">    image: nginx</div><div class="line">    imagePullPolicy: IfNotPresent</div><div class="line">  nodeSelector:</div><div class="line">    envir: live</div></pre></td></tr></table></figure>
+<blockquote>
+<p>需要说明的是，nodeSelector的方式比较简单直观，但是不够灵活，后面，它会被Node Affinity替代。</p>
+</blockquote>
+<h1 id="Node-Affinity"><a href="#Node-Affinity" class="headerlink" title="Node Affinity"></a>Node Affinity</h1><p>Affinity 翻译成中文是“亲和性”，它对应的是 Anti-Affinity，我们翻译成“互斥”。这两个词比较形象，可以把 pod 选择 node 的过程类比成磁铁的吸引和互斥，不同的是除了简单的正负极之外，pod 和 node 的吸引和互斥是可以灵活配置的。</p>
+<p>Affinity的优点：</p>
+<ul>
+<li>匹配有更多的逻辑组合，不只是字符串的完全相等</li>
+<li>调度分成软策略(soft)和硬策略(hard)，在软策略下，如果没有满足调度条件的节点，pod会忽略这条规则，继续完成调度。</li>
+</ul>
+<p>目前主要的node affinity：</p>
+<ul>
+<li><p>requiredDuringSchedulingIgnoredDuringExecution<br>表示pod必须部署到满足条件的节点上，如果没有满足条件的节点，就不停重试。其中IgnoreDuringExecution表示pod部署之后运行的时候，如果节点标签发生了变化，不再满足pod指定的条件，pod也会继续运行。</p>
+</li>
+<li><p>requiredDuringSchedulingRequiredDuringExecution<br>表示pod必须部署到满足条件的节点上，如果没有满足条件的节点，就不停重试。其中RequiredDuringExecution表示pod部署之后运行的时候，如果节点标签发生了变化，不再满足pod指定的条件，则重新选择符合要求的节点。</p>
+</li>
+<li><p>preferredDuringSchedulingIgnoredDuringExecution<br>表示优先部署到满足条件的节点上，如果没有满足条件的节点，就忽略这些条件，按照正常逻辑部署。</p>
+</li>
+<li><p>preferredDuringSchedulingRequiredDuringExecution<br>表示优先部署到满足条件的节点上，如果没有满足条件的节点，就忽略这些条件，按照正常逻辑部署。其中RequiredDuringExecution表示如果后面节点标签发生了变化，满足了条件，则重新调度到满足条件的节点。</p>
+</li>
+</ul>
+<blockquote>
+<p>软策略和硬策略的区分是有用处的，硬策略适用于 pod 必须运行在某种节点，否则会出现问题的情况，比如集群中节点的架构不同，而运行的服务必须依赖某种架构提供的功能；软策略不同，它适用于满不满足条件都能工作，但是满足条件更好的情况，比如服务最好运行在某个区域，减少网络传输等。这种区分是用户的具体需求决定的，并没有绝对的技术依赖。</p>
+</blockquote>
+<p>下面是一个官方的示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">apiVersion: v1</div><div class="line">kind: Pod</div><div class="line">metadata:</div><div class="line">  name: with-node-affinity</div><div class="line">spec:</div><div class="line">  affinity:</div><div class="line">    nodeAffinity:</div><div class="line">      requiredDuringSchedulingIgnoredDuringExecution:</div><div class="line">        nodeSelectorTerms:</div><div class="line">        - matchExpressions:</div><div class="line">          - key: kubernetes.io/e2e-az-name</div><div class="line">            operator: In</div><div class="line">            values:</div><div class="line">            - e2e-az1</div><div class="line">            - e2e-az2</div><div class="line">      preferredDuringSchedulingIgnoredDuringExecution:</div><div class="line">      - weight: 1</div><div class="line">        preference:</div><div class="line">          matchExpressions:</div><div class="line">          - key: another-node-label-key</div><div class="line">            operator: In</div><div class="line">            values:</div><div class="line">            - another-node-label-value</div><div class="line">  containers:</div><div class="line">  - name: with-node-affinity</div><div class="line">    image: gcr.io/google_containers/pause:2.0</div></pre></td></tr></table></figure></p>
+<p>这个 pod 同时定义了 requiredDuringSchedulingIgnoredDuringExecution 和 preferredDuringSchedulingIgnoredDuringExecution 两种 nodeAffinity。第一个要求 pod 运行在特定 AZ 的节点上，第二个希望节点最好有对应的 another-node-label-key:another-node-label-value 标签。</p>
+<p>这里的匹配逻辑是label在某个列表中，可选的操作符有：</p>
+<ul>
+<li>In: label的值在某个列表中</li>
+<li>NotIn：label的值不在某个列表中</li>
+<li>Exists：某个label存在</li>
+<li>DoesNotExist：某个label不存在</li>
+<li>Gt：label的值大于某个值（字符串比较）</li>
+<li>Lt：label的值小于某个值（字符串比较）</li>
+</ul>
+<p>如果nodeAffinity中nodeSelector有多个选项，节点满足任何一个条件即可；如果matchExpressions有多个选项，则节点必须同时满足这些选项才能运行pod 。</p>
+<blockquote>
+<p>需要说明的是，node并没有anti-affinity这种东西，因为NotIn和DoesNotExist能提供类似的功能。</p>
+</blockquote>
+<h1 id="Pod-Affinity"><a href="#Pod-Affinity" class="headerlink" title="Pod Affinity"></a>Pod Affinity</h1><p>通过node affinity，我们知道怎么在调度的时候让pod灵活的选择node，但有些时候我们希望调度能够考虑pod之间的关系，而不只是pod与node的关系。于是在kubernetes 1.4的时候引入了pod affinity。</p>
+<p>为什么有这样的需求呢？举个例子，我们系统服务 A 和服务 B 尽量部署在同个主机、机房、城市，因为它们网络沟通比较多；再比如，我们系统数据服务 C 和数据服务 D 尽量分开，因为如果它们分配到一起，然后主机或者机房出了问题，会导致应用完全不可用，如果它们是分开的，应用虽然有影响，但还是可用的。</p>
+<p>pod affinity 可以这样理解：调度的时候选择（或者不选择）这样的节点 N ，这些节点上已经运行了满足条件 X。条件 X 是一组 label 选择器，它必须指明作用的 namespace（也可以作用于所有的 namespace），因为 pod 是运行在某个 namespace 中的。</p>
+<p>和 node affinity 相似，pod affinity 也有 requiredDuringSchedulingIgnoredDuringExecution 和 preferredDuringSchedulingIgnoredDuringExecution，意义也和之前一样。如果有使用亲和性，在 affinity 下面添加 podAffinity 字段，如果要使用互斥性，在 affinity 下面添加 podAntiAffinity 字段。</p>
+<p>下面是一个示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">apiVersion: v1</div><div class="line">kind: Pod</div><div class="line">metadata:</div><div class="line">  name: with-pod-affinity</div><div class="line">spec:</div><div class="line">  affinity:</div><div class="line">    podAffinity:</div><div class="line">      requiredDuringSchedulingIgnoredDuringExecution:</div><div class="line">      - labelSelector:</div><div class="line">          matchExpressions:</div><div class="line">          - key: security</div><div class="line">            operator: In</div><div class="line">            values:</div><div class="line">            - S1</div><div class="line">        topologyKey: &quot;failure-domain.beta.kubernetes.io/zone&quot;</div><div class="line">    podAntiAffinity:</div><div class="line">      preferredDuringSchedulingIgnoredDuringExecution:</div><div class="line">      - weight: 100</div><div class="line">        podAffinityTerm:</div><div class="line">          labelSelector:</div><div class="line">            matchExpressions:</div><div class="line">            - key: security</div><div class="line">              operator: In</div><div class="line">              values:</div><div class="line">              - S2</div><div class="line">          topologyKey: kubernetes.io/hostname</div><div class="line">  containers:</div><div class="line">  - name: with-pod-affinity</div><div class="line">    image: gcr.io/google_containers/pause:2.0</div></pre></td></tr></table></figure></p>
+<p>这个例子中，pod 需要调度到某个 zone（通过 failure-domain.beta.kubernetes.io/zone指定），这个 zone 至少有一个节点上运行了这样的 pod：这个 pod 有 security:S1 label。互斥性保证节点最好不要调度到这样的节点，这个节点上运行了某个 pod，而且这个 pod 有 security:S2 label。</p>
+<p>在 labelSelector 和 topologyKey 同级，还可以定义 namespaces 列表，表示匹配哪些 namespace 里面的 pod，默认情况下，会匹配定义的 pod 所在的 namespace；如果定义了这个字段，但是它的值为空，则匹配所有的 namespaces。</p>
+<p>参考：<a href="http://cizixs.com/2017/05/17/kubernetes-scheulder-affinity" target="_blank" rel="external">http://cizixs.com/2017/05/17/kubernetes-scheulder-affinity</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/13/ConfigMap/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -840,162 +1043,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/15/jquery事件/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/11/15/jquery事件/" itemprop="url">
-                  事件
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-15T10:38:32+08:00">
-                2017-11-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/事件/" itemprop="url" rel="index">
-                    <span itemprop="name">事件</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/11/15/jquery事件/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/11/15/jquery事件/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/11/15/jquery事件/" class="leancloud_visitors" data-flag-title="事件">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="事件冒泡"><a href="#事件冒泡" class="headerlink" title="事件冒泡"></a>事件冒泡</h3><p>IE的事件流叫做事件冒泡，即事件开始时由最具体的元素接收，然后逐级向上传播到较为不具体的节点。以下面的HTML页面为例子。<br>当你点击div元素，那么这个click事件会按照如下顺序传播：1、div；2、body；3、html；4、document。也就是说click事件首先在<br>div元素上发生，而这个元素就是我们单击的元素。然后，click事件沿dom数向上传播，在每一个节点上都会发生，直至传播到document对象。<br>jquery: class选择器<br>$(“.active .environment”).html()<br>id选择器<br>$(“#active”).html()</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1036,7 +1088,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">80</span>
+              <span class="site-state-item-count">81</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1053,7 +1105,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">56</span>
+                <span class="site-state-item-count">57</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
