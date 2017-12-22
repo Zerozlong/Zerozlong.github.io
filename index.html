@@ -391,6 +391,7 @@
 <h2 id="可压缩资源回收策略"><a href="#可压缩资源回收策略" class="headerlink" title="可压缩资源回收策略"></a>可压缩资源回收策略</h2><p>CPU：在压缩资源部分已经提到CPU属于可压缩资源，当pod使用超过设置的limits值，pod中进程使用cpu会被限制，但不会被kill。</p>
 <h2 id="不可压缩资源回收策略"><a href="#不可压缩资源回收策略" class="headerlink" title="不可压缩资源回收策略"></a>不可压缩资源回收策略</h2><p>当Node 内存资源不足时，那么就会有进程因OOM会被kernel kill掉，3种QoS pods被kill掉的顺序与场景如下：<br>Best-Effort 类型的pods：系统用完了全部内存时，该类型pods会最先被kill掉。<br>Burstable类型pods：系统用完了全部内存，且没有Best-Effort container可以被kill时，该类型pods会被kill掉。<br>Guaranteed pods：系统用完了全部内存、且没有Burstable与Best-Effort container可以被kill，该类型的pods会被kill掉。<br>注：如果pod进程因使用超过预先设定的limites而非Node资源紧张情况，系统倾向于在其原所在的机器上重启该container或本机或<br>其他重新创建一个pod。</p>
 <h1 id="使用建议"><a href="#使用建议" class="headerlink" title="使用建议"></a>使用建议</h1><p>如果资源充足，可将QoS pods类型均设置为Guaranteed。用计算资源换业务性能和稳定性，减少排查问题时间和成本。<br>如果想更好的提高资源利用率，业务服务可以设置为Guaranteed，而其他服务根据重要程度可分别设置为Burstable或Best-Effort，例如filebeat。</p>
+<h1 id="已知问题"><a href="#已知问题" class="headerlink" title="已知问题"></a>已知问题</h1><p>不支持swap，当前的QoS策略假设swap已被禁止。k8s1.7之后kubelet才会又禁用swap的参数。</p>
 
           
         
