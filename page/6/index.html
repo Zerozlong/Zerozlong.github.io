@@ -260,6 +260,319 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/19/消息队列（转/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/05/19/消息队列（转/" itemprop="url">
+                  消息队列（一）（转)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-19T16:28:10+08:00">
+                2017-05-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/05/19/消息队列（转/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/05/19/消息队列（转/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/05/19/消息队列（转/" class="leancloud_visitors" data-flag-title="消息队列（一）（转)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>文章来源：<a href="http://www.cnblogs.com/itfly8/p/5155983.html" target="_blank" rel="external">http://www.cnblogs.com/itfly8/p/5155983.html</a></p>
+<h3 id="消息队列概述"><a href="#消息队列概述" class="headerlink" title="消息队列概述"></a>消息队列概述</h3><p>消息队列中间件是分布式系统中重要的组件，主要解决应用耦合，异步消息，流量削锋等问题。实现高性能，高可用，<br>可伸缩和最终一致性架构。是大型分布式系统不可缺少的中间件。目前在生产环境，使用较多的消息队列有ActiveMQ，RabbitMQ，<br>ZeroMQ，Kafka，MetaMQ，RocketMQ等。</p>
+<h3 id="消息队列应用场景"><a href="#消息队列应用场景" class="headerlink" title="消息队列应用场景"></a>消息队列应用场景</h3><p>以下介绍消息队列在实际应用中常用的使用场景。异步处理，应用解耦，流量削锋和消息通讯四个场景。</p>
+<h4 id="异步处理"><a href="#异步处理" class="headerlink" title="异步处理"></a>异步处理</h4><p>场景说明：用户注册后，需要发注册邮件和注册短信。传统的做法有两种：<br>1.串行的方式；2.并行方式。<br>（1）串行方式：将注册信息写入数据库成功后，发送注册邮件，再发送注册短信。以上三个任务全部完成后，返回给客户端。<br>（2）并行方式：将注册信息写入数据库成功后，发送注册邮件的同时，发送注册短信。以上三个任务完成后，返回给客户端。与串行的差别是，并行的方式可以提高处理的时间。</p>
+<p>假设三个业务节点每个使用50毫秒钟，不考虑网络等其他开销，则串行方式的时间是150毫秒，并行的时间可能是100毫秒。<br>因为CPU在单位时间内处理的请求数是一定的，假设CPU1秒内吞吐量是100次。则串行方式1秒内CPU可处理的请求量是7次（1000/150）。并行方式处理的请求量是10次（1000/100）</p>
+<p>小结：如以上案例描述，传统的方式系统的性能（并发量，吞吐量，响应时间）会有瓶颈。如何解决这个问题呢？<br>引入消息队列，将不是必须的业务逻辑，异步处理。改造后的架构如下。</p>
+<p>按照以上约定，用户的响应时间相当于是注册信息写入数据库的时间，也就是50毫秒。注册邮件，发送短信写入消息队列后，<br>直接返回，因此写入消息队列的速度很快，基本可以忽略，因此用户的响应时间可能是50毫秒。因此架构改变后，系统的吞吐量提高到每秒20 QPS。<br>比串行提高了3倍，比并行提高了两倍。</p>
+<h4 id="应用解耦"><a href="#应用解耦" class="headerlink" title="应用解耦"></a>应用解耦</h4><p>场景说明：用户下单后，订单系统需要通知库存系统。传统的做法是，订单系统调用库存系统的接口。如下图：<br>传统模式的缺点：<br>1）  假如库存系统无法访问，则订单减库存将失败，从而导致订单失败；<br>2）  订单系统与库存系统耦合；<br>如何解决以上问题呢？引入应用消息队列后的方案，如下图</p>
+<p>订单系统：用户下单后，订单系统完成持久化处理，将消息写入消息队列，返回用户订单下单成功。<br>库存系统：订阅下单的消息，采用拉/推的方式，获取下单信息，库存系统根据下单信息，进行库存操作。<br>假如：在下单时库存系统不能正常使用。也不影响正常下单，因为下单后，订单系统写入消息队列就不再关心其他的后续操作了。<br>实现订单系统与库存系统的应用解耦。</p>
+<h4 id="流量削峰"><a href="#流量削峰" class="headerlink" title="流量削峰"></a>流量削峰</h4><p>流量削锋也是消息队列中的常用场景，一般在秒杀或团抢活动中使用广泛。</p>
+<p>应用场景：秒杀活动，一般会因为流量过大，导致流量暴增，应用挂掉。为解决这个问题，一般需要在应用前端加入消息队列。<br>可以控制活动的人数；<br>可以缓解短时间内高流量压垮应用。</p>
+<p>用户的请求，服务器接收后，首先写入消息队列。假如消息队列长度超过最大数量，则直接抛弃用户请求或跳转到错误页面；<br>秒杀业务根据消息队列中的请求信息，再做后续处理。</p>
+<h4 id="日志处理"><a href="#日志处理" class="headerlink" title="日志处理"></a>日志处理</h4><p>日志处理是指将消息队列用在日志处理中，比如Kafka的应用，解决大量日志传输的问题。架构简化如下：<br>日志采集客户端，负责日志数据采集，定时写受写入Kafka队列；<br>Kafka消息队列，负责日志数据的接收，存储和转发；<br>日志处理应用：订阅并消费kafka队列中的日志数据。<br>(1)Kafka：接收用户日志的消息队列。<br>(2)Logstash：做日志解析，统一成JSON输出给Elasticsearch。<br>(3)Elasticsearch：实时日志分析服务的核心技术，一个schemaless，实时的数据存储服务，通过index组织数据，兼具强大的搜索和统计功能。<br>(4)Kibana：基于Elasticsearch的数据可视化组件，超强的数据可视化能力是众多公司选择ELK stack的重要原因</p>
+<h4 id="消息通讯"><a href="#消息通讯" class="headerlink" title="消息通讯"></a>消息通讯</h4><p>消息通讯是指，消息队列一般都内置了高效的通信机制，因此也可以用在纯的消息通讯。比如实现点对点消息队列，或者聊天室等。<br>点对点通讯：<br>客户端A和客户端B使用同一队列，进行消息通讯。<br>聊天室通讯：<br>客户端A，客户端B，客户端N订阅同一主题，进行消息发布和接收。实现类似聊天室效果。<br>以上实际是消息队列的两种消息模式，点对点或发布订阅模式。模型为示意图，供参考。</p>
+<h3 id="消息中间件实例"><a href="#消息中间件实例" class="headerlink" title="消息中间件实例"></a>消息中间件实例</h3><h4 id="电商系统"><a href="#电商系统" class="headerlink" title="电商系统"></a>电商系统</h4><p>消息队列采用高可用，可持久化的消息中间件。比如Active MQ，Rabbit MQ，Rocket Mq。<br>（1）应用将主干逻辑处理完成后，写入消息队列。消息发送是否成功可以开启消息的确认模式。（消息队列返回消息接收成功状态后，应用再返回，这样保障消息的完整性）<br>（2）扩展流程（发短信，配送处理）订阅队列消息。采用推或拉的方式获取消息并处理。<br>（3）消息将应用解耦的同时，带来了数据一致性问题，可以采用最终一致性方式解决。比如主数据写入数据库，扩展应用根据消息队列，<br>并结合数据库方式实现基于消息队列的后续处理。</p>
+<h4 id="日志收集系统"><a href="#日志收集系统" class="headerlink" title="日志收集系统"></a>日志收集系统</h4><p>分为Zookeeper注册中心，日志收集客户端，Kafka集群和Storm集群（OtherApp）四部分组成。<br>Zookeeper注册中心，提出负载均衡和地址查找服务；<br>日志收集客户端，用于采集应用系统的日志，并将数据推送到kafka队列；<br>Kafka集群：接收，路由，存储，转发等消息处理；<br>Storm集群：与OtherApp处于同一级别，采用拉的方式消费队列中的数据。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/19/思维转换/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/05/19/思维转换/" itemprop="url">
+                  思维转换（转）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-19T16:09:18+08:00">
+                2017-05-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/05/19/思维转换/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/05/19/思维转换/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/05/19/思维转换/" class="leancloud_visitors" data-flag-title="思维转换（转）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>文章来源：<a href="http://blog.csdn.net/ityouknow/article/details/72457086" target="_blank" rel="external">http://blog.csdn.net/ityouknow/article/details/72457086</a><br>我相信大家都可能听到过这样一个故事，一名记者看见农村的一个正在放羊的小孩</p>
+<p>问他“你的理想是什么？”<br>小孩回答说：“放羊！”<br>“羊儿喂大了干什么？”<br>“卖钱！”<br>“有了卖羊儿的钱干什么？”<br>“娶老婆！”<br>“娶老婆干什么？”<br>“生小孩！”<br>“生小孩来干什么？”<br>“放羊！”<br>……</p>
+<p>这段流传甚广的段子，但是我们想想这个故事背后的原因是什么。放羊的小孩对世界的理解也就是：放羊挣钱娶老婆生小孩再放羊。对外面世界的了解可能趋向于了零，在他的世界里，这就是美好的一切，幸福的生活。对世界认识的局限性会导致思维的局限性，思维的局限性会导致目标的局限性，目标的局限性最终导致行为的局限性，从而影响你人生中的各种选择。</p>
+<p>关于贫穷</p>
+<p>故事一</p>
+<p>我在知乎看到的这个故事你在哪一刻体验到了真正的贫富差距？,故事情节大概是这个样子的。</p>
+<p>13年的夏天，作者偶然遇到了一个小伙子，一副农民工的打扮，问去从这里到xx城市应该怎么走？作者有点诧异，因为这里距离XX城市要有100百多公里，给他指了指方向，告诉他往西大约一百多公里。小伙子点点头说了声谢谢大哥就往前走了，以为会是个乞讨者或者流浪汉，讨点钱或要点吃的。可他只是问问路，而且看上去是要徒步过去的意思。小伙子走出去几十米，在人行道边坐下，拿出一瓶水喝了几口，然后低着头摆弄着地下的什么玩意，像是在休息。</p>
+<p>好奇心驱使作者去了解情况，才知道他是要去xx市找自己的老乡，老乡在xx市的一个厂里面工作，工资比现在的高一些，老乡给他拖了一个口信，他现在工作的地方老板不给他发工资并且扣了他的身份证。于是他就准备徒步两百多公里去投靠老乡。小伙子没受过教育，家在云南山区，没有电话，打工是为了补贴家用，同村出来的几个人如今都分散了，没有朋友，没有依靠。小伙子在讲这些的时候，在他的眼睛里没看到赶去见同乡的盼望，没看到被工头欺负后的愤怒，在他看来好像一切都很正常，像是在叙述别人的故事，低垂的眼里空洞无意，就像个老人在等待明天。</p>
+<p>故事二</p>
+<p>有次看中央电视台的一个节目，是采访居住在交通闭塞的大山里村民的生活。有一个画面我记忆特别深刻，中央电视台采访一个小伙子，记者问他：你为什么不出去打工来挣钱呢，那个小伙子说了一句，我听不懂你说啥。这句话深深的震撼了我，那个小伙子和我应该是同龄吧，大概也是三十岁左右，几十年没有走出去过小山村，竟然都听不懂普通话，更不敢出去看看外面的世界。那一刻我感觉这个世界在他的眼里充满了迷茫。</p>
+<p>后来村长说，这个村子常年不通公路，村里面的人要出去需要先坐牛车，再坐拖拉机两天后才能到达小县城，村里面就一个小学，一个教室里面坐了六个年级的学生，很多孩子上到一半就回家干活了。这两年有一些年轻人走出了村子去深圳、东莞打工，慢慢的也带动了一些人，但还是有一些年轻人因为不会说普通话，不能直接和人交流，就一直都没有出去，在村里面种地生活。这是21世纪呀，非常有可能他们一辈子就走不去了。</p>
+<p>贫穷在这个年代仍然是存在的，只是可能你不了解。但贫穷其实不是最可怕的，最可怕的是贫穷的人不知道贫穷的可怕，不了解外面的世界，所以对他们来讲没有走出去的动力和勇气，只有让他们了解外面的世界，认识外面的世界，从思想上有了改变的动力和目标，才能真正的走出贫穷。</p>
+<p>教育有时候就是开智，明事理 ，认识世界，可以有一个和外界交流的窗口。到现在为止，高考仍然是很多人走出老家，跨越阶级的最公平，最重要的一条道路，虽然它仍然有很多的弊端。</p>
+<p>思维误区</p>
+<p>我上初中的时候，大家都羡慕不上学去外面世界闯荡的人们。去南方打工、当兵、学一门技术的都觉得挺时髦，可以不用上无用的学，勇敢的走出小县城，自己赚钱自己花，再也没有了上学的约束。我初中的五个好兄弟，两个当了兵，一个去学了理发，一个去学了厨师，只有我一个考上高中，继续求学，每年他们回来都会聊聊他们在外面的故事，一番啤酒下肚之后，我是既羡慕又被吸引，对外面的世界充满了憧憬，多年以后我才知道他们在外面受了多少的苦，但是回老家了，必须要搞的在外面很精彩。</p>
+<p>其实上过大学的就比没有上过大学的能力好很多吗？有可能只是在开始的时候选择对了而已。我们都处在一个大的洪流之中，不是说选择了不读书以后就混不好，选择了读书就肯定会有不错的生活。但是整体的机遇来讲，读过大学的比没有读过大学的会更多一点，没有读过大学的人大多从事了体力劳动或者技能类的一些工作，读过大学不管怎么样，大都是白领类的工作。</p>
+<p>我们这里不讨论极个别厉害人的情况，研究一下为什么会出现这种情况。上大学让你在那些方面有了提升，很多人大学四年几乎没有好好学习过，玩了四年照样出来找了不错的工作，所以说大学对人能力的提升不一定会比没有上学的强，在外面对能力的提升反而是更快。我个人认为最本质的是认知的提升会不一样，那怕你的四年什么都没有做，但是你至少看到很多人做的事情，别人做事情的经验也会成为你的的经验，毕业后大家都去找了工作，你肯定也会跟着找了工作，大不了差了一点。都是在认知上，对世界的认识上有了很大的不同，才最终影响了你未来的选择和目标。</p>
+<p>说到这里想起了波仔的那条理论，你的生活水平就是你身边最亲近的五个人的平均值。我就不信你和奥巴马是哥们，还和我一起在敲代码。其实仔细观察你身边的高管，高层，起步就没在一个层级里面。</p>
+<p>程序员呢，其实也是一样。大家有没有一种感觉，刚毕业一年左右的时候是最自信的，觉得自己已经掌握了程序开发的基本规律，应付工作没有问题，简历上写的各种精通，精通前端，精通数据库，精通core Java等等。反而工作多年以后越发觉得，研究不够深入涉猎不够广泛，很多的新老技术还都停留在使用阶段。为了解释这个问题我画了两个图。</p>
+<p>把整个的IT知识领域用一个圆圈来表示，黑色实体部分就是我们刚开始认知的区域，因为我们刚开始知道的少，了解的少，里面的圆的周长就会小很多，我们感觉到自己需要了解的东西也相对小</p>
+<p>当我们通过不断的学习、扩宽自己知识的边界，就像里面的小圆不断的长大一些，我们感受到的未知也越来越多，认识到自己了解的内容占整个体系只是很小的一部分。</p>
+<p>很多人，不是不想学习，是不知道如何去学习，很多时候遇到问题，不知道外界有很多解决方案。另外，不进步不学习不可怕，最可怕的是，比我们厉害的人比我们更努力。</p>
+<p>如何打破</p>
+<p>1、要跳出你的圈子，我从西安到北京，IT行业工作氛围，技术特征完全没有在一个水平线上。要时常的跳出自己的圈子，站到外面去看原来的自己。</p>
+<p>2、读书，不断的读书，不断的读好书，其实读书是了解作者怎么看这个世界，读好书更是了解很多大师人物对世界的理解。通过读书打开自己对世界认识的另一扇窗，技术人除了看技术书籍，更应该看一些其它领域的书，来扩宽自己的视野。</p>
+<p>3、对于技术，多逛逛技术性网站，了解一下最新的前沿知识，比如vue活跃的时候，技术网站就出了很多关于vue的教程，微服务火的时候，技术网站首页经常有关于微服务的文章，时常关注让你了解有这么个东西，在解决问题的时候或者定方案的时候知道会有这么一个选项。</p>
+<p>4、多走出自己的视角，做为程序员总是以程序的思维去思考问题。比如遇到了问题，这个问题对产品、客户意味着什么，领导是如何考虑的，当领导让你干某件事的时候他关心的什么。刚好我这里有一个职场真实的小故事，分享给大家。</p>
+<p>某一线互联网电商平台，空降了一名技术高管，要求紧急上线一个项目，必须三个月上线，安排下去，技术总监认真的分析了需求和现有公司的资源，告知这个项目最少需要四个月加班才能完成，高管说实在没有办法吗，总监说，已经是极限了。高管直接就把这位总监给开了，然后问下一个总监周期需要多久，这位总监考虑了一下说：2个月，高管说，项目你来负责，最后这个项目整整做了六个月，但是大家也都相安无事。<br>5、培养一个行业之外的爱好，最好是运动类的，只有身体好了，精神才更好，才能体会挥汗之后的畅快之感。具体的，比如坚持每周去户外，在北京的话像绿野这种就可以，参加几次就可以融入组织。程序员的话，建议打羽毛球，感觉这类运动对程序员是最有益处，避免各种颈椎病，游泳也是很好的一个选择。经常保持运动的人，整个人的精神状态是不一样的，我们大多数办公室工作者都处于亚健康状态，锻炼真的很重要。</p>
+<p>6、github对程序员来讲真是一个宝库，提交分享代码都是最基础的，建博客、建网站、建工具github都可以免费让你搞定，可以作为你创意或者实践的一个绝佳场所，也可以好好看看其他牛人的杰作，也有很多github第三方的网站可以帮你找到优秀的开源项目。</p>
+<p>最后</p>
+<p>很多时候的改变，不是我们不想改变，不愿意改变，是不知道如何改变，不知道什么才是好的选择，或者在深刻一点，很多人到现在都不知道什么是好的什么是坏的。<br>所以说很多时候的改变，最先是思维的改变，思维的改变转换成行动，然后达到真正的改变。</p>
+<p>希望我们都不是这个版本</p>
+<p>“你做程序员干什么？”<br>“找个体面又高薪的工作。”<br>“找到理想的工作后呢？”<br>“再寻觅一个温柔漂亮的好老婆。”<br>“找到好老婆后呢？”<br>“生一个聪明智慧的孩子！”<br>“生了孩子后呢？”<br>“从小就好好教育孩子努力学习，考个好大学，最好再做一名程序员！”</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/11/k8s新版本安装/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -829,308 +1142,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/14/再叙python装饰器二有参数的装饰器/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/14/再叙python装饰器二有参数的装饰器/" itemprop="url">
-                  再叙python装饰器二有参数的装饰器
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-14T18:11:01+08:00">
-                2017-04-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/04/14/再叙python装饰器二有参数的装饰器/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/14/再叙python装饰器二有参数的装饰器/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/04/14/再叙python装饰器二有参数的装饰器/" class="leancloud_visitors" data-flag-title="再叙python装饰器二有参数的装饰器">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>上接无参数的装饰器</p>
-<h3 id="有参数的装饰器"><a href="#有参数的装饰器" class="headerlink" title="有参数的装饰器"></a>有参数的装饰器</h3><h4 id="有参数的一般装饰器"><a href="#有参数的一般装饰器" class="headerlink" title="有参数的一般装饰器"></a>有参数的一般装饰器</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">	&apos;通常对arg会有一定的要求&apos;  </div><div class="line">    &quot;&quot;&quot;由于有参数的decorator函数在调用时只会使用应用时的参数  </div><div class="line">       而不接收被装饰的函数做为参数，所以必须在其内部再创建  </div><div class="line">       一个函数  </div><div class="line">    &quot;&quot;&quot;  </div><div class="line">def deco(arg):</div><div class="line">    def test(func):</div><div class="line">        print(&quot;before %s called [%s].&quot; % (func.__name__, arg))</div><div class="line">        A=func()</div><div class="line">        print(&quot;  after %s called [%s].&quot; % (func.__name__, arg))</div><div class="line">        return A</div><div class="line">    return test</div><div class="line"></div><div class="line">@deco(&quot;test&quot;)</div><div class="line">def foo():</div><div class="line">    print(&quot; foo() called.&quot;)</div><div class="line"></div><div class="line">@deco(&quot;test2&quot;)</div><div class="line">def foo2():</div><div class="line">    print(&quot; foo2() called.&quot;)</div></pre></td></tr></table></figure>
-<p>执行结果如下图所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">E:\workspace\tornado\Scripts\python.exe E:/workspace/project_frist/time.py</div><div class="line">before foo called [test].</div><div class="line"> foo() called.</div><div class="line">  after foo called [test].</div><div class="line">before foo2 called [test2].</div><div class="line"> foo2() called.</div><div class="line">  after foo2 called [test2].</div></pre></td></tr></table></figure></p>
-<p>第一个函数decomaker是装饰函数，它的参数是用来加强“加强装饰”的。由于此函数并非被装饰的函数对象，所以在内部必须至少创建一个接受被装饰函数的函数，<br>然后返回这个对象（实际上此时foo=deco(arg)(foo)）。<br>优化之后函数可以写为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">def deco(*arg,**kwargs):</div><div class="line">    def test(func):</div><div class="line">        print(&quot;before %s called [%s].&quot; % (func.__name__, arg))</div><div class="line">        for key in kwargs:</div><div class="line">            print key +&quot;:&quot; + kwargs[key]</div><div class="line">        A=func()</div><div class="line">        print(&quot;  after %s called [%s].&quot; % (func.__name__, arg))</div><div class="line">        return A</div><div class="line">    return test</div><div class="line"></div><div class="line">@deco(&quot;test&quot;,name=&quot;zero&quot;)</div><div class="line">def foo():</div><div class="line">    print(&quot; foo() called.&quot;)</div><div class="line"></div><div class="line">@deco(&quot;test2&quot;)</div><div class="line">def foo2():</div><div class="line">    print(&quot; foo2() called.&quot;)</div></pre></td></tr></table></figure></p>
-<p>执行结果如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">before foo called [(&apos;test&apos;,)].</div><div class="line">name:zero</div><div class="line"> foo() called.</div><div class="line">  after foo called [(&apos;test&apos;,)].</div><div class="line">before foo2 called [(&apos;test2&apos;,)].</div><div class="line"> foo2() called.</div><div class="line">  after foo2 called [(&apos;test2&apos;,)].</div></pre></td></tr></table></figure></p>
-<h4 id="带类参数的装饰器"><a href="#带类参数的装饰器" class="headerlink" title="带类参数的装饰器"></a>带类参数的装饰器</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"># -*- coding:utf-8 -*-</div><div class="line">class zero:</div><div class="line">    \#构造函数</div><div class="line">    def __init__(self):</div><div class="line">        print(&quot;zero.__init__() should be not called.&quot;)</div><div class="line">    \#静态函数</div><div class="line">    @staticmethod</div><div class="line">    def acquire():</div><div class="line">        print(&quot;acquire() called.static method&quot;)</div><div class="line"></div><div class="line">    @staticmethod</div><div class="line">    def release():</div><div class="line">        print(&quot;  release() called. no duxiang shili&quot;)</div><div class="line">\#装饰器，需要实现类的静态方法</div><div class="line">def deco(clas):</div><div class="line">    def test(func):</div><div class="line">        def test2():</div><div class="line">            print(&quot;before %s called [%s].&quot; % (func.__name__, clas))</div><div class="line">            clas.acquire()</div><div class="line">            try:</div><div class="line">                return func()</div><div class="line">            finally:</div><div class="line">                clas.release()</div><div class="line">        return test2</div><div class="line">    return test</div><div class="line"></div><div class="line">@deco(zero)</div><div class="line">def foo():</div><div class="line">    print(&quot; myfunc() called.&quot;)</div><div class="line"></div><div class="line">foo()</div></pre></td></tr></table></figure>
-<p>执行结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">before foo called [__main__.zero].</div><div class="line">acquire() called.static method</div><div class="line"> myfunc() called.</div><div class="line">  release() called. no duxiang shili</div></pre></td></tr></table></figure>
-<h4 id="带类参数及变量的构造函数"><a href="#带类参数及变量的构造函数" class="headerlink" title="带类参数及变量的构造函数"></a>带类参数及变量的构造函数</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"># -*- coding:utf-8 -*-</div><div class="line">class father:</div><div class="line">    def __init__(self):</div><div class="line">        print(&quot;father.__init__() called.&quot;)</div><div class="line"></div><div class="line">    @staticmethod</div><div class="line">    def acquire():</div><div class="line">        print(&quot;father.acquire() called.&quot;)</div><div class="line"></div><div class="line">    @staticmethod</div><div class="line">    def unlock():</div><div class="line">        print(&quot;  father.unlock() called.&quot;)</div><div class="line"></div><div class="line">class sun(father):</div><div class="line">    @staticmethod</div><div class="line">    def acquire():</div><div class="line">        print(&quot;sun.acquire() called.&quot;)</div><div class="line"></div><div class="line">    @staticmethod</div><div class="line">    def unlock():</div><div class="line">        print(&quot;  sun.unlock() called.&quot;)</div><div class="line"></div><div class="line">def demo(cls):</div><div class="line">    &apos;&apos;&apos;cls 必须实现acquire和release静态方法&apos;&apos;&apos;</div><div class="line">    def test(func):</div><div class="line">        def test2(*args, **kwargs):</div><div class="line">            print(&quot;before %s called.&quot; % func.__name__)</div><div class="line">            cls.acquire()</div><div class="line">            try:</div><div class="line">                return func(*args, **kwargs)</div><div class="line">            finally:</div><div class="line">                cls.unlock()</div><div class="line">        return test2</div><div class="line">    return test</div><div class="line">class example:</div><div class="line">    @demo(father)</div><div class="line">    def test(self):</div><div class="line">        print(&quot; test() called.&quot;)</div><div class="line"></div><div class="line">    @demo(father)</div><div class="line">    @demo(sun)</div><div class="line">    def test2(self, a, b):</div><div class="line">        print(&quot; test2() called.&quot;)</div><div class="line">        return a + b</div><div class="line"></div><div class="line">a = example()</div><div class="line">a.test()</div><div class="line">print(a.test2(1, 2))</div><div class="line">print(a.test2(3, 4))</div></pre></td></tr></table></figure>
-<p>执行结果如下所示：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">E:\workspace\tornado\Scripts\python.exe E:/workspace/project_frist/time.py</div><div class="line">before test called.</div><div class="line">father.acquire() called.</div><div class="line"> test() called.</div><div class="line">  father.unlock() called.</div><div class="line">before test2 called.</div><div class="line">father.acquire() called.</div><div class="line">before test2 called.</div><div class="line">sun.acquire() called.</div><div class="line"> test2() called.</div><div class="line">  sun.unlock() called.</div><div class="line">  father.unlock() called.</div><div class="line">3</div><div class="line">before test2 called.</div><div class="line">father.acquire() called.</div><div class="line">before test2 called.</div><div class="line">sun.acquire() called.</div><div class="line"> test2() called.</div><div class="line">  sun.unlock() called.</div><div class="line">  father.unlock() called.</div><div class="line">7</div></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/14/再叙python装饰器/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/14/再叙python装饰器/" itemprop="url">
-                  再叙python装饰器-
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-14T11:22:41+08:00">
-                2017-04-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python开发/" itemprop="url" rel="index">
-                    <span itemprop="name">python开发</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/04/14/再叙python装饰器/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/14/再叙python装饰器/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/04/14/再叙python装饰器/" class="leancloud_visitors" data-flag-title="再叙python装饰器-">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="续言"><a href="#续言" class="headerlink" title="续言"></a>续言</h2><p>自己刚开始学习代码的时候，看书上的装饰器感觉理解了，就照着装饰器的样子写代码。一段时间之后，好像又陌生了。只知道这样写，能实现这样的功能。然后没放在<br>心上。直到某天我在写类的时候，里面也出现了好多装饰器，我觉得是时候从理论上再来一遍学习了。</p>
-<h2 id="装饰器是什么？"><a href="#装饰器是什么？" class="headerlink" title="装饰器是什么？"></a>装饰器是什么？</h2><p>书上说的不是太清楚，根据我的理解就是类似于程序设计中你要在其前面和后面执行什么操作。当然你也可以做更多的事情，如：引入日志、增加计时逻辑来检测性能、给函数增加<br>事务的能力。<br>小结：装饰器其实也就是一个函数，一个用来包装函数的函数，返回一个修改之后的函数对象，将其重新赋值之后。使用原来的标识符，并永久丧失对原始函数对象的访问。</p>
-<h2 id="无参数装饰器演示"><a href="#无参数装饰器演示" class="headerlink" title="无参数装饰器演示"></a>无参数装饰器演示</h2><h3 id="无参数装饰器"><a href="#无参数装饰器" class="headerlink" title="无参数装饰器"></a>无参数装饰器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">def deco(func):</div><div class="line">    print &quot;I have changed!&quot;</div><div class="line">    return func</div><div class="line">@deco</div><div class="line">def foo():</div><div class="line">    print &quot;hehe&quot;</div><div class="line">foo()</div></pre></td></tr></table></figure>
-<p>第一个函数deco是装饰函数，它的参数就是被装饰的函数对象。我们可以在deco函数内对传入的函数对象做一番“装饰”，然后返回这个对象（记住一定要返回 ，<br>不然外面调用foo的地方将会无函数可用。实际上此时foo=deco(foo)）。注意在用@使用装饰器的时候不需要加().</p>
-<h3 id="无参数装饰器对带参数的函数进行装饰"><a href="#无参数装饰器对带参数的函数进行装饰" class="headerlink" title="无参数装饰器对带参数的函数进行装饰"></a>无参数装饰器对带参数的函数进行装饰</h3><p>注意内嵌包装函数的形参和返回值与原函数相同，装饰函数返回内嵌包装函数对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">def deco(func):</div><div class="line">    def test(a,b):</div><div class="line">        print(&quot;before myfunc() called.&quot;)</div><div class="line">        ret = func(a,b)</div><div class="line">        print(&quot;  after myfunc() called. result: %s&quot; % ret)</div><div class="line">        return ret</div><div class="line">    return test</div><div class="line"></div><div class="line">@deco</div><div class="line">def test(a, b):</div><div class="line">    print(&quot; test(%s,%s) called.&quot; % (a, b))</div><div class="line">    return a + b</div><div class="line">test(1,2)</div></pre></td></tr></table></figure></p>
-<p>使用*args优化代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">def deco(func):</div><div class="line">    def test(*args):</div><div class="line">        print(&quot;before %s called.&quot; % func.__name__)</div><div class="line">        ret = func(*args)</div><div class="line">        print(&quot;after %s called. result: %s&quot; % (func.__name__, ret))</div><div class="line">        print &quot;---------------&quot;</div><div class="line">        return ret</div><div class="line">    return test</div><div class="line"></div><div class="line">@deco</div><div class="line">def test(a, b):</div><div class="line">    print(&quot; test(%s,%s) called.&quot; % (a, b))</div><div class="line">    return a + b</div><div class="line"></div><div class="line">@deco</div><div class="line">def test2(a,b,c):</div><div class="line">    print(&quot; tests(%s,%s,%s) called.&quot; % (a, b,c))</div><div class="line">    return a + b + c</div><div class="line">test(1,2)</div><div class="line">test2(1,2,3)</div></pre></td></tr></table></figure></p>
-<p>运行结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">E:\workspace\tornado\Scripts\python.exe E:/workspace/project_frist/time.py</div><div class="line">before test called.</div><div class="line"> test(1,2) called.</div><div class="line">after test called. result: 3</div><div class="line">---------------</div><div class="line">before test2 called.</div><div class="line"> tests(1,2,3) called.</div><div class="line">after test2 called. result: 6</div><div class="line">---------------</div></pre></td></tr></table></figure></p>
-<p>注意：Python的函数具有非常灵活的参数形态，既可以实现简单的调用，又可以传入非常复杂的参数。默认参数一定要用不可变对象，如果是可变对象，运行会有逻辑错误！要注意定<br>义可变参数和关键字参数的语法：<em>args是可变参数，args接收的是一个tuple；**kw是关键字参数，kw接收的是一个dict。以及调用函数时如何传入可变参数和关键字参数的语法：<br>可变参数既可以直接传入：func(1, 2, 3)，又可以先组装list或tuple，再通过</em>args传入：func(<em>(1, 2, 3))；关键字参数既可以直接传入：func(a=1, b=2)，又可以先组装dict，<br>再通过kw传入：func(**{‘a’: 1, ‘b’: 2})。使用</em>args和**kw是Python的习惯写法，当然也可以用其他参数名，但最好使用习惯用法。<br>再优化一次代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">def deco(func):</div><div class="line">    def test(*args,**kwargs):</div><div class="line">        print(&quot;before %s called.&quot; % func.__name__)</div><div class="line">        ret = func(*args,**kwargs)</div><div class="line">        print(&quot;after %s called. result: %s&quot; % (func.__name__, ret))</div><div class="line">        print &quot;---------------&quot;</div><div class="line">        return ret</div><div class="line">    return test</div><div class="line"></div><div class="line">@deco</div><div class="line">def test(a, b):</div><div class="line">    print(&quot; test(%s,%s) called.&quot; % (a, b))</div><div class="line">    return a + b</div><div class="line"></div><div class="line">@deco</div><div class="line">def test2(a,b,c):</div><div class="line">    print(&quot; tests(%s,%s,%s) called.&quot; % (a, b,c))</div><div class="line">    return a + b + c</div><div class="line"></div><div class="line">@deco</div><div class="line">def test3(a,b,**kwargs):</div><div class="line">    print(&quot; tests(%s,%s) called.&quot; % (a, b))</div><div class="line">    for k in kwargs:</div><div class="line">        print k,kwargs[k]</div><div class="line">test(1,2)</div><div class="line">test2(1,2,3)</div><div class="line">test3(1,2,name=&apos;zero&apos;)</div></pre></td></tr></table></figure></p>
-<p>解释下函数说明：test=demo(test(1,2))   test2=deco(test2(1,2,3))   test3=deco(test3(1,2,name=’zero’)).<br>以上为不带参数的装饰器。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1176,7 +1187,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">82</span>
+              <span class="site-state-item-count">84</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1184,7 +1195,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">24</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1193,7 +1204,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">58</span>
+                <span class="site-state-item-count">60</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

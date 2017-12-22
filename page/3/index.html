@@ -260,6 +260,318 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/20/k8s调度gpu程序-一/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/10/20/k8s调度gpu程序-一/" itemprop="url">
+                  k8s调度gpu程序(一)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-20T18:00:02+08:00">
+                2017-10-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/k8/" itemprop="url" rel="index">
+                    <span itemprop="name">k8</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/10/20/k8s调度gpu程序-一/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/10/20/k8s调度gpu程序-一/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/10/20/k8s调度gpu程序-一/" class="leancloud_visitors" data-flag-title="k8s调度gpu程序(一)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="正常gpu服务调度测试"><a href="#正常gpu服务调度测试" class="headerlink" title="正常gpu服务调度测试"></a>正常gpu服务调度测试</h3><p>参考文章：<a href="https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/" target="_blank" rel="external">https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/</a><br>Kubernetes包括用于管理跨节点分布的NVIDIA GPU的实验支持。本文将描述用户如何使用GPU以及当前的限制</p>
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>运行gpu的kubernetes节点必须预先安装nvida的驱动。否则kubelet将检测不到nvidia的gpu。如果kubelet调度nvidia gpu失败，尝试重新安装<br>nvidia驱动程序；</p>
+<h4 id="如何确保nvidia驱动程序是否安装成功"><a href="#如何确保nvidia驱动程序是否安装成功" class="headerlink" title="如何确保nvidia驱动程序是否安装成功"></a>如何确保nvidia驱动程序是否安装成功</h4><p>可以通过运行如下命令：nvidia-docker-plugin来确保所有的驱动程序都已经加载了。<br>docker pull  tensorflow/tensorflow:latest-gpu</p>
+<p><a href="https://zhuanlan.zhihu.com/p/22410507" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/22410507</a><br><a href="https://github.com/ContinUSE/kubernetes-coreos-cluster/tree/master/examples/mpich" target="_blank" rel="external">https://github.com/ContinUSE/kubernetes-coreos-cluster/tree/master/examples/mpich</a><br><a href="https://hub.docker.com/r/tensorflow/tensorflow/" target="_blank" rel="external">https://hub.docker.com/r/tensorflow/tensorflow/</a></p>
+<p>docker pull  tensorflow/tensorflow:latest-gpu</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/19/gpu与docker-一/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/10/19/gpu与docker-一/" itemprop="url">
+                  gpu与docker(一)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-19T15:59:55+08:00">
+                2017-10-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/gpu/" itemprop="url" rel="index">
+                    <span itemprop="name">gpu</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/10/19/gpu与docker-一/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/10/19/gpu与docker-一/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/10/19/gpu与docker-一/" class="leancloud_visitors" data-flag-title="gpu与docker(一)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>参考资料：<a href="https://github.com/NVIDIA/nvidia-docker/wiki/Motivation" target="_blank" rel="external">https://github.com/NVIDIA/nvidia-docker/wiki/Motivation</a></p>
+<h3 id="集成gpu应用程序的优势"><a href="#集成gpu应用程序的优势" class="headerlink" title="集成gpu应用程序的优势"></a>集成gpu应用程序的优势</h3><p>可复制的版本<br>易于部署<br>隔离各个设备<br>跨异构驱动程序/工具包环境运行<br>只需要安装NVIDIA驱动程序</p>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>Docker容器通常用于在多台机器上无缝部署基于CPU的应用程序。有了这个用例，容器可以看做是平台无关和硬件无关的。<br>使用NVIDIA GPU显然不是这样，因为它使用专门的硬件，并且需要安装NVIDIA驱动程序。因此，Docker Engine本身并不支持<br>具有NVIDIA GPU的容器。</p>
+<p>为了解决这个问题，出现的一个早期解决方案是在容器内完全重新安装NVIDIA驱动程序，然后/dev/nvidia0在启动容器时<br>传递与NVIDIA GPU（例如）对应的字符设备。但是，该解决方案是脆弱的：主机驱动程序的版本必须与容器中安装的驱动程序版本完全匹配。<br>Docker镜像无法共享，必须在当前机器上进行构建，从而打破了Docker的主要优势之一。</p>
+<p>为了使Docker镜像可移植，同时仍然利用NVIDIA GPU，所使用的解决方案是使用nvidia-docker；该方案让镜像与NVIDIA驱动程序无关。<br>当将容器运行到目标机器上时候，安装所需的字符设备和驱动程序文件。</p>
+<h3 id="另外一个docker"><a href="#另外一个docker" class="headerlink" title="另外一个docker"></a>另外一个docker</h3><p>由于该解决方案处理细节细节，与普通Docker容器用例完全不同，为方便起见提供了两个工具： alternative Docker CLI和Docker Engine plugin。<br>虽然我们明白使用辅助命令行工具可能令人沮丧，但我们尽量保持与Docker的理念尽可能接近。</p>
+<p>我们希望在未来Docker将增强其插件系统，以便在命令行中更容易地添加设备和参数，使我们的工具过时。</p>
+<h3 id="如何查看gpu的个数"><a href="#如何查看gpu的个数" class="headerlink" title="如何查看gpu的个数"></a>如何查看gpu的个数</h3>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/18/深入理解docker存储驱动/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -754,306 +1066,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/11/celery和flask集成二 /">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/09/11/celery和flask集成二 /" itemprop="url">
-                  celery和flask集成(二)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-11T14:16:58+08:00">
-                2017-09-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python-flask-celery/" itemprop="url" rel="index">
-                    <span itemprop="name">python flask  celery</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/09/11/celery和flask集成二 /#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/11/celery和flask集成二 /" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/09/11/celery和flask集成二 /" class="leancloud_visitors" data-flag-title="celery和flask集成(二)">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="flask与celery的集成"><a href="#flask与celery的集成" class="headerlink" title="flask与celery的集成"></a>flask与celery的集成</h3><p>首先看下项目文档架构图如下所示：<br><img src="/images/2017/09/4.png" alt="image"></p>
-<h3 id="查看init-py文件"><a href="#查看init-py文件" class="headerlink" title="查看init.py文件"></a>查看<strong>init</strong>.py文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">#coding:utf-8</div><div class="line">#Author:Zero</div><div class="line"></div><div class="line">import os</div><div class="line"></div><div class="line">from flask import Flask</div><div class="line"></div><div class="line">from flask.ext.celery import Celery</div><div class="line">import celeryconfig</div><div class="line"></div><div class="line">BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</div><div class="line">app=Flask(&apos;&apos;)</div><div class="line">celery=Celery()</div><div class="line">def create_app():</div><div class="line">    app=Flask(&apos;&apos;)</div><div class="line">    print app</div><div class="line">    app.config[&apos;CELERY_BROKER_URL&apos;]=celeryconfig.BROKER_URL</div><div class="line">    app.config.from_object(celeryconfig)</div><div class="line">    celery.conf.update(app.config)</div><div class="line">    celery.init_app(app)</div><div class="line">    return app</div><div class="line">app=create_app()</div><div class="line">from .controller import test</div></pre></td></tr></table></figure>
-<h3 id="查看controller下面的test-py文件"><a href="#查看controller下面的test-py文件" class="headerlink" title="查看controller下面的test.py文件"></a>查看controller下面的test.py文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">import json</div><div class="line">from web import app,celery</div><div class="line">from flask import request,jsonify, render_template</div><div class="line">def test():</div><div class="line">    try:</div><div class="line">        kwargs=[1,2]</div><div class="line">    # r = app.send_task(&quot;task2.add&quot;,kwargs,routing_key=&quot;celery&quot;, queue=&quot;celery&quot;)</div><div class="line">        r = celery.send_task(&quot;task2.add&quot;,kwargs)</div><div class="line">        print r.get()</div><div class="line">        print r.result</div><div class="line">        print r.ready()</div><div class="line">    except Exception,e:</div><div class="line"></div><div class="line">        print &quot;----------------&quot;</div><div class="line">    return &quot;test&quot;</div></pre></td></tr></table></figure>
-<h3 id="启动celery客户端"><a href="#启动celery客户端" class="headerlink" title="启动celery客户端"></a>启动celery客户端</h3><p>将task2.add进行注册即可，注册命令如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">celery worker -A task2 --loglevel=info --queues=celery,queue_add</div></pre></td></tr></table></figure></p>
-<p>下一步将这个跑通的代码在框架里面进行展示使用即可。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/08/gitbook在本地的搭建/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/09/08/gitbook在本地的搭建/" itemprop="url">
-                  gitbook与github联调
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-08T10:09:45+08:00">
-                2017-09-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/09/08/gitbook在本地的搭建/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/08/gitbook在本地的搭建/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/09/08/gitbook在本地的搭建/" class="leancloud_visitors" data-flag-title="gitbook与github联调">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h3><p>本地电脑安装完node之后，使用如下命令进行安装。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install gitbook -g</div></pre></td></tr></table></figure></p>
-<p>如下图所示，安装时间可能比较长，请耐心等待。<br><img src="/images/2017/09/1.png" alt="image"></p>
-<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><h4 id="初始化书籍目录"><a href="#初始化书籍目录" class="headerlink" title="初始化书籍目录"></a>初始化书籍目录</h4><p>创建两个文件，README.md和SUMMARY.md,其中README.md里面加入一行内容，做测试使用，如下图所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cat README.md</div><div class="line"># README</div><div class="line">zero</div></pre></td></tr></table></figure></p>
-<h4 id="初始化目录结构"><a href="#初始化目录结构" class="headerlink" title="初始化目录结构"></a>初始化目录结构</h4><p>创建完这两个目录之后，使用gitbook init，格式化书籍目录结构。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gitbook init</div></pre></td></tr></table></figure></p>
-<h4 id="本地服务测试"><a href="#本地服务测试" class="headerlink" title="本地服务测试"></a>本地服务测试</h4><p>初始化完成之后，可以使用运行如下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ gitbook serve</div><div class="line">Live reload server started on port: 35729</div><div class="line">Press CTRL+C to quit ...</div><div class="line"></div><div class="line">info: 7 plugins are installed</div><div class="line">info: loading plugin &quot;livereload&quot;... OK</div><div class="line">info: loading plugin &quot;highlight&quot;... OK</div><div class="line">info: loading plugin &quot;search&quot;... OK</div><div class="line">info: loading plugin &quot;lunr&quot;... OK</div><div class="line">info: loading plugin &quot;sharing&quot;... OK</div><div class="line">info: loading plugin &quot;fontsettings&quot;... OK</div><div class="line">info: loading plugin &quot;theme-default&quot;... OK</div><div class="line">info: found 1 pages</div><div class="line">info: found 0 asset files</div><div class="line">info: &gt;&gt; generation finished with success in 0.6s !</div><div class="line"></div><div class="line">Starting server ...</div><div class="line">Serving book on http://localhost:4000</div></pre></td></tr></table></figure></p>
-<p>现在可以通过打开浏览器<a href="http://127.0.0.1:4000查看书籍效果，如下图所示：" target="_blank" rel="external">http://127.0.0.1:4000查看书籍效果，如下图所示：</a><br><img src="/images/2017/09/2.png" alt="image"></p>
-<h3 id="输出方式介绍"><a href="#输出方式介绍" class="headerlink" title="输出方式介绍"></a>输出方式介绍</h3><p>如果你想将自己制作的书籍文件，进行输出，比如输出成pdf怎么做呢？</p>
-<h4 id="安装pdf插件"><a href="#安装pdf插件" class="headerlink" title="安装pdf插件"></a>安装pdf插件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install gitbook-pdf -g</div></pre></td></tr></table></figure>
-<p>这次安装的过程中发现发生了安装报错，怎么办呢？<br><img src="/images/2017/09/3.png" alt="image"><br>有报错信息可知，某个js下载有问题。去<a href="http://phantomjs.org下载进行安装即可。" target="_blank" rel="external">http://phantomjs.org下载进行安装即可。</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-windows.zip</div></pre></td></tr></table></figure></p>
-<p>安装完成之后，可以使用下面的命令，生成pdf文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gitbook pdf  zero</div></pre></td></tr></table></figure></p>
-<h3 id="将书籍发布到github上"><a href="#将书籍发布到github上" class="headerlink" title="将书籍发布到github上"></a>将书籍发布到github上</h3><p>在github上创建一个分支，我这里使用的分支名字叫做book。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/Zerozlong/book.git</div></pre></td></tr></table></figure></p>
-<p>创建一个新分支：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git checkout -b pages</div></pre></td></tr></table></figure></p>
-<p>将我们之前的项目内容复制过来，git add和git commit之后，直接push到远端的github服务器。紧接着，我们使用git push -u origin pages。之后再到github页面进行查看发现多了个分支，且<br>里面有我们刚刚提交的内容。<br>你可以使用github page功能去浏览你的书籍，由于本人博客已经使用了github page的功能，所以这里为了展示书籍的功能，特使用gitbook将其与我的github进行关联，然后将我的书籍在gitbook上进行展示。</p>
-<h3 id="将gitbook和我们刚刚创建的github图书关联起来"><a href="#将gitbook和我们刚刚创建的github图书关联起来" class="headerlink" title="将gitbook和我们刚刚创建的github图书关联起来"></a>将gitbook和我们刚刚创建的github图书关联起来</h3><h4 id="使用github账号登陆gitbook"><a href="#使用github账号登陆gitbook" class="headerlink" title="使用github账号登陆gitbook"></a>使用github账号登陆gitbook</h4>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1099,7 +1111,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">82</span>
+              <span class="site-state-item-count">84</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1107,7 +1119,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">24</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1116,7 +1128,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">58</span>
+                <span class="site-state-item-count">60</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
