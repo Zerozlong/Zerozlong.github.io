@@ -69,7 +69,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="python 网络框架 tornado," />
+  <meta name="keywords" content="kubernetes，k8s，高可用方案," />
 
 
 
@@ -85,16 +85,67 @@
 
 
 
-<meta name="description" content="网站架构：12345678910111213import tornado.ioloopimport tornado.webclass MainHandler(tornado.web.RequestHandler):    def get(self):        self.write(&amp;quot;hello world&amp;quot;)def make_app():    return tornad">
+<meta name="description" content="简介服务器规划：
+
+
+
+物理机ip
+虚拟ip
+用途
+realserver
+软件版本
+
+
+
+
+
+
+
+
+10.240.29.226     | 10.240.29.249      |  k8s-haproxy2-gpu-m6 |10.240.29.221 10.240.29.233  10.240.29.220 | 1.9.0 |10.249.29.239        | 10.240.29.24">
 <meta property="og:type" content="article">
-<meta property="og:title" content="tornado之三">
-<meta property="og:url" content="http://yoursite.com/2017/02/28/tornado之三/index.html">
+<meta property="og:title" content="k8s安装之kubeconfig配置(四)">
+<meta property="og:url" content="http://yoursite.com/2018/01/02/k8s安装之kubeconfig配置-四/index.html">
 <meta property="og:site_name" content="Zero">
-<meta property="og:description" content="网站架构：12345678910111213import tornado.ioloopimport tornado.webclass MainHandler(tornado.web.RequestHandler):    def get(self):        self.write(&amp;quot;hello world&amp;quot;)def make_app():    return tornad">
-<meta property="og:updated_time" content="2017-03-07T08:53:45.536Z">
+<meta property="og:description" content="简介服务器规划：
+
+
+
+物理机ip
+虚拟ip
+用途
+realserver
+软件版本
+
+
+
+
+
+
+
+
+10.240.29.226     | 10.240.29.249      |  k8s-haproxy2-gpu-m6 |10.240.29.221 10.240.29.233  10.240.29.220 | 1.9.0 |10.249.29.239        | 10.240.29.24">
+<meta property="og:updated_time" content="2018-01-02T03:40:13.119Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="tornado之三">
-<meta name="twitter:description" content="网站架构：12345678910111213import tornado.ioloopimport tornado.webclass MainHandler(tornado.web.RequestHandler):    def get(self):        self.write(&amp;quot;hello world&amp;quot;)def make_app():    return tornad">
+<meta name="twitter:title" content="k8s安装之kubeconfig配置(四)">
+<meta name="twitter:description" content="简介服务器规划：
+
+
+
+物理机ip
+虚拟ip
+用途
+realserver
+软件版本
+
+
+
+
+
+
+
+
+10.240.29.226     | 10.240.29.249      |  k8s-haproxy2-gpu-m6 |10.240.29.221 10.240.29.233  10.240.29.220 | 1.9.0 |10.249.29.239        | 10.240.29.24">
 
 
 
@@ -122,13 +173,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/02/28/tornado之三/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/01/02/k8s安装之kubeconfig配置-四/"/>
 
 
 
 
 
-  <title> tornado之三 | Zero </title>
+  <title> k8s安装之kubeconfig配置(四) | Zero </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -259,7 +310,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/28/tornado之三/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/k8s安装之kubeconfig配置-四/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Zero">
@@ -283,7 +334,7 @@
             
             
               
-                tornado之三
+                k8s安装之kubeconfig配置(四)
               
             
           </h1>
@@ -296,8 +347,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-28T17:08:14+08:00">
-                2017-02-28
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-02T11:39:43+08:00">
+                2018-01-02
               </time>
             
 
@@ -315,8 +366,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python开发/" itemprop="url" rel="index">
-                    <span itemprop="name">python开发</span>
+                  <a href="/categories/k8/" itemprop="url" rel="index">
+                    <span itemprop="name">k8</span>
                   </a>
                 </span>
 
@@ -330,8 +381,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2017/02/28/tornado之三/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/28/tornado之三/" itemprop="commentCount"></span>
+                <a href="/2018/01/02/k8s安装之kubeconfig配置-四/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/01/02/k8s安装之kubeconfig配置-四/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -341,7 +392,7 @@
 
           
           
-             <span id="/2017/02/28/tornado之三/" class="leancloud_visitors" data-flag-title="tornado之三">
+             <span id="/2018/01/02/k8s安装之kubeconfig配置-四/" class="leancloud_visitors" data-flag-title="k8s安装之kubeconfig配置(四)">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -366,10 +417,53 @@
       
 
       
-        <h3 id="网站架构："><a href="#网站架构：" class="headerlink" title="网站架构："></a>网站架构：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">import tornado.ioloop</div><div class="line">import tornado.web</div><div class="line">class MainHandler(tornado.web.RequestHandler):</div><div class="line">    def get(self):</div><div class="line">        self.write(&quot;hello world&quot;)</div><div class="line">def make_app():</div><div class="line">    return tornado.web.Application([(&quot;r/&quot;,MainHandler),])</div><div class="line">def main():</div><div class="line">    app = make_app()</div><div class="line">    app.listen(8888)</div><div class="line">    tornado.ioloop.IOLoop.current().start()</div><div class="line">if __name__ == &quot;__main__&quot;:</div><div class="line">    main()</div></pre></td></tr></table></figure>
-<p>代码说明：<br>首先通过import语句引入tornado包中iollp和web类；这两个类是tornado程序的基础；<br>实现一个web.RequestHandler子类，重载其中的get()函数，该函数负责相应定位到该requesthandler的httpget请求处理。<br>定义了make_app函数，该函数返回一个web.application对象。<br>用tornado.web.application.listen()函数指定服务器监听的端口。<br>用tornado.ioloop.IOLoop.current().start启动IOLOOP，该函数将一直运行且不退出。</p>
-<h3 id="路由解析"><a href="#路由解析" class="headerlink" title="路由解析"></a>路由解析</h3><h4 id="固定字串路径"><a href="#固定字串路径" class="headerlink" title="固定字串路径"></a>固定字串路径</h4><p>Handlers = [(“/“,MainHandler),<br>             (“/entry” ,EntryHandler),<br>             (“/entry/2015”,Entry2015Handler),]</p>
-<h4 id="参数字串路径"><a href="#参数字串路径" class="headerlink" title="参数字串路径"></a>参数字串路径</h4>
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>服务器规划：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">物理机ip</th>
+<th style="text-align:center">虚拟ip</th>
+<th style="text-align:center">用途</th>
+<th style="text-align:center">realserver</th>
+<th style="text-align:center">软件版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<p>10.240.29.226     | 10.240.29.249      |  k8s-haproxy2-gpu-m6 |10.240.29.221 10.240.29.233  10.240.29.220 | 1.9.0 |<br>10.249.29.239        | 10.240.29.249    |   k8s-haproxy1-gpu-m6  |10.240.29.221 10.240.29.233  10.240.29.220 | 1.9.0 |<br>首先将执行下面的命令，将kubectl安装到master机器上，具体步骤可以参照下篇文章，kubectl的安装。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">查看到客户端版本目前为1.9.0</div><div class="line"># kubectl version</div><div class="line">    Client Version: version.Info&#123;Major:&quot;1&quot;, Minor:&quot;9&quot;, GitVersion:&quot;v1.9.0&quot;, GitCommit:&quot;925c127ec6b946659ad0fd596fa959be43f0cc05&quot;, GitTreeState:&quot;clean&quot;, BuildDate:&quot;2017-12-15T21:07:38Z&quot;, GoVersion:&quot;go1.9.2&quot;, Compiler:&quot;gc&quot;, Platform:&quot;linux/amd64&quot;&#125;</div><div class="line">    The connection to the server localhost:8080 was refused - did you specify the right host or port?</div></pre></td></tr></table></figure>
+<h1 id="kubeocnfig文件"><a href="#kubeocnfig文件" class="headerlink" title="kubeocnfig文件"></a>kubeocnfig文件</h1><p>kubeconfig文件记录k8s集群的各种信息，对集群构建非常重要。<br>kubectl命令行工具从~/.kube/config，即kubectl的kubeconfig文件中获取访问kube-apiserver的地址，证书和用户名等信息<br>kubelet/kube-proxy等在Node上的程序进程同样通过bootstrap.kubeconfig和kube-proxy.kubeconfig上提供的认证与授权信息与Master进行通讯<br>Kubelet在首次启动时，会向kube-apiserver发送TLS Bootstrapping请求。如果kube-apiserver验证其与自己的token.csv一致，则为kubelete生成CA与key。</p>
+<h1 id="token文件"><a href="#token文件" class="headerlink" title="token文件"></a>token文件</h1><p>先在<code>master</code>节点上安装 kubectl 然后再进行下面的操作。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">export BOOTSTRAP_TOKEN=$(head -c 16 /dev/urandom | od -An -t x | tr -d &apos; &apos;)</div><div class="line">cat &gt; token.csv &lt;&lt;EOF</div><div class="line">$&#123;BOOTSTRAP_TOKEN&#125;,kubelet-bootstrap,10001,&quot;system:kubelet-bootstrap&quot;</div><div class="line">EOF</div><div class="line"></div><div class="line">生成的文件：</div><div class="line">[root@JXQ-23-58-39 files]# cat token.csv </div><div class="line">bd8cc63aacf12ba3d4cac2464b185740,kubelet-bootstrap,10001,&quot;system:kubelet-bootstrap&quot;</div></pre></td></tr></table></figure></p>
+<p>将生成的token文件发送到集群的/export/kubernetes目录下。</p>
+<h2 id="token文件怎么更新？"><a href="#token文件怎么更新？" class="headerlink" title="token文件怎么更新？"></a>token文件怎么更新？</h2><p><code>BOOTSTRAP_TOKEN</code> 将被写入到 kube-apiserver 使用的 <code>token.csv</code> 文件和 kubelet 使用的 <code>bootstrap.kubeconfig</code> 文件，如果后续重新生成了 BOOTSTRAP_TOKEN，则需要：</p>
+<ul>
+<li>更新 token.csv 文件，分发到所有机器 (master 和 node）的 /export/kubernetes/ 目录下，分发到node节点上非必需；</li>
+<li>重新生成 bootstrap.kubeconfig 文件，分发到所有 node 机器的 /export/kubernetes/ 目录下；</li>
+<li>重启 kube-apiserver 和 kubelet 进程；</li>
+<li>重新 approve kubelet 的 csr 请求；</li>
+</ul>
+<p>分发token到节点上：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">salt &apos;*master1*&apos; state.sls  ssl.install saltenv=gpu</div></pre></td></tr></table></figure>
+<h2 id="生成kubectl-kubelet的kubeconfig文件bootstrap-kubeconfig和kubelet-kubeconfig"><a href="#生成kubectl-kubelet的kubeconfig文件bootstrap-kubeconfig和kubelet-kubeconfig" class="headerlink" title="生成kubectl kubelet的kubeconfig文件bootstrap.kubeconfig和kubelet.kubeconfig"></a>生成kubectl kubelet的kubeconfig文件bootstrap.kubeconfig和kubelet.kubeconfig</h2><p>创建 <code>kubelet bootstrapping kubeconfig</code>配置(需要提前安装 kubectl 命令)，对于 node 节点，api server 地址为master-vip:6443(为多个apiserver做负载均衡后的负载IP)，如果想把 master<br>也当做 node 使用，那么 master 上 api server 地址应该为 masterIP:6443。所以以下配置只适合 node 节点，如果想把 master 也当做 node，那么需要重新生成下面的 kubeconfig 配置，<br>并把 api server 地址修改为当前 master的虚ip地址。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">export KUBE_APISERVER=&quot;https://10.240.29.249:6443&quot;</div><div class="line"># 设置集群参数</div><div class="line">kubectl config set-cluster kubernetes \</div><div class="line">  --certificate-authority=/export/kubernetes/ssl/ca.pem \</div><div class="line">  --embed-certs=true \</div><div class="line">  --server=$&#123;KUBE_APISERVER&#125; \</div><div class="line">  --kubeconfig=bootstrap.kubeconfig</div><div class="line"># 设置客户端认证参数</div><div class="line">kubectl config set-credentials kubelet-bootstrap \</div><div class="line">  --token=$&#123;BOOTSTRAP_TOKEN&#125; \</div><div class="line">  --kubeconfig=bootstrap.kubeconfig</div><div class="line"># 设置上下文参数</div><div class="line">kubectl config set-context default \</div><div class="line">  --cluster=kubernetes \</div><div class="line">  --user=kubelet-bootstrap \</div><div class="line">  --kubeconfig=bootstrap.kubeconfig</div><div class="line"># 设置默认上下文</div><div class="line">kubectl config use-context default --kubeconfig=bootstrap.kubeconfig</div></pre></td></tr></table></figure>
+<ul>
+<li>–embed-certs 为 true 时表示将 certificate-authority 证书写入到生成的 <code>bootstrap.kubeconfig</code>文件中；</li>
+<li>设置客户端认证参数时没有指定秘钥和证书，后续由 kube-apiserver 自动生成；</li>
+</ul>
+<p><strong>创建 kube-proxy kubeconfig 配置，同上面一样，如果想要把 master 当 node 使用，需要修改 api server</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"># 设置集群参数</div><div class="line">kubectl config set-cluster kubernetes \</div><div class="line">  --certificate-authority=/export/kubernetes/ssl/ca.pem \</div><div class="line">  --embed-certs=true \</div><div class="line">  --server=$&#123;KUBE_APISERVER&#125; \</div><div class="line">  --kubeconfig=kube-proxy.kubeconfig</div><div class="line"># 设置客户端认证参数</div><div class="line">kubectl config set-credentials kube-proxy \</div><div class="line">  --client-certificate=/export/kubernetes/ssl/kube-proxy.pem \</div><div class="line">  --client-key=/export/kubernetes/ssl/kube-proxy-key.pem \</div><div class="line">  --embed-certs=true \</div><div class="line">  --kubeconfig=kube-proxy.kubeconfig</div><div class="line"># 设置上下文参数</div><div class="line">kubectl config set-context default \</div><div class="line">  --cluster=kubernetes \</div><div class="line">  --user=kube-proxy \</div><div class="line">  --kubeconfig=kube-proxy.kubeconfig</div><div class="line"># 设置默认上下文</div><div class="line">kubectl config use-context default --kubeconfig=kube-proxy.kubeconfig</div></pre></td></tr></table></figure>
+<ul>
+<li>设置集群参数和客户端认证参数时 –embed-certs 都为 true，这会将 certificate-authority、client-certificate 和 client-key 指向的证书文件内容写入到生成的 kube-proxy.kubeconfig 文件中；</li>
+<li>kube-proxy.pem 证书中 CN 为 system:kube-proxy，kube-apiserver 预定义的 RoleBinding cluster-admin 将User system:kube-proxy 与 Role system:node-proxier 绑定，该 Role 授予了调用 kube-apiserver Proxy 相关 API 的权限；</li>
+</ul>
+<p><strong>分发 kubeconfig 文件</strong></p>
+<p>将两个 kubeconfig 文件分发到所有 Node 机器的 /export/kubernetes/ 目录;我这里是将其放到k8s集群的每个机器上了。以备后用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">salt &apos;*master*&apos;  state.sls  ssl.install</div></pre></td></tr></table></figure>
+
       
     </div>
 
@@ -413,7 +507,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/python-网络框架-tornado/" rel="tag"># python 网络框架 tornado</a>
+            <a href="/tags/kubernetes，k8s，高可用方案/" rel="tag"># kubernetes，k8s，高可用方案</a>
           
         </div>
       
@@ -422,8 +516,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/02/28/tornado之二/" rel="next" title="tornado之二">
-                <i class="fa fa-chevron-left"></i> tornado之二
+              <a href="/2018/01/02/k8s安装之etcd集群搭建-三/" rel="next" title="k8s安装之etcd集群搭建(三)">
+                <i class="fa fa-chevron-left"></i> k8s安装之etcd集群搭建(三)
               </a>
             
           </div>
@@ -431,10 +525,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/03/01/celery/" rel="prev" title="celery入门">
-                celery入门 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -460,8 +550,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/02/28/tornado之三/"
-           data-title="tornado之三" data-url="http://yoursite.com/2017/02/28/tornado之三/">
+      <div class="ds-thread" data-thread-key="2018/01/02/k8s安装之kubeconfig配置-四/"
+           data-title="k8s安装之kubeconfig配置(四)" data-url="http://yoursite.com/2018/01/02/k8s安装之kubeconfig配置-四/">
       </div>
     
   </div>
@@ -580,7 +670,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#网站架构："><span class="nav-number">1.</span> <span class="nav-text">网站架构：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#路由解析"><span class="nav-number">2.</span> <span class="nav-text">路由解析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#固定字串路径"><span class="nav-number">2.1.</span> <span class="nav-text">固定字串路径</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参数字串路径"><span class="nav-number">2.2.</span> <span class="nav-text">参数字串路径</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#kubeocnfig文件"><span class="nav-number">2.</span> <span class="nav-text">kubeocnfig文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#token文件"><span class="nav-number">3.</span> <span class="nav-text">token文件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#token文件怎么更新？"><span class="nav-number">3.1.</span> <span class="nav-text">token文件怎么更新？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成kubectl-kubelet的kubeconfig文件bootstrap-kubeconfig和kubelet-kubeconfig"><span class="nav-number">3.2.</span> <span class="nav-text">生成kubectl kubelet的kubeconfig文件bootstrap.kubeconfig和kubelet.kubeconfig</span></a></li></ol></li></ol></div>
             
 
           </div>
