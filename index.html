@@ -604,20 +604,34 @@ k8s-master2-m6-gpu:
 <table>
 <thead>
 <tr>
+<th style="text-align:center"></th>
 <th style="text-align:center">物理机ip</th>
 <th style="text-align:center">虚拟ip</th>
 <th style="text-align:center">用途</th>
 <th style="text-align:center">realserver</th>
-<th style="text-align:center">软件版本</th>
+<th>软件版本</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center"></td>
+<td style="text-align:center">10.240.29.226</td>
+<td style="text-align:center">10.240.29.249</td>
+<td style="text-align:center">k8s-haproxy2-gpu-m6</td>
+<td style="text-align:center">10.240.29.221 10.240.29.233  10.240.29.220</td>
+<td style="text-align:center">1.9.0</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">10.249.29.239</td>
+<td style="text-align:center">10.240.29.249</td>
+<td style="text-align:center">k8s-haproxy1-gpu-m6</td>
+<td style="text-align:center">10.240.29.221 10.240.29.233  10.240.29.220</td>
+<td style="text-align:center">1.9.0</td>
+<td></td>
 </tr>
 </tbody>
 </table>
-<p>10.240.29.226     | 10.240.29.249      |  k8s-haproxy2-gpu-m6 |10.240.29.221 10.240.29.233  10.240.29.220 | 1.9.0 |<br>10.249.29.239        | 10.240.29.249    |   k8s-haproxy1-gpu-m6  |10.240.29.221 10.240.29.233  10.240.29.220 | 1.9.0 |<br>首先将执行下面的命令，将kubectl安装到master机器上，具体步骤可以参照下篇文章，kubectl的安装。</p>
+<p>首先将执行下面的命令，将kubectl安装到master机器上，具体步骤可以参照下篇文章，kubectl的安装。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">查看到客户端版本目前为1.9.0</div><div class="line"># kubectl version</div><div class="line">    Client Version: version.Info&#123;Major:&quot;1&quot;, Minor:&quot;9&quot;, GitVersion:&quot;v1.9.0&quot;, GitCommit:&quot;925c127ec6b946659ad0fd596fa959be43f0cc05&quot;, GitTreeState:&quot;clean&quot;, BuildDate:&quot;2017-12-15T21:07:38Z&quot;, GoVersion:&quot;go1.9.2&quot;, Compiler:&quot;gc&quot;, Platform:&quot;linux/amd64&quot;&#125;</div><div class="line">    The connection to the server localhost:8080 was refused - did you specify the right host or port?</div></pre></td></tr></table></figure>
 <h1 id="kubeocnfig文件"><a href="#kubeocnfig文件" class="headerlink" title="kubeocnfig文件"></a>kubeocnfig文件</h1><p>kubeconfig文件记录k8s集群的各种信息，对集群构建非常重要。<br>kubectl命令行工具从~/.kube/config，即kubectl的kubeconfig文件中获取访问kube-apiserver的地址，证书和用户名等信息<br>kubelet/kube-proxy等在Node上的程序进程同样通过bootstrap.kubeconfig和kube-proxy.kubeconfig上提供的认证与授权信息与Master进行通讯<br>Kubelet在首次启动时，会向kube-apiserver发送TLS Bootstrapping请求。如果kube-apiserver验证其与自己的token.csv一致，则为kubelete生成CA与key。</p>
 <h1 id="token文件"><a href="#token文件" class="headerlink" title="token文件"></a>token文件</h1><p>先在<code>master</code>节点上安装 kubectl 然后再进行下面的操作。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">export BOOTSTRAP_TOKEN=$(head -c 16 /dev/urandom | od -An -t x | tr -d &apos; &apos;)</div><div class="line">cat &gt; token.csv &lt;&lt;EOF</div><div class="line">$&#123;BOOTSTRAP_TOKEN&#125;,kubelet-bootstrap,10001,&quot;system:kubelet-bootstrap&quot;</div><div class="line">EOF</div><div class="line"></div><div class="line">生成的文件：</div><div class="line">[root@JXQ-23-58-39 files]# cat token.csv </div><div class="line">bd8cc63aacf12ba3d4cac2464b185740,kubelet-bootstrap,10001,&quot;system:kubelet-bootstrap&quot;</div></pre></td></tr></table></figure></p>
