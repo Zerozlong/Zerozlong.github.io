@@ -85,16 +85,16 @@
 
 
 
-<meta name="description" content="走过山山水水,脚下高高低低,人生难得糊涂！">
+<meta name="description" content="下发证书修改权限1234salt &amp;apos;*etcd*&amp;apos; state.sls ssl.install saltenv=gpusalt &amp;apos;*master*&amp;apos; state.sls ssl.install saltenv=gpusalt &amp;apos;*master*&amp;apos;  cmd.run &amp;apos;chmod 600 /export/kubernetes/ss">
 <meta property="og:type" content="article">
 <meta property="og:title" content="k8s安装之etcd集群搭建(三)">
 <meta property="og:url" content="http://yoursite.com/2018/01/02/k8s安装之etcd集群搭建-三/index.html">
 <meta property="og:site_name" content="Zero">
-<meta property="og:description" content="走过山山水水,脚下高高低低,人生难得糊涂！">
-<meta property="og:updated_time" content="2018-01-02T03:36:26.292Z">
+<meta property="og:description" content="下发证书修改权限1234salt &amp;apos;*etcd*&amp;apos; state.sls ssl.install saltenv=gpusalt &amp;apos;*master*&amp;apos; state.sls ssl.install saltenv=gpusalt &amp;apos;*master*&amp;apos;  cmd.run &amp;apos;chmod 600 /export/kubernetes/ss">
+<meta property="og:updated_time" content="2018-01-02T03:42:45.503Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="k8s安装之etcd集群搭建(三)">
-<meta name="twitter:description" content="走过山山水水,脚下高高低低,人生难得糊涂！">
+<meta name="twitter:description" content="下发证书修改权限1234salt &amp;apos;*etcd*&amp;apos; state.sls ssl.install saltenv=gpusalt &amp;apos;*master*&amp;apos; state.sls ssl.install saltenv=gpusalt &amp;apos;*master*&amp;apos;  cmd.run &amp;apos;chmod 600 /export/kubernetes/ss">
 
 
 
@@ -366,7 +366,12 @@
       
 
       
-        
+        <h1 id="下发证书修改权限"><a href="#下发证书修改权限" class="headerlink" title="下发证书修改权限"></a>下发证书修改权限</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">salt &apos;*etcd*&apos; state.sls ssl.install saltenv=gpu</div><div class="line">salt &apos;*master*&apos; state.sls ssl.install saltenv=gpu</div><div class="line">salt &apos;*master*&apos;  cmd.run &apos;chmod 600 /export/kubernetes/ssl/*.pem&apos; </div><div class="line">salt &apos;*etcd*&apos;  cmd.run &apos;chmod 600 /export/kubernetes/ssl/*.pem&apos;</div></pre></td></tr></table></figure>
+<h1 id="etcd集群搭建"><a href="#etcd集群搭建" class="headerlink" title="etcd集群搭建"></a>etcd集群搭建</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">etcd-source-install:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://etcd/files/etcd-v3.1.5-linux-amd64.tar.gz</div><div class="line">    - name: /usr/local/src/etcd-v3.1.5-linux-amd64.tar.gz</div><div class="line">  cmd.run:</div><div class="line">    - name:  cd /usr/local/src  &amp;&amp; tar -xvf etcd-v3.1.5-linux-amd64.tar.gz &amp;&amp; mv etcd-v3.1.5-linux-amd64/etcd* /bin/  &amp;&amp; mkdir -pv /export/Data/etcd &amp;&amp; mkdir /export/etcd/ &amp;&amp; mkdir -pv /etc/etcd</div><div class="line">/etc/etcd/etcd.conf:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://etcd/files/etcd.conf</div><div class="line">    - user: root</div><div class="line">    - group: root</div><div class="line">    - template: jinja</div><div class="line">    - defaults:</div><div class="line">      FQDN: &#123;&#123; grains[&apos;fqdn&apos;] &#125;&#125;</div><div class="line">      FQDN_IP: &#123;&#123;grains.get(&apos;fqdn_ip4&apos;)[0]&#125;&#125;</div><div class="line">    - mode: 644</div><div class="line">    - require:</div><div class="line">      - file: etcd-source-install</div><div class="line">/usr/lib/systemd/system/etcd.service:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://etcd/files/etcd.service</div><div class="line">    - user: root</div><div class="line">    - group: root</div><div class="line">    - mode: 644</div><div class="line">  cmd.run:</div><div class="line">    - name: systemctl daemon-reload </div><div class="line">  service.running:</div><div class="line">    - name: etcd</div><div class="line">    - enable: True</div><div class="line">    - reload: True</div><div class="line">    - require: </div><div class="line">      - file: /usr/lib/systemd/system/etcd.service</div></pre></td></tr></table></figure>
+<h1 id="集群搭建之后验证"><a href="#集群搭建之后验证" class="headerlink" title="集群搭建之后验证"></a>集群搭建之后验证</h1><p> 验证etcd集群的命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"> export ETCDCTL_API=3 </div><div class="line"> etcdctl  --cacert=/export/kubernetes/ssl/ca.pem --cert=/export/kubernetes/ssl/kubernetes.pem --key=/export/kubernetes/ssl/kubernetes-key.pem  --endpoints  https://10.240.29.222:2379,https://10.240.29.234:2379,https://10.240.29.235:2379 endpoint health</div><div class="line"></div><div class="line">etcdctl  --cacert=/export/kubernetes/ssl/ca.pem --cert=/export/kubernetes/ssl/kubernetes.pem --key=/export/kubernetes/ssl/kubernetes-key.pem  --endpoints  https://10.240.29.222:2379,https://10.240.29.234:2379,https://10.240.29.235:2379 endpoint health</div><div class="line">2017-12-27 15:01:46.194898 I | warning: ignoring ServerName for user-provided CA for backwards compatibility is deprecated</div><div class="line">2017-12-27 15:01:46.196109 I | warning: ignoring ServerName for user-provided CA for backwards compatibility is deprecated</div><div class="line">2017-12-27 15:01:46.197285 I | warning: ignoring ServerName for user-provided CA for backwards compatibility is deprecated</div><div class="line">https://10.240.29.222:2379 is healthy: successfully committed proposal: took = 1.618653ms</div><div class="line">https://10.240.29.234:2379 is healthy: successfully committed proposal: took = 1.383725ms</div><div class="line">https://10.240.29.235:2379 is healthy: successfully committed proposal: took = 1.31283ms</div></pre></td></tr></table></figure>
+<p>证明etcd集群搭建完毕</p>
+
       
     </div>
 
@@ -482,8 +487,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -494,7 +508,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">88</span>
+              <span class="site-state-item-count">89</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -558,6 +572,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#下发证书修改权限"><span class="nav-number">1.</span> <span class="nav-text">下发证书修改权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#etcd集群搭建"><span class="nav-number">2.</span> <span class="nav-text">etcd集群搭建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#集群搭建之后验证"><span class="nav-number">3.</span> <span class="nav-text">集群搭建之后验证</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>

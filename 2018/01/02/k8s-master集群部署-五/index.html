@@ -1,0 +1,977 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<div id="show" >
+</div>
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="kubernetes，k8s，高可用方案," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="简介kubernetes master节点仅仅需要运行三个进程，这三个进程为kube-apiserver、kube-scheduler、kube-controller-manager。
+master节点上的三个组件功能紧密相连，同时又有制约：master节点同时只能有一个 kube-scheduler、kube-controller-manager 进程处于工作状态，如果运行多个，则需要通过选举产">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s master集群部署(五)">
+<meta property="og:url" content="http://yoursite.com/2018/01/02/k8s-master集群部署-五/index.html">
+<meta property="og:site_name" content="Zero">
+<meta property="og:description" content="简介kubernetes master节点仅仅需要运行三个进程，这三个进程为kube-apiserver、kube-scheduler、kube-controller-manager。
+master节点上的三个组件功能紧密相连，同时又有制约：master节点同时只能有一个 kube-scheduler、kube-controller-manager 进程处于工作状态，如果运行多个，则需要通过选举产">
+<meta property="og:updated_time" content="2018-01-02T03:44:19.467Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="k8s master集群部署(五)">
+<meta name="twitter:description" content="简介kubernetes master节点仅仅需要运行三个进程，这三个进程为kube-apiserver、kube-scheduler、kube-controller-manager。
+master节点上的三个组件功能紧密相连，同时又有制约：master节点同时只能有一个 kube-scheduler、kube-controller-manager 进程处于工作状态，如果运行多个，则需要通过选举产">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/02/k8s-master集群部署-五/"/>
+
+
+
+
+
+  <title> k8s master集群部署(五) | Zero </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Zero</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/k8s-master集群部署-五/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                k8s master集群部署(五)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-02T11:43:53+08:00">
+                2018-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/k8/" itemprop="url" rel="index">
+                    <span itemprop="name">k8</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/01/02/k8s-master集群部署-五/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/01/02/k8s-master集群部署-五/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2018/01/02/k8s-master集群部署-五/" class="leancloud_visitors" data-flag-title="k8s master集群部署(五)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>kubernetes master节点仅仅需要运行三个进程，这三个进程为kube-apiserver、kube-scheduler、kube-controller-manager。</p>
+<p>master节点上的三个组件功能紧密相连，同时又有制约：<br>master节点同时只能有一个 kube-scheduler、kube-controller-manager 进程处于工作状态，如果运行多个，则需要通过选举产生一个 leader。<br>因此要实现kuber-master的高可用其实只需要处理apiserver的高可用就行，而其他两个组件可用使用etcd进行选举产生。请在进行如下操作之前，请<br>确认已经执行过如下操作：haproxy和keepalived的正确安装，ssl.install文件的顺利下发。ssl.install文件包含了kubeconfig文件的下发。</p>
+<h1 id="节点规划"><a href="#节点规划" class="headerlink" title="节点规划"></a>节点规划</h1><h2 id="ip地址规划"><a href="#ip地址规划" class="headerlink" title="ip地址规划"></a>ip地址规划</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">物理机ip</th>
+<th style="text-align:center">虚拟ip</th>
+<th style="text-align:center">名字</th>
+<th style="text-align:center">realserver</th>
+<th style="text-align:center">软件版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"> 10.240.29.226</td>
+<td style="text-align:center">10.240.29.249</td>
+<td style="text-align:center">k8s-haproxy2-gpu-m6</td>
+<td style="text-align:center">10.240.29.221 10.240.29.233  10.240.29.220</td>
+<td style="text-align:center">1.9.0</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center"> 10.249.29.239</td>
+<td style="text-align:center">10.240.29.249</td>
+<td style="text-align:center">k8s-haproxy1-gpu-m6</td>
+<td style="text-align:center">10.240.29.221 10.240.29.233  10.240.29.220</td>
+<td style="text-align:center">1.9.0</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="安装部署"><a href="#安装部署" class="headerlink" title="安装部署"></a>安装部署</h1><p>注意：在kubernetes-server包中默认包含了客户端相关的包</p>
+<h2 id="软件包下载"><a href="#软件包下载" class="headerlink" title="软件包下载"></a>软件包下载</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget https://dl.k8s.io/v1.9.0/kubernetes-server-linux-amd64.tar.gz</div></pre></td></tr></table></figure>
+<h2 id="master安装步骤说明"><a href="#master安装步骤说明" class="headerlink" title="master安装步骤说明"></a>master安装步骤说明</h2><p>这是整理好的目录结构：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">[root@JXQ-23-58-39 k8s-master]# tree</div><div class="line">.</div><div class="line">├── files</div><div class="line">│   ├── config</div><div class="line">│   └── kubernetes-server-linux-amd64.tar.gz</div><div class="line">├── install.sls</div><div class="line">├── kube-api</div><div class="line">│   ├── files</div><div class="line">│   │   ├── apiserver</div><div class="line">│   │   ├── config</div><div class="line">│   │   └── kube-apiserver.service</div><div class="line">│   └── install.sls</div><div class="line">├── kube-contorller-manager</div><div class="line">│   ├── files</div><div class="line">│   │   ├── controller-manager</div><div class="line">│   │   └── kube-controller-manager.service</div><div class="line">│   └── install.sls</div><div class="line">└── kube-scheduler</div><div class="line">    ├── files</div><div class="line">    │   ├── kube-scheduler.service</div><div class="line">    │   └── scheduler</div><div class="line">    └── install.sls</div><div class="line"></div><div class="line">7 directories, 13 files</div></pre></td></tr></table></figure></p>
+<p>如下是k8s-master的安装文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">k8s-source-install:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://k8s-master/files/kubernetes-server-linux-amd64.tar.gz</div><div class="line">    - name: /usr/local/src/kubernetes-server-linux-amd64.tar.gz</div><div class="line">    - user: root</div><div class="line">    - mode: 644</div><div class="line">  cmd.run:</div><div class="line">    - name: cd /usr/local/src  &amp;&amp; tar -xvf kubernetes-server-linux-amd64.tar.gz &amp;&amp; cd kubernetes &amp;&amp; cp -r server/bin/&#123;kube-apiserver,kube-controller-manager,kube-scheduler,kubectl&#125; /bin</div><div class="line">k8s-config-manged:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://k8s-master/files/config</div><div class="line">    - name: /export/kubernetes/config</div><div class="line">    - user: root</div><div class="line">    - mode: 644</div><div class="line">include:</div><div class="line">  - k8s-master.kube-api.install</div><div class="line">  - k8s-master.kube-contorller-manager.install</div><div class="line">  - k8s-master.kube-scheduler.instal</div></pre></td></tr></table></figure>
+<h2 id="配置kube-apiserver"><a href="#配置kube-apiserver" class="headerlink" title="配置kube-apiserver"></a>配置kube-apiserver</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">将token进行下发，目前安装的过程中，token的安装放在了ssl下发那个步骤里面。即ssl.install里面。</div><div class="line"></div><div class="line"></div><div class="line">[Unit]</div><div class="line">Description=Kubernetes API Server</div><div class="line">Documentation=https://github.com/GoogleCloudPlatform/kubernetes</div><div class="line">After=network.target</div><div class="line"></div><div class="line">[Service]</div><div class="line">User=root</div><div class="line">ExecStart=/usr/bin/kube-apiserver \</div><div class="line">  --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota \</div><div class="line">  --advertise-address=&#123;&#123; fqdn_ip &#125;&#125; \</div><div class="line">  --allow-privileged=true \</div><div class="line">  --apiserver-count=3 \</div><div class="line">  --audit-log-maxage=30 \</div><div class="line">  --audit-log-maxbackup=3 \</div><div class="line">  --audit-log-maxsize=100 \</div><div class="line">  --audit-log-path=/export/Log/audit.log \</div><div class="line">  --authorization-mode=Node,RBAC \</div><div class="line">  --bind-address=&#123;&#123; fqdn_ip &#125;&#125; \</div><div class="line">  --client-ca-file=/export/kubernetes/ssl/ca.pem \</div><div class="line">  --enable-swagger-ui=true \</div><div class="line">  --etcd-cafile=/export/kubernetes/ssl/ca.pem \</div><div class="line">  --etcd-certfile=/export/kubernetes/ssl/kubernetes.pem \</div><div class="line">  --etcd-keyfile=/export/kubernetes/ssl/kubernetes-key.pem  \</div><div class="line">  --etcd-servers=https://&#123;&#123; ETCD1 &#125;&#125;:2379,https://&#123;&#123; ETCD2 &#125;&#125;:2379,https://&#123;&#123; ETCD3 &#125;&#125;:2379 \</div><div class="line">  --event-ttl=1h \</div><div class="line">  --kubelet-https=true \</div><div class="line">  --insecure-bind-address=0.0.0.0 \</div><div class="line">  --runtime-config=rbac.authorization.k8s.io/v1alpha1 \</div><div class="line">  --service-account-key-file=/export/kubernetes/ssl/ca-key.pem \</div><div class="line">  --service-cluster-ip-range=10.254.0.0/16 \</div><div class="line">  --service-node-port-range=30000-32000 \</div><div class="line">  --tls-cert-file=/export/kubernetes/ssl/kubernetes.pem \</div><div class="line">  --tls-private-key-file=/export/kubernetes/ssl/kubernetes-key.pem \</div><div class="line">  --enable-bootstrap-token-auth \</div><div class="line">  --token-auth-file=/export/kubernetes/token.csv \</div><div class="line">  --v=2</div><div class="line">Restart=on-failure</div><div class="line">RestartSec=5</div><div class="line">Type=notify</div><div class="line">LimitNOFILE=65536</div><div class="line"></div><div class="line">[Install]</div><div class="line">WantedBy=multi-user.target</div></pre></td></tr></table></figure>
+<h2 id="kube-controller-manager安装"><a href="#kube-controller-manager安装" class="headerlink" title="kube-controller-manager安装"></a>kube-controller-manager安装</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">[root@JXQ-23-58-39 k8s-master]# cat kube-controller-manager/install.sls </div><div class="line">kube-controller-manager:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://k8s-master/kube-controller-manager/files/controller-manager</div><div class="line">    - name: /export/kubernetes/controller-manager</div><div class="line">    - user: root</div><div class="line">    - mode: 644</div><div class="line">kube-controller-init:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://k8s-master/kube-controller-manager/files/kube-controller-manager.service </div><div class="line">    - name: /usr/lib/systemd/system/kube-controller-manager.service</div><div class="line">    - user: root</div><div class="line">    - mode: 644</div><div class="line">  service.running:</div><div class="line">    - name: kube-controller-manager.service</div><div class="line">    - enable: True</div><div class="line">    - reload: True</div><div class="line">    - require: </div><div class="line">      - file: kube-controller-init</div><div class="line"></div><div class="line">[root@JXQ-23-58-39 k8s-master]# cat kube-controller-manager/files/controller-manager </div><div class="line">###</div><div class="line"># The following values are used to configure the kubernetes controller-manager</div><div class="line"></div><div class="line"># defaults from config and apiserver should be adequate</div><div class="line"></div><div class="line"># controller manager默认会为所有的网络提供服务，这里指定服务地址为本机</div><div class="line"># Add your own!</div><div class="line">KUBE_CONTROLLER_MANAGER_ARGS=&quot;--address=127.0.0.1 \</div><div class="line">            --service-cluster-ip-range=10.254.0.0/16 \</div><div class="line">            --cluster-name=kubernetes \</div><div class="line">            --cluster-signing-cert-file=/export/kubernetes/ssl/ca.pem \</div><div class="line">            --cluster-signing-key-file=/export/kubernetes/ssl/ca-key.pem \</div><div class="line">             --service-account-private-key-file=/export/kubernetes/ssl/ca-key.pem \</div><div class="line">            --root-ca-file=/export/kubernetes/ssl/ca.pem \</div><div class="line">            --leader-elect=true \</div><div class="line">            --node-monitor-grace-period=40s \</div><div class="line">            --node-monitor-period=5s \</div><div class="line">            --pod-eviction-timeout=50ms&quot;</div></pre></td></tr></table></figure>
+<h2 id="kube-schedule安装配置"><a href="#kube-schedule安装配置" class="headerlink" title="kube-schedule安装配置"></a>kube-schedule安装配置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">[root@JXQ-23-58-39 k8s-master]# cat kube-scheduler/install.sls </div><div class="line">kube-scheduler-conf-managed:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://k8s-master/kube-scheduler/files/scheduler</div><div class="line">    - name: /export/kubernetes/scheduler</div><div class="line">    - user: root</div><div class="line">    - mode: 644</div><div class="line">kube-scheduler-init:</div><div class="line">  file.managed:</div><div class="line">    - source: salt://k8s-master/kube-scheduler/files/kube-scheduler.service</div><div class="line">    - name: /usr/lib/systemd/system/kube-scheduler.service</div><div class="line">    - user: root</div><div class="line">    - mode: 644</div><div class="line">  service.running:</div><div class="line">    - name: kube-scheduler.service</div><div class="line">    - enable: True</div><div class="line">    - reload: True</div><div class="line">    - require: </div><div class="line">      - file: kube-scheduler-init</div><div class="line">kube-scheduler.service  scheduler               </div><div class="line">[root@JXQ-23-58-39 k8s-master]# cat kube-scheduler/files/kube-scheduler.service </div><div class="line">[Unit]</div><div class="line">Description=Kubernetes Scheduler Plugin</div><div class="line">Documentation=https://github.com/GoogleCloudPlatform/kubernetes</div><div class="line"></div><div class="line">[Service]</div><div class="line">EnvironmentFile=-/export/kubernetes/config</div><div class="line">EnvironmentFile=-/export/kubernetes/scheduler</div><div class="line">ExecStart=/usr/bin/kube-scheduler \</div><div class="line">            $KUBE_LOGTOSTDERR \</div><div class="line">            $KUBE_LOG_LEVEL \</div><div class="line">            $KUBE_MASTER \</div><div class="line">            $KUBE_SCHEDULER_ARGS</div><div class="line">Restart=on-failure</div><div class="line">LimitNOFILE=65536</div><div class="line"></div><div class="line">[Install]</div><div class="line">WantedBy=multi-user.target</div><div class="line">[root@JXQ-23-58-39 k8s-master]# cat kube-scheduler/files/</div><div class="line">kube-scheduler.service  scheduler               </div><div class="line">[root@JXQ-23-58-39 k8s-master]# cat kube-scheduler/files/scheduler </div><div class="line">###</div><div class="line"># kubernetes scheduler config</div><div class="line"></div><div class="line"># default config should be adequate</div><div class="line"></div><div class="line"># Add your own!</div><div class="line">KUBE_SCHEDULER_ARGS=&quot;--leader-elect=true --address=127.0.0.1&quot;</div><div class="line">[root@JXQ-23-58-39 k8s-master]#</div></pre></td></tr></table></figure>
+<h1 id="部署完成之后进行测试"><a href="#部署完成之后进行测试" class="headerlink" title="部署完成之后进行测试"></a>部署完成之后进行测试</h1><pre><code>[root@JXQ-23-58-39 k8s-master]#  curl http://10.240.29.249:8080
+{
+  &quot;paths&quot;: [
+    &quot;/api&quot;,
+    &quot;/api/v1&quot;,
+    &quot;/apis&quot;,
+    &quot;/apis/&quot;,
+    &quot;/apis/admissionregistration.k8s.io&quot;,
+    &quot;/apis/admissionregistration.k8s.io/v1beta1&quot;,
+    &quot;/apis/apiextensions.k8s.io&quot;,
+    &quot;/apis/apiextensions.k8s.io/v1beta1&quot;,
+    &quot;/apis/apiregistration.k8s.io&quot;,
+    &quot;/apis/apiregistration.k8s.io/v1beta1&quot;,
+    &quot;/apis/apps&quot;,
+    &quot;/apis/apps/v1&quot;,
+    &quot;/apis/apps/v1beta1&quot;,
+</code></pre><pre><code> [root@JXQ-23-58-39 k8s-node]# salt &apos;*master*&apos;  cmd.run &apos;kubectl get cs&apos;
+k8s-master1-m6-gpu:
+    NAME                 STATUS    MESSAGE              ERROR
+    scheduler            Healthy   ok                   
+    controller-manager   Healthy   ok                   
+    etcd-0               Healthy   {&quot;health&quot;: &quot;true&quot;}   
+    etcd-2               Healthy   {&quot;health&quot;: &quot;true&quot;}   
+    etcd-1               Healthy   {&quot;health&quot;: &quot;true&quot;}
+k8s-master3-m6-gpu:
+    NAME                 STATUS    MESSAGE              ERROR
+    controller-manager   Healthy   ok                   
+    scheduler            Healthy   ok                   
+    etcd-2               Healthy   {&quot;health&quot;: &quot;true&quot;}   
+    etcd-1               Healthy   {&quot;health&quot;: &quot;true&quot;}   
+    etcd-0               Healthy   {&quot;health&quot;: &quot;true&quot;}
+k8s-master2-m6-gpu:
+    NAME                 STATUS    MESSAGE              ERROR
+    scheduler            Healthy   ok                   
+    controller-manager   Healthy   ok                   
+    etcd-0               Healthy   {&quot;health&quot;: &quot;true&quot;}   
+    etcd-2               Healthy   {&quot;health&quot;: &quot;true&quot;}   
+    etcd-1               Healthy   {&quot;health&quot;: &quot;true&quot;}
+[root@JXQ-23-58-39 k8s-node]#
+</code></pre>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wx.png" alt="Zero WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/zhifu.png" alt="Zero Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes，k8s，高可用方案/" rel="tag"># kubernetes，k8s，高可用方案</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/02/k8s安装之kubeconfig配置-四/" rel="next" title="k8s安装之kubeconfig配置(四)">
+                <i class="fa fa-chevron-left"></i> k8s安装之kubeconfig配置(四)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2018/01/02/k8s-master集群部署-五/"
+           data-title="k8s master集群部署(五)" data-url="http://yoursite.com/2018/01/02/k8s-master集群部署-五/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Zero" />
+          <p class="site-author-name" itemprop="name">Zero</p>
+          <p class="site-description motion-element" itemprop="description">走过山山水水,脚下高高低低,人生难得糊涂！</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">89</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">60</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.unixhot.com/" title="运维社区" target="_blank">运维社区</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.yfshare.vip" title="Jack Wang Blog" target="_blank">Jack Wang Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.25555579.com/" title="背锅侠" target="_blank">背锅侠</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#节点规划"><span class="nav-number">2.</span> <span class="nav-text">节点规划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ip地址规划"><span class="nav-number">2.1.</span> <span class="nav-text">ip地址规划</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装部署"><span class="nav-number">3.</span> <span class="nav-text">安装部署</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#软件包下载"><span class="nav-number">3.1.</span> <span class="nav-text">软件包下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#master安装步骤说明"><span class="nav-number">3.2.</span> <span class="nav-text">master安装步骤说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置kube-apiserver"><span class="nav-number">3.3.</span> <span class="nav-text">配置kube-apiserver</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kube-controller-manager安装"><span class="nav-number">3.4.</span> <span class="nav-text">kube-controller-manager安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kube-schedule安装配置"><span class="nav-number">3.5.</span> <span class="nav-text">kube-schedule安装配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#部署完成之后进行测试"><span class="nav-number">4.</span> <span class="nav-text">部署完成之后进行测试</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zero</span>
+</div>
+
+<script  language="javascript">
+window.onload = function() { 
+var show = document.getElementById("show"); 
+setInterval(function() { 
+var time = new Date(); 
+// 程序计时的月从0开始取值后+1 
+var m = time.getMonth() + 2; 
+//根据自己博客的创建时间更改数值 
+var t = "Welcome to Zero's  Blog! 宝宝已经存在"+(time.getFullYear()-2017) + "年" + m + "月" 
++ time.getDate() + "天 " + time.getHours() + "时" 
++ time.getMinutes() + "分" + time.getSeconds() + "秒了"; 
+show.innerHTML = t; 
+}, 1000); 
+}; 
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?ecc9733854359d44324d6063c4776ffb";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+<span id="busuanzi_container_site_uv">
+  你是本站的第<span id="busuanzi_value_site_uv"></span>个访客
+</span>
+<!--
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+
+
+-->
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zerosre"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("DoxG0uQxF81TSYnLX2XSmf3s-gzGzoHsz", "Q4wLV6Vdxd4YnCWesJ0qk9cO");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>
