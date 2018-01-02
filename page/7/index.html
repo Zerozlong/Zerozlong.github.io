@@ -260,6 +260,160 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/19/glusterfs使用nfs方式/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/19/glusterfs使用nfs方式/" itemprop="url">
+                  glusterfs使用nfs方式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-19T11:33:54+08:00">
+                2017-04-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/分布式存储/" itemprop="url" rel="index">
+                    <span itemprop="name">分布式存储</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/04/19/glusterfs使用nfs方式/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/19/glusterfs使用nfs方式/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/04/19/glusterfs使用nfs方式/" class="leancloud_visitors" data-flag-title="glusterfs使用nfs方式">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="什么情况下用nfs方式？"><a href="#什么情况下用nfs方式？" class="headerlink" title="什么情况下用nfs方式？"></a>什么情况下用nfs方式？</h3><p>不想让某个目录暴漏在所有的客户端，使用glusterfs做好目录划分：<br>mkdir /test<br>mount -t glusterfs  service1:/test-volume  /test<br>cd /test  &amp;&amp; mkdir   -v project{1,2,3,4,5,6}<br>这个时候我们想让project1只暴露给project1的主机；</p>
+<h3 id="怎么样用glusterfs的nfs协议？"><a href="#怎么样用glusterfs的nfs协议？" class="headerlink" title="怎么样用glusterfs的nfs协议？"></a>怎么样用glusterfs的nfs协议？</h3><p>首先打开逻辑卷的nfs协议；<br>mount -t nfs -o vers=3 server1:/test-volume/project1 /mnt/glusterfs</p>
+<p>注：Gluster NFS server不支持UDP，如果你的NFS客户端报错提示NFS版本或协议不正确，则可以在挂接命令的参数选项中明确指定下使用TCP协议。<br>mount -o mountproto=tcp -t nfs server1:/test-volume /mnt/glusterfs</p>
+<h3 id="设置成系统启动时自动挂接存储卷"><a href="#设置成系统启动时自动挂接存储卷" class="headerlink" title="设置成系统启动时自动挂接存储卷"></a>设置成系统启动时自动挂接存储卷</h3><p>设置成系统启动时自动挂接存储卷：<br>修改/etc/fstab文件并添加以下内容：<br>server1:/test-volume /mnt/glusterfs nfs defaults,_netdev,vers=3 0 0<br>或<br>server1:/test-volume /mnt/glusterfs nfs defaults,_netdev,mountproto=tcp 0 0</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/17/flask权限认证flask-principle/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -908,166 +1062,11 @@ Date: Thu, 13 Apr 2017 11:13:13 GMT
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/13/http-auth在flask中的使用/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Zero">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Zero">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Zero" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/13/http-auth在flask中的使用/" itemprop="url">
-                  httpauth在flask中的使用-
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-13T14:57:43+08:00">
-                2017-04-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python开发/" itemprop="url" rel="index">
-                    <span itemprop="name">python开发</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/04/13/http-auth在flask中的使用/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/13/http-auth在flask中的使用/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/04/13/http-auth在flask中的使用/" class="leancloud_visitors" data-flag-title="httpauth在flask中的使用-">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="模块安装"><a href="#模块安装" class="headerlink" title="模块安装"></a>模块安装</h3><p>pip install flask-httpauth<br>如果我们只想我们的web服务器只被用户名是miguel和password是python的用户访问。我们可以按照下面的方式进行配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">from flask.ext.httpauth import HTTPBasicAuth</div><div class="line">auth = HTTPBasicAuth()</div><div class="line"></div><div class="line">@auth.get_password</div><div class="line">def get_password(username):</div><div class="line">    if username == &apos;miguel&apos;:</div><div class="line">        return &apos;python&apos;</div><div class="line">    return None</div><div class="line"></div><div class="line">@auth.error_handler</div><div class="line">def unauthorized():</div><div class="line">    return make_response(jsonify(&#123;&apos;error&apos;: &apos;Unauthorized access&apos;&#125;), 401)</div></pre></td></tr></table></figure></p>
-<p>The get_password函数，返回的是一个用户的用户名；在实际使用过程中，我们可能会用到数据库，这里为了演示方便，就先这样写吧。<br>The error_handler函数：如果客户端请求不合法，我们将对其返回一个401的错误请求。</p>
-<h3 id="url配置"><a href="#url配置" class="headerlink" title="url配置"></a>url配置</h3><p>当认证配置完成之后，将其加到我们需要保护的url下面，通过一个装饰器。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@app.route(&apos;/todo/api/v1.0/tasks&apos;, methods=[&apos;GET&apos;])</div><div class="line">@auth.login_required</div><div class="line">def get_tasks():</div><div class="line">    return jsonify(&#123;&apos;tasks&apos;: tasks&#125;)</div></pre></td></tr></table></figure></p>
-<p>如果我们使用curl来进行访问，像下面这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ curl -i http://localhost:5000/todo/api/v1.0/tasks</div><div class="line">HTTP/1.0 401 UNAUTHORIZED</div><div class="line">Content-Type: application/json</div><div class="line">Content-Length: 36</div><div class="line">WWW-Authenticate: Basic realm=&quot;Authentication Required&quot;</div><div class="line">Server: Werkzeug/0.8.3 Python/2.7.3</div><div class="line">Date: Mon, 20 May 2013 06:41:14 GMT</div><div class="line"></div><div class="line">&#123;</div><div class="line">  &quot;error&quot;: &quot;Unauthorized access&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>要使用此功能，我们必须使用凭证。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">$ curl -u miguel:python -i http://localhost:5000/todo/api/v1.0/tasks</div><div class="line">HTTP/1.0 200 OK</div><div class="line">Content-Type: application/json</div><div class="line">Content-Length: 316</div><div class="line">Server: Werkzeug/0.8.3 Python/2.7.3</div><div class="line">Date: Mon, 20 May 2013 06:46:45 GMT</div><div class="line"></div><div class="line">&#123;</div><div class="line">  &quot;tasks&quot;: [</div><div class="line">    &#123;</div><div class="line">      &quot;title&quot;: &quot;Buy groceries&quot;,</div><div class="line">      &quot;done&quot;: false,</div><div class="line">      &quot;description&quot;: &quot;Milk, Cheese, Pizza, Fruit, Tylenol&quot;,</div><div class="line">      &quot;uri&quot;: &quot;http://localhost:5000/todo/api/v1.0/tasks/1&quot;</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      &quot;title&quot;: &quot;Learn Python&quot;,</div><div class="line">      &quot;done&quot;: false,</div><div class="line">      &quot;description&quot;: &quot;Need to find a good Python tutorial on the web&quot;,</div><div class="line">      &quot;uri&quot;: &quot;http://localhost:5000/todo/api/v1.0/tasks/2&quot;</div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1108,7 +1107,7 @@ Date: Thu, 13 Apr 2017 11:13:13 GMT
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">85</span>
+              <span class="site-state-item-count">86</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
