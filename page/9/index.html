@@ -372,13 +372,15 @@
       
         
           
-            <h3 id="页面代码如下："><a href="#页面代码如下：" class="headerlink" title="页面代码如下："></a>页面代码如下：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">&lt;tittle&gt;登陆页面&lt;/tittle&gt;</div><div class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/dns/static/js/zero/api.js&quot;&gt;&lt;/script&gt;</div><div class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;/dns/static/js/zero/login.js&quot;&gt;&lt;/script&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">&lt;div class=&quot;container&quot;&gt;</div><div class="line">	&lt;div class=&quot;center-block&quot; class=&quot;div&quot;&gt;</div><div class="line">		&lt;div&gt;</div><div class="line">            &lt;h3&gt;Please Login&lt;/h3&gt;</div><div class="line">            &lt;label&gt;Username:&lt;/label&gt;</div><div class="line">            &lt;input type=&quot;text&quot; id=&quot;username&quot;  placeholder=&quot;username&quot;&gt;</div><div class="line">        &lt;/div&gt;</div><div class="line">        &lt;div&gt;</div><div class="line">            &lt;label class=&quot;form-contrl&quot;&gt;Password:&lt;/label&gt;</div><div class="line">            &lt;input type=&quot;password&quot; id=&quot;password&quot;   placeholder=&quot;password&quot;&gt;</div><div class="line">        &lt;/div&gt;</div><div class="line">        &lt;button type=&quot;submit&quot; id=&quot;submit&quot; class=&quot;btn btn-primary &quot;&gt;提交&lt;/button&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
-<h3 id="后端接收方法详解"><a href="#后端接收方法详解" class="headerlink" title="后端接收方法详解"></a>后端接收方法详解</h3><h4 id="法一：js文件如下："><a href="#法一：js文件如下：" class="headerlink" title="法一：js文件如下："></a>法一：js文件如下：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">cat  /dns/static/js/zero/login.js</div><div class="line"></div><div class="line">$(document).ready(function() &#123;</div><div class="line">    $(&quot;#submit&quot;).click(function () &#123;</div><div class="line">        login(</div><div class="line">            &#123;&quot;username&quot;: $(&quot;#username&quot;).val(),</div><div class="line">             &quot;password&quot; : $(&quot;#password&quot;).val()&#125;,</div><div class="line">            function (result) &#123;</div><div class="line">                var status=check_return(result);</div><div class="line">                if (status) &#123;</div><div class="line">                    window.location.assign(&apos;/dns_api&apos;)</div><div class="line">                &#125;</div><div class="line">                else &#123;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        );</div><div class="line">    &#125;);</div><div class="line">&#125;)</div><div class="line"></div><div class="line">cat /dns/static/js/zero/api.</div><div class="line"></div><div class="line">function login(data, callback)&#123;</div><div class="line">    $.post(&quot;/login&quot;, data, callback, &quot;json&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="后端代码"><a href="#后端代码" class="headerlink" title="后端代码"></a>后端代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">@app.route(&apos;/login&apos;, methods=[&apos;GET&apos;, &apos;POST&apos;])</div><div class="line">def login():</div><div class="line">    data = &#123;</div><div class="line">        &quot;rc&quot;:0,</div><div class="line">        &quot;msg&quot;:&quot;success&quot;,</div><div class="line">            &#125;</div><div class="line">    username = request.form.get(&quot;username&quot;)</div><div class="line">    password = request.form.get(&quot;password&quot;)</div><div class="line">    if request.method==&quot;POST&quot;:</div><div class="line">        user=User.query.filter_by(username=username).first()</div><div class="line">        if user is not None and user.verify_password(password):</div><div class="line">            login_user(user)</div><div class="line">            return jsonify(data)</div><div class="line">        else:</div><div class="line">            data=&#123;</div><div class="line">                &quot;rc&quot;:1,</div><div class="line">                &quot;msg&quot;:&quot;username or password incorrect!&quot;</div><div class="line">            &#125;</div><div class="line">            return jsonify(data)</div><div class="line">    return render_template(&quot;login.html&quot;)</div></pre></td></tr></table></figure>
-<h4 id="法二：js文件如下："><a href="#法二：js文件如下：" class="headerlink" title="法二：js文件如下："></a>法二：js文件如下：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">cat  /dns/static/js/zero/login.js</div><div class="line"></div><div class="line">$(document).ready(function() &#123;</div><div class="line">    $(&quot;#submit&quot;).click(function () &#123;</div><div class="line">        login(</div><div class="line">            JSON.stringify(&#123;&quot;username&quot;: $(&quot;#username&quot;).val(),</div><div class="line">             &quot;password&quot; : $(&quot;#password&quot;).val()&#125;),</div><div class="line">            function (result) &#123;</div><div class="line">                var status=check_return(result);</div><div class="line">                if (status) &#123;</div><div class="line">                    window.location.assign(&apos;/dns_api&apos;)</div><div class="line">                &#125;</div><div class="line">                else &#123;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        );</div><div class="line">    &#125;);</div><div class="line">&#125;)</div><div class="line"></div><div class="line">cat /dns/static/js/zero/api.</div><div class="line"></div><div class="line">function login(data, callback)&#123;</div><div class="line">    $.post(&quot;/login&quot;, data, callback, &quot;json&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="后端代码如下"><a href="#后端代码如下" class="headerlink" title="后端代码如下"></a>后端代码如下</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">@app.route(&apos;/login&apos;, methods=[&apos;GET&apos;, &apos;POST&apos;])</div><div class="line">def login():</div><div class="line">    data = &#123;</div><div class="line">        &quot;rc&quot;:0,</div><div class="line">        &quot;msg&quot;:&quot;success&quot;,</div><div class="line">            &#125;</div><div class="line"></div><div class="line">    if request.method==&quot;POST&quot;:</div><div class="line">        json_data=json.loads(request.get_data())</div><div class="line">        username = json_data[&quot;username&quot;]</div><div class="line">        password = json_data[&quot;password&quot;]</div><div class="line">        user=User.query.filter_by(username=username).first()</div><div class="line">        if user is not None and user.verify_password(password):</div><div class="line">            login_user(user)</div><div class="line">            return jsonify(data)</div><div class="line">        else:</div><div class="line">            data=&#123;</div><div class="line">                &quot;rc&quot;:1,</div><div class="line">                &quot;msg&quot;:&quot;username or password incorrect!&quot;</div><div class="line">            &#125;</div><div class="line">            return jsonify(data)</div><div class="line">    return render_template(&quot;login.html&quot;)</div></pre></td></tr></table></figure>
-
-          
+          页面代码如下：12345678910111213141516
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/04/11/flask获取ajax数据的几种方式/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -527,8 +529,15 @@
       
         
           
-            
           
+          
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/04/11/使用flask设计restful-api/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -677,11 +686,15 @@
       
         
           
-            <h3 id="alert"><a href="#alert" class="headerlink" title="alert"></a>alert</h3><p>alert 是弹出警告框，在文本里面加入\n就可以换行。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;script type=&quot;text/javascript&quot;&gt;  </div><div class="line">function show_alert()&#123;  </div><div class="line">    alert(&apos;第一行\n第二行&apos;);  </div><div class="line">&#125;  </div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
-<h3 id="confirm"><a href="#confirm" class="headerlink" title="confirm"></a>confirm</h3><p>confirm弹出确认框，会返回布尔值，通过这个值可以判断点击时确认还是取消。true表示点击了确认，false表示点击了取消。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;script type=&quot;text/javascript&quot;&gt; </div><div class="line">function show_confirm()&#123;  </div><div class="line">    var result = confirm(&apos;是否删除！&apos;);  </div><div class="line">    if(result)&#123;  </div><div class="line">        alert(&apos;删除成功！&apos;);  </div><div class="line">    &#125;else&#123;  </div><div class="line">        alert(&apos;不删除！&apos;);  </div><div class="line">    &#125;  </div><div class="line">&#125;</div><div class="line">&lt;script type=&quot;text/javascript&quot;&gt;</div></pre></td></tr></table></figure></p>
-<h3 id="prompt"><a href="#prompt" class="headerlink" title="prompt"></a>prompt</h3><p>prompt弹出输入框，点击确认返回输入框中的值，点击取消返回null。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&lt;script type=&quot;text/javascript&quot;&gt; </div><div class="line">function show_prompt()&#123;  </div><div class="line">    var value = prompt(&apos;输入你的名字：&apos;, &apos;默认名字&apos;);  </div><div class="line">    if(value == null)&#123;  </div><div class="line">        alert(&apos;你取消了输入！&apos;);  </div><div class="line">    &#125;else if(value == &apos;&apos;)&#123;  </div><div class="line">        alert(&apos;姓名输入为空，请重新输入！&apos;);  </div><div class="line">        show_prompt();  </div><div class="line">    &#125;else&#123;  </div><div class="line">        alert(&apos;你好，&apos;+value);  </div><div class="line">    &#125;  </div><div class="line">&#125;</div><div class="line">&lt;script type=&quot;text/javascript&quot;&gt;</div></pre></td></tr></table></figure></p>
-
-          
+          alertalert 是弹出警告框，在文本里面加入\n就可以
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/04/06/javascript中的三种消息弹出框alert,confirm,prompt/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -830,15 +843,15 @@
       
         
           
-            <h3 id="上代码"><a href="#上代码" class="headerlink" title="上代码"></a>上代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;script type=&quot;text/javascript&quot;&gt;  </div><div class="line">$(&apos;button&apos;).click(function()&#123;</div><div class="line">var name = $(this).attr(&apos;name&apos;);</div><div class="line">$.ajax(&#123;</div><div class="line">url:&quot;test.py&quot;,</div><div class="line">type:&quot;POST&quot;,</div><div class="line">data:&#123;&apos;search&apos;:name&#125;,</div><div class="line">success:function(data)</div><div class="line">&#123;</div><div class="line">alert(&apos;success&apos;);</div><div class="line">&#125;,</div><div class="line">error: function()&#123;</div><div class="line">alert(&apos;error&apos;);</div><div class="line">&#125;</div><div class="line">&#125;);</div><div class="line">&#125;);</div><div class="line">&#125;);</div><div class="line">&lt;script type=&quot;text/javascript&quot;&gt;</div></pre></td></tr></table></figure>
-<p>这段代码，在现在基于Restful API架构，前后端严格分离的WEB程序中，是很常见的。现在有一个问题，那就是调用后，在什么情况下走success方法，在什么情况走error方法？<br>我们先简单介绍下ajax：<br>简单的说Ajax请求通过XMLHttpRequest对象发送请求，<br>该对象有四个状态（readyState）：<br>0-未初始化、1-正在初始化、2-发送数据、3-正在发送数据、4-完成。<br>当XMLHttpRequest.readyState为4时，表示ajax请求已经完成可以得到响应结果。<br>ajax的success和error方法根据响应状态码来触发。当XMLHttpRequest.status为200的时候，表示响应成功，此时触发success().其他状态码则触发error()。<br>除了根据响应状态码外，ajax还会在下列情况下走error方法：</p>
-<ol>
-<li>返回数据类型不是JSON</li>
-<li>网络中断</li>
-<li>后台响应中断<br>知道这个知识点有什么用呢？我觉得这个在restful API中定义返回的JSON消息格式是很有用的。</li>
-</ol>
-
-          
+          上代码123456789101112131415161718
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/04/06/ajax在什么情况下会走success和error/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -987,22 +1000,16 @@
       
         
           
-            <h3 id="命名规范"><a href="#命名规范" class="headerlink" title="命名规范"></a>命名规范</h3><h4 id="文件名"><a href="#文件名" class="headerlink" title="文件名"></a>文件名</h4><p>全小写,可使用下划线</p>
-<p>####包<br>应该是简短的、小写的名字。如果下划线可以改善可读性可以加入。如mypackage。</p>
-<h4 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h4><p>与包的规范同。如mymodule。</p>
-<h4 id="类"><a href="#类" class="headerlink" title="类"></a>类</h4><p>总是使用首字母大写单词串。如MyClass。内部类可以使用额外的前导下划线。</p>
-<h4 id="函数-amp-方法"><a href="#函数-amp-方法" class="headerlink" title="函数&amp;方法"></a>函数&amp;方法</h4><p>函数名应该为小写，可以用下划线风格单词以增加可读性。如：myfunction，my_example_function。<br><em>注意</em>：混合大小写仅被允许用于这种风格已经占据优势的时候，以便保持向后兼容。</p>
-<h4 id="函数和方法的参数"><a href="#函数和方法的参数" class="headerlink" title="函数和方法的参数"></a>函数和方法的参数</h4><p>总使用“self”作为实例方法的第一个参数。总使用“cls”作为类方法的第一个参数。<br>如果一个函数的参数名称和保留的关键字冲突，通常使用一个后缀下划线好于使用缩写或奇怪的拼写。</p>
-<h4 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h4><p>对于from M import <em>导入语句，如果想阻止导入模块内的全局变量可以使用旧有的规范，在全局变量上加一个前导的下划线。
-</em>注意*:应避免使用全局变量</p>
-<h4 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h4><p>变量名全部小写，由下划线连接各个单词。如color = WHITE，this_is_a_variable = 1<br><em>注意</em>：<br>1.不论是类成员变量还是全局变量，均不使用 m 或 g 前缀。<br>2.私有类成员使用单一下划线前缀标识，多定义公开成员，少定义私有成员。<br>3.变量名不应带有类型信息，因为Python是动态类型语言。如 iValue、names_list、dict_obj 等都是不好的命名。</p>
-<h4 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h4><p>常量名所有字母大写，由下划线连接各个单词如MAX_OVERFLOW，TOTAL。</p>
-<h4 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h4><p>以“Error”作为后缀。</p>
-<h4 id="缩写"><a href="#缩写" class="headerlink" title="缩写"></a>缩写</h4><p>命名应当尽量使用全拼写的单词，缩写的情况有如下两种：<br>1.常用的缩写，如XML、ID等，在命名时也应只大写首字母，如XmlParser。<br>2.命名中含有长单词，对某个单词进行缩写。这时应使用约定成俗的缩写方式。<br>例如：<br>function 缩写为 fn<br>text 缩写为 txt<br>object 缩写为 obj<br>count 缩写为 cnt<br>number 缩写为 num，等。</p>
-<h4 id="前导后缀下划线"><a href="#前导后缀下划线" class="headerlink" title="前导后缀下划线"></a>前导后缀下划线</h4><p>一个前导下划线：表示非公有。<br>一个后缀下划线：避免关键字冲突。<br>两个前导下划线：当命名一个类属性引起名称冲突时使用。<br>两个前导和后缀下划线：“魔”（有特殊用图）对象或者属性，例如<strong>init</strong>或者<strong>file</strong>。绝对不要创造这样的名字，而只是使用它们。<br><em>注意</em>：关于下划线的使用存在一些争议。</p>
-<p>####特定命名方式<br>主要是指 <strong>xxx</strong> 形式的系统保留字命名法。项目中也可以使用这种命名，它的意义在于这种形式的变量是只读的，这种形式的类成员函数尽量不要重载。如<br>class Base(object):<br>def <strong>init</strong>(self, id, parent = None):<br>self.<strong>id</strong> = id<br>self.<strong>parent</strong> = parent<br>def <strong>message</strong>(self, msgid):</p>
-
-          
+          命名规范文件名全小写,可使用下划线
+####包应该是简短的、
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/03/31/python命名规范/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

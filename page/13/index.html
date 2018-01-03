@@ -372,22 +372,16 @@
       
         
           
-            <p>有时间再把存储更新下，这里就近两年基础知识进行复习。</p>
-<h3 id="类和对象"><a href="#类和对象" class="headerlink" title="类和对象"></a>类和对象</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">class MyClass(object):</div><div class="line">    message=&quot;hello world&quot;</div><div class="line">    def show(self):</div><div class="line">        print self.message</div></pre></td></tr></table></figure>
-<p>代码解析如下:<br>类名定义为Myclass<br>该类中定义了一个成员变量message，并对其赋了初始值；<br>类中定义了一个成员函数show(self),注意类中的成员函数必须要带参数self。<br>参数self是对象本身的引用，在成员函数中可以引用self参数获得对象的信息。<br>读取成员变量：print MyClass.message<br>实例化对象：init=Myclass()<br>调用成员函数：init.show()</p>
-<h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><p>构造函数是一种特殊的类成员方法，主要用来在创建对象时初始化对象，即为对象成员赋初值。python中类的构造函数用<strong>init</strong>命名，为Myclass添加构造函数，<br>并实例化一个对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/python</div><div class="line">#auth: zero</div><div class="line">#-*- coding: utf-8 -*-</div><div class="line">class MyClass(object):</div><div class="line">    message=&quot;hello world&quot;</div><div class="line">    def __init__(self):</div><div class="line">        print &quot;Constructor is called&quot;</div><div class="line">    def show(self):</div><div class="line">        print self.message</div><div class="line">print &quot;hehe&quot;</div><div class="line">inst=MyClass()</div></pre></td></tr></table></figure></p>
-<p>如下为输出结果：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">E:\dns\Scripts\python.exe E:/workspace/project_frist/namespace.py</div><div class="line">hehe</div></pre></td></tr></table></figure>
-<p>如果需要多种方式构造对象，则可以通过默认参数的方式实现。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">class MyClass(object):</div><div class="line">    message=&quot;hello world&quot;</div><div class="line">    def __init__(self,name=&quot;unset&quot;, color=&quot;black&quot;):</div><div class="line">        print &quot;constructor is called with params:&quot;,name, &quot;&quot;,color</div><div class="line">        print self.message</div><div class="line">inst=MyClass()</div><div class="line">inst2=MyClass(&quot;David&quot;)</div></pre></td></tr></table></figure>
-<p>在上述代码中定义了3个构造函数，分别接受0、1、2个构造函数，之后分别通过不同的构造参数构造实例。<br>如果开发者试图调用未被定义过的构造函数，则会在运行时导致异常。注意构造函数没有返回值。</p>
-<h3 id="析构函数"><a href="#析构函数" class="headerlink" title="析构函数"></a>析构函数</h3><p>python中为类定义析构函数的方法在类中定义一个<strong>del</strong>的没有返回值和参数的函数。</p>
-<h3 id="实例成员变量"><a href="#实例成员变量" class="headerlink" title="实例成员变量"></a>实例成员变量</h3><p>在之前的例子中，Myclass类中的变量message是类的成员变量，即Myclass类和所有Myclass对象共享该成员变量。那么如何定义每个对象自己的成员函数？<br>答案是在构造函数中定义self引用中的变量，这样的成员变量在python中叫做实例成员变量。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def __init__(self,name=&quot;unset&quot;, color=&quot;black&quot;):</div><div class="line">    print &quot;constructor is called with params:&quot;,name, &quot;&quot;,color</div><div class="line">    self.name = name</div><div class="line">    self.color = color</div></pre></td></tr></table></figure></p>
-<p>好处：self.name和self.color；在myclass的成员函数中可以直接使用这两个成员变量，通过实例名也可以访问到实例成员变量。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">class MyClass(object):</div><div class="line">    message=&quot;hello world&quot;</div><div class="line">    def __init__(self,name=&quot;unset&quot;, color=&quot;black&quot;):</div><div class="line">        print &quot;constructor is called with params:&quot;,name, &quot;&quot;,color</div><div class="line">        self.name = name</div><div class="line">        self.color = color</div><div class="line">    def show(self):</div><div class="line">        print  self.name</div><div class="line">inst=MyClass()</div><div class="line">inst.show()</div><div class="line">inst2=MyClass(&quot;David&quot;)</div><div class="line">inst2.show()</div><div class="line">print inst2.name</div></pre></td></tr></table></figure></p>
-<p>###静态函数和类函数<br>到目前为止，读者在本书中接触到的类成员函数均与实例绑定，即只能通过对象访问而不能通过类名访问。python中支持两种基于类名访问成员的函数：静态函数和类函数。他们的<br>不同点是类函数有一个隐性参数cls可以用来获取类信息，而静态函数没有该参数。静态函数使用装饰器@staticmethod定义，类函数使用装饰器@classmethod定义。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@staticmethod</div><div class="line">def printMessage():</div><div class="line">    print &quot;Print Message is called&quot;</div><div class="line">    print Myclass.message</div></pre></td></tr></table></figure></p>
-<h3 id="私有成员"><a href="#私有成员" class="headerlink" title="私有成员"></a>私有成员</h3><p>封装性是面面向对象编程的重要特点，python也提供了将不希望外部看到的成员隐藏起来的私有成员机制，但不像大多数编程语言用Public、Priviate关键字表达可见范围方法，python<br>使用指定变量名格式的方法定义私有成员，即所有以双下划线“————”开始命名的成员都为私有成员变量。</p>
-
-          
+          有时间再把存储更新下，这里就近两年基础知识进行复习。
+类和对
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/02/18/python类和对象/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -536,8 +530,15 @@
       
         
           
-            
           
+          
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/10/k8s监控之prometheus/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -686,9 +687,15 @@
       
         
           
-            <p>常用命令详解：<br>```<br>kubectl –kubeconfig=/etc/kubernetes/admin.conf get nodes</p>
-
-          
+          常用命令详解：```kubectl –kubeconfig=
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/10/k8s滚动升级/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -837,16 +844,15 @@
       
         
           
-            <h3 id="why"><a href="#why" class="headerlink" title="why?"></a>why?</h3><p>测试使用过程中发现根分区预警了，查看了下发现是/var/lib太大了，怎么办呢？</p>
-<h3 id="怎么办？"><a href="#怎么办？" class="headerlink" title="怎么办？"></a>怎么办？</h3><p>挂载一个200g的盘到根下面的important.<br>停掉docker服务，然后将数据移动到这个目录下。<br>把/var/lib/docker下的数据移动到/importan/docker下面。</p>
-<p>[root@ucloud-test-bj2c-master1 ~]# cat /etc/fstab </p>
-<p>#</p>
-<h1 id="etc-fstab"><a href="#etc-fstab" class="headerlink" title="/etc/fstab"></a>/etc/fstab</h1><h1 id="Created-by-anaconda-on-Thu-Jul-31-07-50-13-2014"><a href="#Created-by-anaconda-on-Thu-Jul-31-07-50-13-2014" class="headerlink" title="Created by anaconda on Thu Jul 31 07:50:13 2014"></a>Created by anaconda on Thu Jul 31 07:50:13 2014</h1><p>#</p>
-<h1 id="Accessible-filesystems-by-reference-are-maintained-under-‘-dev-disk’"><a href="#Accessible-filesystems-by-reference-are-maintained-under-‘-dev-disk’" class="headerlink" title="Accessible filesystems, by reference, are maintained under ‘/dev/disk’"></a>Accessible filesystems, by reference, are maintained under ‘/dev/disk’</h1><h1 id="See-man-pages-fstab-5-findfs-8-mount-8-and-or-blkid-8-for-more-info"><a href="#See-man-pages-fstab-5-findfs-8-mount-8-and-or-blkid-8-for-more-info" class="headerlink" title="See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info"></a>See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info</h1><p>#<br>/dev/vda1         /                       xfs     errors=remount-ro 0 1<br>/swapfile                none                    swap    defaults        0 0<br>/dev/vdb /data xfs defaults,noatime 0 0<br>/dev/vdc1                 /zhongyao            xfs       defaults     1  2<br>/zhongyao/docker       /var/lib/docker         none      bind          0   0 </p>
-<p>mount  -a<br>重启docker服务。<br>完美解决问题。</p>
-<h3 id="等等，如果我有服务正在跑着怎么办？"><a href="#等等，如果我有服务正在跑着怎么办？" class="headerlink" title="等等，如果我有服务正在跑着怎么办？"></a>等等，如果我有服务正在跑着怎么办？</h3><p>停掉docker进程，然后重启机器。</p>
-
-          
+          why?测试使用过程中发现根分区预警了，查看了下发现是/va
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/05/docker日记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -995,19 +1001,15 @@
       
         
           
-            <h3 id="先上一个简单的类"><a href="#先上一个简单的类" class="headerlink" title="先上一个简单的类"></a>先上一个简单的类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">#coding:utf-8</div><div class="line">class Kls(object):</div><div class="line">    def __init__(self, data):</div><div class="line">        self.data = data</div><div class="line">    def printd(self):</div><div class="line">        print(self.data)</div><div class="line">ik1 = Kls(&apos;arun&apos;)</div><div class="line">ik2 = Kls(&apos;seema&apos;)</div><div class="line">ik1.printd()</div><div class="line">ik2.printd()</div><div class="line"></div><div class="line">运行结果：</div><div class="line">E:\python\python.exe E:/workspace/test/test.py</div><div class="line">arun</div><div class="line">seema</div></pre></td></tr></table></figure>
-<p>这个类的解释看下图：<br><img src="/images/2017/01/1.png" alt="image"></p>
-<p>1和2参数传递给方法；<br>3 self实例指向当前实例自身，<br>4 我们不需要传递参数给方法，python解释器自己会做这些操作</p>
-<p>如果我们现在想写一些仅仅与类交互而不是和实例交互的方法会怎么样呢？我们可以在类外面写一个简单的方法来做这些，<br>但是这样做就扩散了类代码的关系到类的外面定义，如果像下面这样写就会导致以后代码维护的困难。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#coding:utf-8</div><div class="line">def get_no_of_instances(cls_obj):</div><div class="line">    return cls_obj.no_inst</div><div class="line">class Kls(object):</div><div class="line">    no_inst = 0</div><div class="line">    def __init__(self):</div><div class="line">        Kls.no_inst = Kls.no_inst + 1</div><div class="line">ik1 = Kls()</div><div class="line">ik2 = Kls()</div><div class="line">ik3 = Kls()</div><div class="line">print(get_no_of_instances(Kls))</div></pre></td></tr></table></figure>
-<p>@classmethod<br>我们要写一个只在类中运行而不在实例中运行的方法. 如果我们想让方法不在实例中运行，可以这么做:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">def iget_no_of_instance(ins_obj):</div><div class="line">    return ins_obj.__class__.no_inst</div><div class="line">class Kls(object):</div><div class="line">    no_inst = 0</div><div class="line">    def __init__(self):</div><div class="line">    Kls.no_inst = Kls.no_inst + 1</div><div class="line">ik1 = Kls()</div><div class="line">ik2 = Kls()</div><div class="line">print iget_no_of_instance(ik1)</div></pre></td></tr></table></figure></p>
-<p>在Python2.2以后可以使用@classmethod装饰器来创建类方法.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">class Kls(object):</div><div class="line">    no_inst = 0</div><div class="line">    def __init__(self):</div><div class="line">        Kls.no_inst = Kls.no_inst + 1</div><div class="line">    @classmethod</div><div class="line">    def get_no_of_instance(cls_obj):</div><div class="line">        return cls_obj.no_inst</div><div class="line">ik1 = Kls()</div><div class="line">ik2 = Kls()</div><div class="line">print ik1.get_no_of_instance()</div><div class="line">print Kls.get_no_of_instance()</div></pre></td></tr></table></figure>
-<p>这样的好处是: 不管这个方式是从实例调用还是从类调用，它都用第一个参数把类传递过来.<br>@staticmethod<br>经常有一些跟类有关系的功能但在运行时又不需要实例和类参与的情况下需要用到静态方法.<br>比如更改环境变量或者修改其他类的属性等能用到静态方法. 这种情况可以直接用函数解决, 但这样同样会扩散类内部的代码，造成维护困难.<br>比如这样:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">IND = &apos;ON&apos;</div><div class="line">def checkind():</div><div class="line">    return (IND == &apos;ON&apos;)</div><div class="line">class Kls(object):</div><div class="line">    def __init__(self,data):</div><div class="line">        self.data = data</div><div class="line">    def do_reset(self):</div><div class="line">        if checkind():</div><div class="line">            print(&apos;Reset done for:&apos;, self.data)</div><div class="line">    def set_db(self):</div><div class="line">        if checkind():</div><div class="line">            self.db = &apos;new db connection&apos;</div><div class="line">            print(&apos;DB connection made for:&apos;,self.data)</div><div class="line">ik1 = Kls(12)</div><div class="line">ik1.do_reset()</div><div class="line">ik1.set_db()</div></pre></td></tr></table></figure></p>
-<p>下面这个更全面的代码和图示来展示这两种方法的不同<br>@staticmethod 和 @classmethod的不同.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">class Kls(object):</div><div class="line">    def __init__(self, data):</div><div class="line">        self.data = data</div><div class="line">    def printd(self):</div><div class="line">        print(self.data)</div><div class="line">    @staticmethod</div><div class="line">    def smethod(*arg):</div><div class="line">        print(&apos;Static:&apos;, arg)</div><div class="line">    @classmethod</div><div class="line">    def cmethod(*arg):</div><div class="line">        print(&apos;Class:&apos;, arg)</div><div class="line"></div><div class="line">ik = Kls(23)</div><div class="line">ik.printd()</div><div class="line">ik.smethod()</div><div class="line">ik.cmethod()</div><div class="line">Kls.smethod()</div><div class="line">Kls.cmethod()</div></pre></td></tr></table></figure></p>
-<p>总结下吧 static就是一个静态方法，classmethod是一个类的方法。</p>
-
-          
+          先上一个简单的类123456789101112131415#
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/04/python中classmethond和staticmethod的用法/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

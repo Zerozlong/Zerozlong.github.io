@@ -372,22 +372,15 @@
       
         
           
-            <h3 id="再次理解下yield表达式"><a href="#再次理解下yield表达式" class="headerlink" title="再次理解下yield表达式"></a>再次理解下yield表达式</h3><p>生成器是通过一个或多个yield表达式构成的函数，每一个生成器都是一个迭代器（但是迭代器不一定是生成器）。<br>如果一个函数包含yield关键字，这个函数就会变为一个生成器。<br>生成器并不会一次返回所有结果，而是每次遇到yield关键字后返回相应结果，并保留函数当前的运行状态，等待下一次的调用。<br>由于生成器也是一个迭代器，那么它就应该支持next方法来获取下一个值。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">A=[]</div><div class="line">A.append( [&apos;abc&apos;,&apos;test&apos;,&apos;test2&apos;])</div><div class="line">A.append(&apos;2&apos;)</div><div class="line">for m in A:</div><div class="line">    print m</div><div class="line">    </div><div class="line">print &quot;--------------&quot;</div><div class="line"></div><div class="line">def hehe():</div><div class="line">    yield  [&apos;abc&apos;,&apos;test&apos;,&apos;test2&apos;]</div><div class="line">    yield 2</div><div class="line">j=0</div><div class="line">for i in hehe():</div><div class="line">    print j</div><div class="line">    print i</div><div class="line">    j=j+1</div></pre></td></tr></table></figure>
-<h3 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h3><h4 id="编写协程函数"><a href="#编写协程函数" class="headerlink" title="编写协程函数"></a>编写协程函数</h4><p>使用tornado协程可以开发类似同步代码的异步行为。同时，因为协程本身不使用线程，所以减少了线程上下文切换的开销，是一种更高效的开发模式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">from tornado import gen</div><div class="line">from tornado.httpclient import AsyncHTTPClient</div><div class="line">@gen.coroutine</div><div class="line">def coroutine_visit():</div><div class="line">    http_client = AsyncHTTPClient()</div><div class="line">    response = yield http_client.fetch(&quot;www.baidu.com&quot;)</div><div class="line">    print response.body</div></pre></td></tr></table></figure></p>
-<p>本次使用了异步客户端asynchttpclient进行页面访问，装饰器@gen.coroutine声明这是一个协程函数。由于yield关键字的使用，使得代码中不用再编写回调函数用于<br>处理访问结果，而可以直接再yield语句的后面编写结果处理语句。</p>
-<h4 id="调用协程函数"><a href="#调用协程函数" class="headerlink" title="调用协程函数"></a>调用协程函数</h4><p>由于tornado协程基于python的yield关键字实现，所以不能像调用普通函数一样调用协程函数，比如用下面的代码不能调用之前编写的coroutine_visit()协程函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def bad_call():</div><div class="line">	coroutine_visit()</div></pre></td></tr></table></figure></p>
-<p>协程函数可以通过以下三种方式进行调用：<br>在本身是携程函数的内通过yield关键字调用；<br>在IOLoop尚未启动时，通过IOLoop的run_sync()函数调用；<br>在IOLoop已经启动时，通过IOLoop的spawn_callback()函数调用；<br>下面是一个通过协程函数调用的例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">from tornado import gen</div><div class="line">from tornado.httpclient import AsyncHTTPClient</div><div class="line">@gen.coroutine</div><div class="line">def coroutine_visit():</div><div class="line">    http_client = AsyncHTTPClient()</div><div class="line">    response = yield http_client.fetch(&quot;www.baidu.com&quot;)</div><div class="line">    print response.body</div><div class="line">@gen.coroutine</div><div class="line">def outer_coroutine():</div><div class="line">    print &quot;start call another coroutine&quot;</div><div class="line">    yield coroutine_visit()</div><div class="line">    print &quot;end of out_couroutine&quot;</div><div class="line">outer_coroutine()</div></pre></td></tr></table></figure></p>
-<p>本例中out_coroutine和coroutine_visit都是协程函数，所以它们之间可以通过yiled关键字进行调用。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def fun_normal():</div><div class="line">    print &quot;start to call a coroutine&quot;</div><div class="line">    IOLoop.current().run_sync(lambda: coroutine_visit())</div><div class="line">    print &quot;end of calling a  couroutine&quot;</div><div class="line">fun_normal()</div></pre></td></tr></table></figure></p>
-<p>IOLoop是tornado的主事件循环对象，tornado程序通过它监听外部客户端的访问请求，并执行相应的操作。当程序尚未进入IOLoop的running状态时，可以通过<br>run_sync（）函数调用协程函数。run_sync()函数将阻塞当前函数的执行，直到被调用的协程执行完成。<br>事实上，tornado要求协程函函数在IOLoop的running状态中才能被调用，只不过run——sync函数自动完成了启动/停止IOLoop的步骤；它的实现逻辑为：启动IOLOOP→调用<br>被lambda封装的协程函数→停止IOLoop。</p>
-<p>当tornado程序已经处于running状态时的协程函数的调用示例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def fun_normal():</div><div class="line">    print &quot;start to call a coroutine&quot;</div><div class="line">    IOLoop.current().spawn_callback(coroutine_visit())</div><div class="line">    print &quot;end of calling a  couroutine&quot;</div></pre></td></tr></table></figure></p>
-<p>本例子中spawn_callback()函数将不会等待被调用协程执行完成，所以spwan_callback()之前和之后的语句将会被连续执行，而coroutine_visit本身将会由IOLoop在合适的时机<br>进行调用。</p>
-<p>###在协程中直接调用阻塞函数<br>在协程中直接调用阻塞函数会影响协程本身的性能，所以tornado提供了在协程中利用线程池调度阻塞函数，从而不影响协程本身继续执行的方法。代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">from concurrent.futures import ThreadPoolExecutor</div><div class="line">thread_pool = ThreadPoolExecutor(2)</div><div class="line">def mySleep(count):</div><div class="line">    import time</div><div class="line">    for i in range(count):</div><div class="line">        time.sleep(1)</div><div class="line">@gen.coroutine</div><div class="line">def call_blocking():</div><div class="line">    print &quot;start of call_blocking&quot;</div><div class="line">    yield thread_pool.submit(mySleep,10)</div><div class="line">    print &quot;end of call_blocking&quot;</div></pre></td></tr></table></figure></p>
-<p>代码中首先引用了concurrent.futures 中的treadpoolexecutor类，并实例化了一个有两个线程的线程池thread_pool。在需要调用阻塞函数的协程call_blocking中，使用<br>thread_pool.submit调用阻塞函数，并通过yield返回。这样便不会阻塞携程所在线程的继续执行，也保证了阻塞函数前后代码的顺序执行。</p>
-<h3 id="在协程中等待多个异步调用"><a href="#在协程中等待多个异步调用" class="headerlink" title="在协程中等待多个异步调用"></a>在协程中等待多个异步调用</h3><p>到目前为止，我们只接触了一个yield关键字等待一个异步调用的编程方法。其实，tornado允许在携程中用一个yield关键字等待多个异步调用，只需把这些调用用list或者<br>字典的方式传递给yield关键字即可。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">from tornado import gen</div><div class="line">from tornado.httpclient import AsyncHTTPClient</div><div class="line">@gen.coroutine</div><div class="line">def coroutine_visit():</div><div class="line">    http_client = AsyncHTTPClient()</div><div class="line">    list_response = yield [ http_client.fetch(&apos;www.baidu.com&apos;),</div><div class="line">                            http_client.fetch(&apos;www.google.com&apos;),</div><div class="line">                            http_client.fetch(&apos;www.jd.com&apos;)]</div><div class="line">    for response in list_response:</div><div class="line">        print response.body</div></pre></td></tr></table></figure></p>
-<p>在代码中仍然用@gen.coroutine装饰器定义协程，在需要yield的地方用列表传递若干个异步调用，只有在列表中的所有调用都执行完成后，yield才会返回并继续执行。yield以列表<br>方式返回N个调用结果，通过for语句逐个访问。<br><figure class="highlight plain"><figcaption><span>tornado import gen</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">from tornado.httpclient import AsyncHTTPClient</div><div class="line">@gen.coroutine</div><div class="line">def coroutine_visit():</div><div class="line">    http_client = AsyncHTTPClient()</div><div class="line">    dict_response = yield&#123;“baidu&quot;:http_client.fetch(&quot;www.baidu.com&quot;),</div><div class="line">						&quot;sina&quot;:http_client.fetch(&quot;www.sina.com&quot;)&#125;</div><div class="line">	print dict_response[&quot;sina&quot;].body</div></pre></td></tr></table></figure></p>
-
-          
+          再次理解下yield表达式生成器是通过一个或多个yield表
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/02/28/tornado之二/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -536,22 +529,15 @@
       
         
           
-            <p>Tornado是一个可扩展的非阻塞式web服务器及其相关工具的开源版本。tornado每秒可以处理若干连接。所以对于实时web服务来说，tornado是一个理想的web框架。</p>
-<h3 id="tornado介绍"><a href="#tornado介绍" class="headerlink" title="tornado介绍"></a>tornado介绍</h3><p>tornado是使用python编写的一个强大的可扩展的web服务器。它在处理高流量时表现的足够强健，却在创建和编写的时有着足够的轻量级，并能够被用在大量的应用和开发中。</p>
-<h3 id="tornado特点"><a href="#tornado特点" class="headerlink" title="tornado特点"></a>tornado特点</h3><p>完备的web框架：与django/flask一样，tornado也提供了url路由映射；request上下文/基于模板的页面渲染技术等开发web应用的必备工具；<br>是一个高效的网络库，性能与twisted/gevent等底层python框架媲美；提供了异步I/O支持,超时事件处理。这使得tornado除了可以作为web应用服务器框架，还可以用来<br>做爬虫应用；<br>提供高效的内部http服务器：虽然其他python网络框架也提供了内部http服务器，但他们的http服务器由于性能原因只能用于测试环境。<br>完备的websocket支持，websocket是HTML5的一种新标准，实现了浏览器与服务器之间的双向实时通信。</p>
-<h4 id="异步及协程基础"><a href="#异步及协程基础" class="headerlink" title="异步及协程基础"></a>异步及协程基础</h4><p>协程是tornado中推荐的编码方式，使用协程可以开发出便捷/高效的异步代码。</p>
-<h4 id="同步与异步I-O"><a href="#同步与异步I-O" class="headerlink" title="同步与异步I/O"></a>同步与异步I/O</h4><p>同步I/O操作导致请求进程阻塞，直到I/O操作完成。异步I/O操作不导致请求进程阻塞。在python中，同步I/O可以被理解为一个被调用的I/O函数会阻塞调用函数的执行，而异步I/O操作导致请求进程阻塞，直到I/O操作完成。异步I/O操作不导致请求进程阻塞。在python中，同步I/O可以被理解为一个被调用的I/O函数会阻塞调用函数的执行，而异步I/O<br>则不会阻塞调用函数的执行。代码举例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">from tornado.httpclient import HTTPClient</div><div class="line">def synchronous_visit():</div><div class="line">    http_client=HTTPClient()</div><div class="line">    response=http_client.fetch(&quot;www.baidu.com&quot;)</div><div class="line">    print response.body</div><div class="line"></div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">    synchronous_visit()</div></pre></td></tr></table></figure></p>
-<p>该函数使用了典型的同步I/O操作访问www.baidu.com网站，该函数的执行时间取决于网络速度/对方服务响应速度等。只有当对www.baidu.com的访问完成并获取结果后，才能完成对synchroncous_visit()<br>函数的执行。</p>
-<p>而使用异步I/O访问www.baidu.com网站无需等待访问完成才能返回。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">from tornado.httpclient import AsyncHTTPClient</div><div class="line">def handle_response(response):</div><div class="line">    print response.body</div><div class="line">def asynchronous_visit():</div><div class="line">    http_client=AsyncHTTPClient()</div><div class="line">    http_client.fetch(&quot;www.baidu.com&quot;,callback=handle_response)</div></pre></td></tr></table></figure></p>
-<p>AsyncHTTPCLient是tornado的异步访问http客户端，在上述代码的asynchronous_visit函数中使用AsyncHTTPClient对第三方网站进行异步访问，http_client.fetch()函数会在调用后立刻<br>返回而无需等待实际访问完成，从而导致asynchronous_visit()也会立刻完成。当对www.baidu.com的实际访问完成后，async会调用callback参数制定的函数，开发者可以在其中写入处理<br>访问结果的逻辑代码。</p>
-<h4 id="python关键字yield"><a href="#python关键字yield" class="headerlink" title="python关键字yield"></a>python关键字yield</h4><p>协程是tornado中进行异步I/O代码开发的方法。协程使用了python关键字yield将调用挂起和恢复执行。所以我们需要先学习下python中的yield。</p>
-<h5 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h5><p>迭代器是访问集合内元素的一种方式。迭代器对象从集合的第一个元素开始访问，直到所有元素都被一一访问一遍后结束。迭代器不能回退，只能往前进行迭代。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">for number in range(5):</div><div class="line">    print number</div></pre></td></tr></table></figure></p>
-<p>详解：range()函数返回一个包含所制定元素的集合，而for语句将其封装成一个迭代器后访问。<br>使用iter（）可以将列表、集合转换为迭代器。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">numbers=[0,1,2,3,4,5]</div><div class="line">t=iter(numbers)</div><div class="line">print t</div></pre></td></tr></table></figure></p>
-<p>迭代器与普通python对象的区别是迭代器有一个next()方法，每次调用该方法可以返回一个元素。调用者可以通过不断调用next()方法来逐个访问集合元素。调用者可以一直调用next()<br>方法来访问迭代器，直到next()返回stopIteration异常来表示迭代已经完成。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">numbers=[0,1,2,3,4,5]</div><div class="line">t=iter(numbers)</div><div class="line">print t</div><div class="line">print t.next()</div><div class="line">print t.next()</div></pre></td></tr></table></figure></p>
-<h5 id="使用yield"><a href="#使用yield" class="headerlink" title="使用yield"></a>使用yield</h5><p>迭代器在python编程中的使用范围很广，那么开发者如何定制自己的迭代器呢？答案是使用yield关键字。调用任何定义中包含yield关键字的函数都不会执行该函数，而会获得一个<br>对应该函数的迭代器。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">def demoIterator():</div><div class="line">    # test(&quot;I am in the first call of next()&quot;)</div><div class="line"></div><div class="line">    yield &quot;I am in the first call of next()&quot;</div><div class="line">    # print &quot;I am in the second call of next()&quot;</div><div class="line">    # print &quot;2&quot;</div><div class="line">    yield &quot;I am in the second call of next()&quot;</div><div class="line">    # print &quot;3&quot;</div><div class="line">    yield &quot;I am in the third call of next()&quot;</div><div class="line">    # print &quot;I am in the third call of next()&quot;</div><div class="line">    # yield 9</div><div class="line">for i in demoIterator():</div><div class="line">      print i</div><div class="line">      print &quot;hehe&quot;</div></pre></td></tr></table></figure></p>
-<p>每次调用迭代器的next（）函数，并返回yield的结果作为迭代返回元素。当迭代器函数return时，迭代器会抛出stopIteration异常使迭代终止。</p>
-
-          
+          Tornado是一个可扩展的非阻塞式web服务器及其相关工具
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/02/27/tornado/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -700,15 +686,15 @@
       
         
           
-            <h3 id="Python网络框架的概念"><a href="#Python网络框架的概念" class="headerlink" title="Python网络框架的概念"></a>Python网络框架的概念</h3><p>目前Python编程的网络框架已经多达几十个，逐个学习他们显然不现实。如下文章只介绍框架的常用知识。</p>
-<h4 id="网络框架及MVC架构"><a href="#网络框架及MVC架构" class="headerlink" title="网络框架及MVC架构"></a>网络框架及MVC架构</h4><p>网络框架是指这样的一组python包，它能够使开发者专注于网站应用业务逻辑的开发，而无需处理网络应用底层的协议/线程/进程等方面。<br>好处：能够大大提高开发者开发的效率，同时提高网络应用程序的质量。</p>
-<p>在目前python的几十个开发框架中，几乎所有的全栈网络框架都强制或引导开发者使用MVC架构开发WEB应用。所谓全栈网络框架，是指除了封装网络和<br>线程操作，还提供http栈，数据库读写管理、html模板引擎等一系列功能的网络框架。如django、flask、tornado。而twisted更专注于网络底层的高性能<br>封装而不提供渲染html模板引擎等界面功能，所以不能称之为全栈框架。</p>
-<p>网络上有许多关于MVC的说法，MVC大概把应用系统分为3层。</p>
-<h4 id="模型（model）"><a href="#模型（model）" class="headerlink" title="模型（model）"></a>模型（model）</h4><p>用于封装与应用程序的业务逻辑相关的数据及对数据处理的方法，是web应用程序中用于处理应用程序的数据逻辑部分，model只提供功能性的接口，通过这些接口<br>可以获取model的所有功能。model不依赖于view和controller，它们可以在任何时候调用model访问数据。有些model还提供了事件通知机制，为在其上的注册过的view<br>或者controller提供实时数据更新。</p>
-<h4 id="视图（view）"><a href="#视图（view）" class="headerlink" title="视图（view）"></a>视图（view）</h4><p>负责数据的展示和呈现，view是对用户的直接输出，mvc中的一个modle通常为多个view提供服务。为了获取model的实时更新数据，view应该尽早注册到model中。</p>
-<h4 id="控制器（controller）"><a href="#控制器（controller）" class="headerlink" title="控制器（controller）"></a>控制器（controller）</h4><p>负责从用户端收集用户的输入，可以看成提供View的反向功能。当用户的输入导致view发生变化时，这种变化必须是通过model反映给view的。在mvc架构下，controller一般<br>不能与view直接通信，这样提高了业务数据的一致性，即以model作为数据中心。</p>
-
-          
+          Python网络框架的概念目前Python编程的网络框架已经
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/02/24/python-网络框架介绍/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -857,14 +843,15 @@
       
         
           
-            <p>python中提供orm支持的组件有很多，每个组件的应用领域稍有区别，但是数据操作的理论原理是相同的。下面对比较著名的<br>python数据库的orm框架介绍如下。</p>
-<h3 id="SQLALchemy"><a href="#SQLALchemy" class="headerlink" title="SQLALchemy"></a>SQLALchemy</h3><p>python中最成熟的ORM框架，资源和文档都很丰富。大多数Python web框架都有很好的支持。能够胜任大多数python开发的场合；</p>
-<h3 id="Django-ORM"><a href="#Django-ORM" class="headerlink" title="Django ORM"></a>Django ORM</h3><p>python世界中大名鼎鼎的Django web框架独用的ORM技术。DJANGO是一个大而全的框架，这使得其灵活性大大降低。其他python框架<br>可以随意更换orm，但django不能这样做，因为django内置的model是用django内置orm实现的。</p>
-<h3 id="peewee"><a href="#peewee" class="headerlink" title="peewee"></a>peewee</h3><p>小强灵活，是一个轻量级的ORM。peewee是基于sqlchemy内核开发的，整个框架只有一个文件构成。peewee提供了对多种数据库访问方式，<br>如sqllite/mysql/postsql，适用于功能简单的小型网站。</p>
-<h3 id="storm"><a href="#storm" class="headerlink" title="storm"></a>storm</h3><p>中型的ORM库，比sqlalchem和django等轻量，比peewee更丰富。storm要求开发者编写数据表的DDL代码，而不能直接从数据表定义中自生成表定义。</p>
-<h3 id="sqlobject"><a href="#sqlobject" class="headerlink" title="sqlobject"></a>sqlobject</h3><p>与sqlalchemy相似，也是一套大而全的ORM。sqlobject的特点是其设计借鉴了ruby on rails的ActiveRecord模型，使得熟悉RUBY的开发者能够快速上手。</p>
-
-          
+          python中提供orm支持的组件有很多，每个组件的应用领域
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/02/24/python-ORM库介绍/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1013,15 +1000,15 @@
       
         
           
-            <h3 id="数据库编程"><a href="#数据库编程" class="headerlink" title="数据库编程"></a>数据库编程</h3><p>数据库编程遵循标准：<br>引入python引擎包<br>连接数据库<br>获取游标<br>执行sql命令<br>提交或者回滚事务<br>关闭游标<br>关闭数据库连接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">#引入sqlite3包</div><div class="line">import sqlite3</div><div class="line">conn = sqlite3.connect(&apos;testdb&apos;)</div><div class="line">#获取游标对象</div><div class="line">cur = conn.cursor()</div><div class="line">#执行一系列sql语句</div><div class="line">#建立一个表</div><div class="line">cur.excute(&quot;create table demo(num int,str varchar(20))&quot;)</div><div class="line">#插入一些记录</div><div class="line">cur.excute(&quot;insert into demo values(&apos;%d&apos;,&apos;%s&apos;)&quot; %(1,&apos;aaa&apos;))</div><div class="line">cur.excute(&quot;insert into demo values(&apos;%d&apos;,&apos;%s&apos;)&quot; %(2,&apos;bbb&apos;))</div><div class="line">### 更新一条记录</div><div class="line">cur.excute(&quot;update demo set str=&apos;%s&apos; where num = %d&quot; %(&apos;ddd&apos;,3))</div><div class="line">## 查询语句</div><div class="line">cur.excute(&apos;select * from demo&apos;)</div><div class="line">rows=cur.fetchall()</div><div class="line">print &quot;number of records:&quot;,len(rows)</div><div class="line">for i in rows:</div><div class="line">    print i</div><div class="line">#提交事务</div><div class="line">conn.commit()</div><div class="line">#关闭游标对象</div><div class="line">cur.close()</div><div class="line">#关闭数据库链接</div><div class="line">conn.close()</div></pre></td></tr></table></figure></p>
-<p>由于所有数据库都遵循DB-API的开发接口，不再演示其他数据库编程代码。</p>
-<h3 id="ORM编程"><a href="#ORM编程" class="headerlink" title="ORM编程"></a>ORM编程</h3><p>除了直接引用sql语句操作关系数据库，python中的另一种与关系数据库进行交互的技术是ORM。<br>ORM（object-relatioal mapping，对象关系映射）的作用是在关系数据库和业务实体对象之间做一个映射，这样开发者在操作数据库<br>的数据时，就不需要再去和复杂的sql语句打交道了，只需简单地操作对象的属性和方法。所有的orm必须具备3方面的基本能力：映射技术/CRUD操作和缓存优化。</p>
-<h4 id="映射技术："><a href="#映射技术：" class="headerlink" title="映射技术："></a>映射技术：</h4><p>面向对象是从软件工程的基本原则（如耦合/聚合/封装）的基础上发展而来的。而关系数据库是从数学理论的基础上发展而来的，两套理论存在显著的区别，ORM通过<br>映射机制将两种技术联系起来。每种语言都有自己的ORM。比如java的hibernat/IBATIS；c#的Crove/Linq；python的sqlchemy等；所有这些都满足如下3个映射问题：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">数据类型映射：将数据库的类型映射为编程语言自身的类型。数据类型映射解决了由数据表列类型向编程语言类型转换的问题。</div><div class="line">类映射：将数据表定义映射为编程语言自身的类，这样数据表中的每一条记录就可以映射为一个编程语言自身的对象。</div><div class="line">关系映射: 将数据库中基于外键的关系连接转换为编程语言中基于对象引用的关系连接。例如：sqlchemy中制定relationship（）字段，使开发者能够指定数据表之间的连接关系。</div></pre></td></tr></table></figure></p>
-<h4 id="CRUD操作"><a href="#CRUD操作" class="headerlink" title="CRUD操作"></a>CRUD操作</h4><p>crud操作是数据库处理时增加、读取、更新和删除几个单词的首字母简写。<br>当开发者调用这些函数时，orm自动执行下列操作。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">将这些调用转换为sql语句；</div><div class="line">通过数据库引擎发送给数据库执行；</div><div class="line">将数据库返回的结果记录用orm映射技术转换为类对象。</div></pre></td></tr></table></figure></p>
-<h4 id="缓存优化"><a href="#缓存优化" class="headerlink" title="缓存优化"></a>缓存优化</h4><p>由于数据库操作比较耗时，所以大多数orm提供数据缓存优化的功能。最基本的缓存优化能力如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">将从数据库中查询到的数据以类对象的形式保存在内存中，以便之后再随时提取；</div><div class="line">在真正需要读取查询结果时才执行数据库select操作，而不是在ORM查询命令执行时查询数据库。</div></pre></td></tr></table></figure></p>
-<h4 id="为什么要用ORM"><a href="#为什么要用ORM" class="headerlink" title="为什么要用ORM"></a>为什么要用ORM</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">向开发者屏蔽了数据库细节，使开发者无须与sql语句打交道，提高开发效率；</div><div class="line">便于数据库迁移。优于每种数据库的sql有细微差别，所以基于sql的数据访问层在更换数据库时通常需要花费大量时间调试sql语句；</div><div class="line">应用缓存优化等技术有时可以提高数据库操作的频率。</div></pre></td></tr></table></figure>
-
-          
+          数据库编程数据库编程遵循标准：引入python引擎包连接数据
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/02/24/数据库及oorm/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
