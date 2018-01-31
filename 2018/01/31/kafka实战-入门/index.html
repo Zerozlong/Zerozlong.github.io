@@ -69,7 +69,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Zero, Welcom!" />
+  <meta name="keywords" content="kafka," />
 
 
 
@@ -85,16 +85,18 @@
 
 
 
-<meta name="description" content="走过山山水水,脚下高高低低,人生难得糊涂！">
+<meta name="description" content="kafka背景　Kafka它本质上是一个消息系统，由当时从LinkedIn出来创业的三人小组开发，他们开发出了Apache Kafka实时信息队列技术，该技术致力于为各行各业的公司提供实时数据处理服务解决方案。Kafka为LinkedIn的中枢神经系统，管理从各个应用程序的汇聚，这些数据经过处理后再被分发到其他地方。Kafka不同于传统的企业信息队列系统，它是以近乎实时的方式处理流经一个公司的所有">
 <meta property="og:type" content="article">
-<meta property="og:title" content="kafka实战-入门">
+<meta property="og:title" content="kafka实战-入门（转）">
 <meta property="og:url" content="http://yoursite.com/2018/01/31/kafka实战-入门/index.html">
 <meta property="og:site_name" content="Zero">
-<meta property="og:description" content="走过山山水水,脚下高高低低,人生难得糊涂！">
-<meta property="og:updated_time" content="2018-01-31T03:40:30.983Z">
+<meta property="og:description" content="kafka背景　Kafka它本质上是一个消息系统，由当时从LinkedIn出来创业的三人小组开发，他们开发出了Apache Kafka实时信息队列技术，该技术致力于为各行各业的公司提供实时数据处理服务解决方案。Kafka为LinkedIn的中枢神经系统，管理从各个应用程序的汇聚，这些数据经过处理后再被分发到其他地方。Kafka不同于传统的企业信息队列系统，它是以近乎实时的方式处理流经一个公司的所有">
+<meta property="og:image" content="http://yoursite.com/images/2018/01/1.png">
+<meta property="og:updated_time" content="2018-01-31T04:12:13.196Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="kafka实战-入门">
-<meta name="twitter:description" content="走过山山水水,脚下高高低低,人生难得糊涂！">
+<meta name="twitter:title" content="kafka实战-入门（转）">
+<meta name="twitter:description" content="kafka背景　Kafka它本质上是一个消息系统，由当时从LinkedIn出来创业的三人小组开发，他们开发出了Apache Kafka实时信息队列技术，该技术致力于为各行各业的公司提供实时数据处理服务解决方案。Kafka为LinkedIn的中枢神经系统，管理从各个应用程序的汇聚，这些数据经过处理后再被分发到其他地方。Kafka不同于传统的企业信息队列系统，它是以近乎实时的方式处理流经一个公司的所有">
+<meta name="twitter:image" content="http://yoursite.com/images/2018/01/1.png">
 
 
 
@@ -128,7 +130,7 @@
 
 
 
-  <title> kafka实战-入门 | Zero </title>
+  <title> kafka实战-入门（转） | Zero </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -283,7 +285,7 @@
             
             
               
-                kafka实战-入门
+                kafka实战-入门（转）
               
             
           </h1>
@@ -307,6 +309,24 @@
           </span>
 
           
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kafka/" itemprop="url" rel="index">
+                    <span itemprop="name">kafka</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -323,7 +343,7 @@
 
           
           
-             <span id="/2018/01/31/kafka实战-入门/" class="leancloud_visitors" data-flag-title="kafka实战-入门">
+             <span id="/2018/01/31/kafka实战-入门/" class="leancloud_visitors" data-flag-title="kafka实战-入门（转）">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -348,7 +368,10 @@
       
 
       
-        
+        <h1 id="kafka背景"><a href="#kafka背景" class="headerlink" title="kafka背景"></a>kafka背景</h1><p>　Kafka它本质上是一个消息系统，由当时从LinkedIn出来创业的三人小组开发，他们开发出了Apache Kafka实时信息队列技术，<br>该技术致力于为各行各业的公司提供实时数据处理服务解决方案。Kafka为LinkedIn的中枢神经系统，管理从各个应用程序的汇聚，<br>这些数据经过处理后再被分发到其他地方。Kafka不同于传统的企业信息队列系统，它是以近乎实时的方式处理流经一个公司的所<br>有数据，目前已经服务于LinkedIn、Netflix、Uber以及Verizon，并为此建立了实时信息处理平台。</p>
+<p>流水数据是所有站点对其网站使用情况做报表时都要用到的数据中最常用的一部分，流水数据包括PV，浏览内容信息以及搜索记录等。这些数据通常是先以日志文件的形式存在，然后有周期的去对这些日志文件进行统计分析处理，<br>然后获得需要的KPI指标结果。</p>
+<h1 id="Kafka应用场景"><a href="#Kafka应用场景" class="headerlink" title="Kafka应用场景"></a>Kafka应用场景</h1><p>我们在接触一门新技术或是新语言时，得明白这门技术（或是语言）的应用场景，也就说要明白它能做什么，服务的对象是谁，下面<br>用一个图来说明，如下图所示：<br><img src="/images/2018/01/1.png" alt="image"></p>
+
       
     </div>
 
@@ -390,6 +413,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/kafka/" rel="tag"># kafka</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
@@ -430,7 +459,7 @@
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2018/01/31/kafka实战-入门/"
-           data-title="kafka实战-入门" data-url="http://yoursite.com/2018/01/31/kafka实战-入门/">
+           data-title="kafka实战-入门（转）" data-url="http://yoursite.com/2018/01/31/kafka实战-入门/">
       </div>
     
   </div>
@@ -454,8 +483,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -474,7 +512,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -483,7 +521,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">62</span>
+                <span class="site-state-item-count">63</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -530,6 +568,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#kafka背景"><span class="nav-number">1.</span> <span class="nav-text">kafka背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Kafka应用场景"><span class="nav-number">2.</span> <span class="nav-text">Kafka应用场景</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>
