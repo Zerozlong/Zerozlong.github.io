@@ -87,14 +87,16 @@
 
 <meta name="description" content="kafka背景　Kafka它本质上是一个消息系统，由当时从LinkedIn出来创业的三人小组开发，他们开发出了Apache Kafka实时信息队列技术，该技术致力于为各行各业的公司提供实时数据处理服务解决方案。Kafka为LinkedIn的中枢神经系统，管理从各个应用程序的汇聚，这些数据经过处理后再被分发到其他地方。Kafka不同于传统的企业信息队列系统，它是以近乎实时的方式处理流经一个公司的所有">
 <meta property="og:type" content="article">
-<meta property="og:title" content="kafka实战-入门（转）">
+<meta property="og:title" content="kafka实战-入门(一）">
 <meta property="og:url" content="http://yoursite.com/2018/01/31/kafka实战-入门/index.html">
 <meta property="og:site_name" content="Zero">
 <meta property="og:description" content="kafka背景　Kafka它本质上是一个消息系统，由当时从LinkedIn出来创业的三人小组开发，他们开发出了Apache Kafka实时信息队列技术，该技术致力于为各行各业的公司提供实时数据处理服务解决方案。Kafka为LinkedIn的中枢神经系统，管理从各个应用程序的汇聚，这些数据经过处理后再被分发到其他地方。Kafka不同于传统的企业信息队列系统，它是以近乎实时的方式处理流经一个公司的所有">
 <meta property="og:image" content="http://yoursite.com/images/2018/01/1.png">
-<meta property="og:updated_time" content="2018-01-31T04:12:13.196Z">
+<meta property="og:image" content="http://yoursite.com/images/2018/01/2.png">
+<meta property="og:image" content="http://yoursite.com/images/2018/01/3.png">
+<meta property="og:updated_time" content="2018-01-31T06:16:05.989Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="kafka实战-入门（转）">
+<meta name="twitter:title" content="kafka实战-入门(一）">
 <meta name="twitter:description" content="kafka背景　Kafka它本质上是一个消息系统，由当时从LinkedIn出来创业的三人小组开发，他们开发出了Apache Kafka实时信息队列技术，该技术致力于为各行各业的公司提供实时数据处理服务解决方案。Kafka为LinkedIn的中枢神经系统，管理从各个应用程序的汇聚，这些数据经过处理后再被分发到其他地方。Kafka不同于传统的企业信息队列系统，它是以近乎实时的方式处理流经一个公司的所有">
 <meta name="twitter:image" content="http://yoursite.com/images/2018/01/1.png">
 
@@ -130,7 +132,7 @@
 
 
 
-  <title> kafka实战-入门（转） | Zero </title>
+  <title> kafka实战-入门(一） | Zero </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -285,7 +287,7 @@
             
             
               
-                kafka实战-入门（转）
+                kafka实战-入门(一）
               
             
           </h1>
@@ -343,7 +345,7 @@
 
           
           
-             <span id="/2018/01/31/kafka实战-入门/" class="leancloud_visitors" data-flag-title="kafka实战-入门（转）">
+             <span id="/2018/01/31/kafka实战-入门/" class="leancloud_visitors" data-flag-title="kafka实战-入门(一）">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -370,7 +372,12 @@
       
         <h1 id="kafka背景"><a href="#kafka背景" class="headerlink" title="kafka背景"></a>kafka背景</h1><p>　Kafka它本质上是一个消息系统，由当时从LinkedIn出来创业的三人小组开发，他们开发出了Apache Kafka实时信息队列技术，<br>该技术致力于为各行各业的公司提供实时数据处理服务解决方案。Kafka为LinkedIn的中枢神经系统，管理从各个应用程序的汇聚，<br>这些数据经过处理后再被分发到其他地方。Kafka不同于传统的企业信息队列系统，它是以近乎实时的方式处理流经一个公司的所<br>有数据，目前已经服务于LinkedIn、Netflix、Uber以及Verizon，并为此建立了实时信息处理平台。</p>
 <p>流水数据是所有站点对其网站使用情况做报表时都要用到的数据中最常用的一部分，流水数据包括PV，浏览内容信息以及搜索记录等。这些数据通常是先以日志文件的形式存在，然后有周期的去对这些日志文件进行统计分析处理，<br>然后获得需要的KPI指标结果。</p>
-<h1 id="Kafka应用场景"><a href="#Kafka应用场景" class="headerlink" title="Kafka应用场景"></a>Kafka应用场景</h1><p>我们在接触一门新技术或是新语言时，得明白这门技术（或是语言）的应用场景，也就说要明白它能做什么，服务的对象是谁，下面<br>用一个图来说明，如下图所示：<br><img src="/images/2018/01/1.png" alt="image"></p>
+<h1 id="Kafka应用场景"><a href="#Kafka应用场景" class="headerlink" title="Kafka应用场景"></a>Kafka应用场景</h1><p>我们在接触一门新技术或是新语言时，得明白这门技术（或是语言）的应用场景，也就说要明白它能做什么，服务的对象是谁，下面<br>用一个图来说明，如下图所示：</p>
+<p><img src="/images/2018/01/1.png" alt="image"></p>
+<p>首先，Kafka可以应用于消息系统，比如，当下较为热门的消息推送，这些消息推送系统的消息源，可以使用Kafka作为系统的核心组<br>建来完成消息的生产和消息的消费。然后是网站的行迹，我们可以将企业的Portal，用户的操作记录等信息发送到Kafka中，按照实际<br>业务需求，可以进行实时监控，或者做离线处理等。最后，一个是日志收集，类似于Flume套件这样的日志收集系统，但Kafka的设计<br>架构采用push/pull，适合异构集群，Kafka可以批量提交消息，对Producer来说，在性能方面基本上是无消耗的，而在Consumer端中，<br>我们可以使用HDFS这类的分布式文件存储系统进行存储。</p>
+<h1 id="kafka架构原理"><a href="#kafka架构原理" class="headerlink" title="kafka架构原理"></a>kafka架构原理</h1><p>Kafka的设计之初是希望做一个统一的信息收集平台，能够实时的收集反馈信息，并且具有良好的容错能力。Kafka中我们最直观的感受就是<br>它的消费者与生产者，如下图所示：<br><img src="/images/2018/01/2.png" alt="image"><br>这里Kafka对消息的保存是根据Topic进行归类的，由消息生产者（Producer）和消息消费者（Consumer）组成，另外，每一个Server<br>称为一个Broker。对于Kafka集群而言，Producer和Consumer都依赖于ZooKeeper来保证数据的一致性。</p>
+<h2 id="topic"><a href="#topic" class="headerlink" title="topic"></a>topic</h2><p>在每条消息输送到Kafka集群后，消息都会由一个Type，这个Type被称为一个Topic，不同的Topic的消息是分开存储的。如下图所示<br><img src="/images/2018/01/3.png" alt="image"><br>一个Topic会被归类为一则消息，每个Topic可以被分割为多个Partition，在每条消息中，它在文件中的位置称为Offset，用于标记<br>唯一一条消息。在Kafka中，消息被消费后，消息仍然会被保留一定时间后在删除，比如在配置信息中，文件信息保留7天，那么7天<br>后，不管Kafka中的消息是否被消费，都会被删除；以此来释放磁盘空间，减少磁盘的IO消耗。</p>
+<p>在Kafka中，一个Topic的多个分区，被分布在Kafka集群的多个Server上，每个Server负责分区中消息的读写操作。另外，Kafka还可<br>以配置分区需要备份的个数，以便提高可用行。由于用到ZK来协调，每个分区都有一个Server为Leader状态，服务对外响应<br>（如读写操作），若该Leader宕机，会由其他的Follower来选举出新的Leader来保证集群的高可用性。</p>
 
       
     </div>
@@ -459,7 +466,7 @@
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2018/01/31/kafka实战-入门/"
-           data-title="kafka实战-入门（转）" data-url="http://yoursite.com/2018/01/31/kafka实战-入门/">
+           data-title="kafka实战-入门(一）" data-url="http://yoursite.com/2018/01/31/kafka实战-入门/">
       </div>
     
   </div>
@@ -578,7 +585,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#kafka背景"><span class="nav-number">1.</span> <span class="nav-text">kafka背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Kafka应用场景"><span class="nav-number">2.</span> <span class="nav-text">Kafka应用场景</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#kafka背景"><span class="nav-number">1.</span> <span class="nav-text">kafka背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Kafka应用场景"><span class="nav-number">2.</span> <span class="nav-text">Kafka应用场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#kafka架构原理"><span class="nav-number">3.</span> <span class="nav-text">kafka架构原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#topic"><span class="nav-number">3.1.</span> <span class="nav-text">topic</span></a></li></ol></li></ol></div>
             
 
           </div>
