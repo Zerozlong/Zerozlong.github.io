@@ -1,0 +1,943 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<div id="show" >
+</div>
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python websocket," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="参考文章大家新年快乐，过年好，年前最后一篇文章，过完年再见了！harbor api参考文档：http://www.cnblogs.com/guigujun/p/8352983.html简单实现参考文档：https://blog.miguelgrinberg.com/post/easy-websockets-with-flask-and-gevent复杂实现参考文档：http://flask-soc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="websocket（一）">
+<meta property="og:url" content="http://yoursite.com/2018/02/06/websocket/index.html">
+<meta property="og:site_name" content="Zero">
+<meta property="og:description" content="参考文章大家新年快乐，过年好，年前最后一篇文章，过完年再见了！harbor api参考文档：http://www.cnblogs.com/guigujun/p/8352983.html简单实现参考文档：https://blog.miguelgrinberg.com/post/easy-websockets-with-flask-and-gevent复杂实现参考文档：http://flask-soc">
+<meta property="og:updated_time" content="2018-02-09T08:54:47.851Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="websocket（一）">
+<meta name="twitter:description" content="参考文章大家新年快乐，过年好，年前最后一篇文章，过完年再见了！harbor api参考文档：http://www.cnblogs.com/guigujun/p/8352983.html简单实现参考文档：https://blog.miguelgrinberg.com/post/easy-websockets-with-flask-and-gevent复杂实现参考文档：http://flask-soc">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/06/websocket/"/>
+
+
+
+
+
+  <title> websocket（一） | Zero </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Zero</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/06/websocket/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Zero">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Zero">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Zero" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                websocket（一）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-06T11:28:14+08:00">
+                2018-02-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python-websocket/" itemprop="url" rel="index">
+                    <span itemprop="name">python websocket</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/02/06/websocket/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/02/06/websocket/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2018/02/06/websocket/" class="leancloud_visitors" data-flag-title="websocket（一）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><p>大家新年快乐，过年好，年前最后一篇文章，过完年再见了！<br>harbor api参考文档：<a href="http://www.cnblogs.com/guigujun/p/8352983.html" target="_blank" rel="external">http://www.cnblogs.com/guigujun/p/8352983.html</a><br>简单实现参考文档：<br><a href="https://blog.miguelgrinberg.com/post/easy-websockets-with-flask-and-gevent" target="_blank" rel="external">https://blog.miguelgrinberg.com/post/easy-websockets-with-flask-and-gevent</a><br>复杂实现参考文档：<br><a href="http://flask-socketio.readthedocs.io/en/latest/" target="_blank" rel="external">http://flask-socketio.readthedocs.io/en/latest/</a><br><a href="http://www.runoob.com/html/html5-websocket.html" target="_blank" rel="external">http://www.runoob.com/html/html5-websocket.html</a><br><a href="https://jiayi.space/post/shi-yong-flask-socketiojin-xing-websockettong-xin" target="_blank" rel="external">https://jiayi.space/post/shi-yong-flask-socketiojin-xing-websockettong-xin</a></p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Gateone是一个tornado的web terminal，以后有时间研究下。<br>需要写一个程序，实现web页面登陆到terminal操作容器的功能；http协议都需要从客户端发起，服务器应答。而这里的情况是客户端<br>并不知道后台程序的状态什么时候发生改变，所以需要让服务器可以主动地发送数据给客户端。google之后，发现websocket可以满足<br>这个要求，所以了解了一下这个html5的协议，并且学习了下它的flask插件-flask-socketio。</p>
+<h1 id="html5"><a href="#html5" class="headerlink" title="html5"></a>html5</h1><p>WebSocket是HTML5开始提供的一种在单个 TCP 连接上进行全双工通讯的协议。在WebSocket API中，浏览器和服务器只需要做一个握手<br>的动作，然后，浏览器和服务器之间就形成了一条快速通道。两者之间就直接可以数据互相传送。浏览器通过 JavaScript 向服务器<br>发出建立 WebSocket 连接的请求，连接建立以后，客户端和服务器端就可以通过 TCP 连接直接交换数据。</p>
+<h1 id="websocket"><a href="#websocket" class="headerlink" title="websocket"></a>websocket</h1><p>WebSocket一种在单个 TCP 连接上进行全双工通讯的协议。<br>WebSocket 是独立的、创建在 TCP 上的协议，和 HTTP 的唯一关联是使用 HTTP 协议的101状态码进行协议切换，使用的 TCP 端口是<br>80，可以用于绕过大多数防火墙的限制。<br>WebSocket 使得客户端和服务器之间的数据交换变得更加简单，允许服务端直接向客户端推送数据而不需要客户端进行请求，在<br>WebSocket API 中，浏览器和服务器只需要完成一次握手，两者之间就直接可以创建持久性的连接，并允许数据进行双向传送。</p>
+<p>websocket是一个持久化的协议，在浏览器中可以看出，请求一直处于pending状态。而一般http协议的request一旦受到response，这<br>个请求就结束了。<br>websocket使用http建立连接，并转换成websocket。查看它的请求头和响应头，会发现很多和一般http请求不一样的地方。<br>请求头中：<br>Upgrade和Connection字段告诉服务器切换协议；<br>Sec-WebSocket开头的字段用于验证和统一协议版本细节；<br>响应头中：<br>Upgrade和Connection表明已经切换到Websocket协议；<br>Sec-WebSocket-Accept用于确认验证信息。</p>
+<h1 id="socket-io"><a href="#socket-io" class="headerlink" title="socket.io"></a>socket.io</h1><p>Socket.IO 是一个面向实时 web 应用的 JavaScript 库。它使得服务器和客户端之间实时双向的通信成为可能。他有两个部分：<br>在浏览器中运行的客户端库，和一个面向Node.js的服务端库。两者有着几乎一样的API。像Node.js一样，它也是事件驱动的.</p>
+<p>Socket.IO 主要使用WebSocket协议。但是如果需要的话，Socket.io可以回退到几种其它方法，例如Adobe Flash Sockets，<br>JSONP拉取，或是传统的AJAX拉取，并且在同时提供完全相同的接口。尽管它可以被用作WebSocket的包装库，它还是提供了许多<br>其它功能，比如广播至多个套接字，存储与不同客户有关的数据，和异步IO操作。</p>
+<p>Socket.IO的客户端常用API比较简单，先看一段示例代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;script src=&quot;socket.io.min.js&quot;&gt;&lt;/script&gt;</div><div class="line">&lt;script&gt;</div><div class="line">  var socket = io.connect();</div><div class="line">  socket.on(&apos;news&apos;, function (data) &#123;</div><div class="line">    console.log(data); </div><div class="line">    socket.emit(&apos;my other event&apos;, &#123; my: &apos;data&apos; &#125;);</div><div class="line">  &#125;);</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<p>代码说明：<br>io.connect()建立连接<br>socket.on()监听事件<br>socket.emit()发送消息<br>socket.emit()直接发送中文会出现乱码导致服务器返回400，所以发送中文时需要将中文进行编码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">var data = encodeURI(&apos;你好&apos;);</div><div class="line">socket.emit(&apos;my event&apos;, data);</div></pre></td></tr></table></figure></p>
+<h1 id="eventlet介绍"><a href="#eventlet介绍" class="headerlink" title="eventlet介绍"></a>eventlet介绍</h1><p>参考资料：<a href="https://www.cnblogs.com/Security-Darren/p/4170031.html" target="_blank" rel="external">https://www.cnblogs.com/Security-Darren/p/4170031.html</a><br>eventlet语境下的“绿色线程”普通线程之间的区别：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">绿色线程几乎没有开销，不用像保留普通线程一样保留“绿色线程”，每一个网络连接对应至少一个“绿色线程”；</div><div class="line">绿色线程需要人为的设置使其互相让渡CPU控制权，而不是抢占。绿色线程既能够共享数据结构，又不需要显式的互斥控制，</div><div class="line">因为只有当一个绿色线程让出了控制权后其他的绿色线程才能访问彼此共享的数据结构。</div></pre></td></tr></table></figure>
+<h1 id="flask-socketio"><a href="#flask-socketio" class="headerlink" title="flask-socketio"></a>flask-socketio</h1><p>flask-socketio是socketio的flask插件，常用api和socket.io非常类似，上手比较容易。flask-socketio基于异步处理各种事件，<br>可以选择使用的异步服务有:eventlet、gevent和flask自带的werkzeug。我对这几种异步包都还不太了解，就直接使用默认的<br>eventlet了。</p>
+<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><p>flask-socketio的初始化方法和其它flask插件基本一样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">from flask import Flask, render_template</div><div class="line">from flask_socketio import SocketIO</div><div class="line"></div><div class="line">app = Flask(__name__)</div><div class="line">app.config[&apos;SECRET_KEY&apos;] = &apos;secret!&apos;</div><div class="line">socketio = SocketIO(app)</div><div class="line"></div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">    socketio.run(app)</div></pre></td></tr></table></figure>
+<p>Socketio的run方法封装了Flask的run方法，依然可以指定host和port。</p>
+<h2 id="监听事件"><a href="#监听事件" class="headerlink" title="监听事件"></a>监听事件</h2><p>Socketio的通信基于事件，不同名称的事件对应不同的处理函数，类似于Web服务器处理路由的机制。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@socketio.on(&apos;message&apos;)</div><div class="line">def handle_message(msg):</div><div class="line">    print(&apos;received message: &apos; + msg)</div></pre></td></tr></table></figure></p>
+<p>on装饰器指定接收事件的名称和所在的命名空间（这里使用默认的namespace），处理函数可以接收各种类型的参数：string，bytes，<br>int，或者json。<br>事件名称可以自由指定，但也有几个内置事件，如connect，disconnect…自定义事件名时，不要跟内置事件重复，否则不会按照自己<br>的代码触发事件。如果不使用装饰器，on_event函数也可以用于监听事件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">def my_function_handler(data):</div><div class="line">    pass</div><div class="line">socketio.on_event(&apos;my event&apos;, my_function_handler, namespace=&apos;/test&apos;)</div></pre></td></tr></table></figure></p>
+<h2 id="发送消息"><a href="#发送消息" class="headerlink" title="发送消息"></a>发送消息</h2><p>发送消息使用send()或是emit()，对于未命名的事件使用send()，已经命名的事件用emit()。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">from flask_socketio import send, emit</div><div class="line">@socketio.on(&apos;message&apos;)</div><div class="line">def handle_message(message):</div><div class="line">    send(message)</div><div class="line"></div><div class="line">@socketio.on(&apos;json&apos;)</div><div class="line">def handle_json(json):</div><div class="line">    send(json, json=True)</div><div class="line"></div><div class="line">@socketio.on(&apos;my event&apos;)</div><div class="line">def handle_my_custom_event(json):</div><div class="line">    emit(&apos;my response&apos;, json)</div></pre></td></tr></table></figure>
+<p>发送事件时，如果把broadcasting参数设为true，那么同一个namespace下的所有连接都会收到该事件。</p>
+<h2 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h2><p>Namespace允许客户端与服务器通过同一个socket建立多个连接。如果不指定则使用默认namespace。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@socketio.on(&apos;my event&apos;, namespace=&apos;/chat&apos;)</div><div class="line">def handle_my_custom_event(json):</div><div class="line">    emit(&apos;my response&apos;, json, namespace=&apos;/chat&apos;)</div></pre></td></tr></table></figure></p>
+<h2 id="Room"><a href="#Room" class="headerlink" title="Room"></a>Room</h2><p>顾名思义，Room把namespace分成了很多小”房间”，如果一个事件指定了room，那么只有处在同一个room内的连接才能收到该事件。<br>每一个连接默认属于名为request.sid的房间。<br>与room有关的常用方法有：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">join_room() 创建房间</div><div class="line">leave_room() 离开房间</div><div class="line">close_room() 关闭房间</div><div class="line">rooms() 当前连接属于的房间列表</div></pre></td></tr></table></figure></p>
+<h1 id="简单demo"><a href="#简单demo" class="headerlink" title="简单demo"></a>简单demo</h1><p>app.py<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python</div><div class="line"># coding=utf-8</div><div class="line">from flask import Flask, render_template, session, request</div><div class="line">from flask_socketio import SocketIO, emit</div><div class="line">import requests,time</div><div class="line">app = Flask(__name__, template_folder=&apos;./&apos;)</div><div class="line">app.config[&apos;SECRET_KEY&apos;] = &apos;secret!&apos;</div><div class="line"></div><div class="line">socketio = SocketIO(app)</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">@app.route(&apos;/&apos;)</div><div class="line">def index():</div><div class="line">    return render_template(&apos;templates/index.html&apos;)</div><div class="line"></div><div class="line"># 自定义的监听事件，用来接收客户端的请求</div><div class="line">@socketio.on(&apos;client_test&apos;)</div><div class="line">def client_msg(msg):</div><div class="line">    print &quot;client event&quot;</div><div class="line">    uri=&quot;http://172.25.51.120:8080/api/v1/namespaces/test/pods/test2-1083395987-jwrn3/log&amp;pretty=true&amp;follow=true&quot;</div><div class="line">    d = requests.get(uri)</div><div class="line">    print d</div><div class="line">    emit(&apos;server_response&apos;, &#123;&apos;data&apos;: d.text&#125;)</div><div class="line"></div><div class="line"># 监听事件,socket连接成功之后触发，用于初始化。</div><div class="line">@socketio.on(&apos;connect_event&apos;)</div><div class="line">def connected_msg(msg):</div><div class="line">    print &quot;-----&quot;</div><div class="line">    uri=&quot;http://172.25.51.120:8080/api/v1/namespaces/test/pods/test2-1083395987-jwrn3/log&amp;pretty=true&amp;follow=true&quot;</div><div class="line">    d = requests.get(uri)</div><div class="line">    for num in range(10,20):</div><div class="line">        emit(&apos;server_response&apos;, &#123;&apos;data&apos;: num&#125;)</div><div class="line">        time.sleep(1)</div><div class="line">    emit(&apos;server_response&apos;,&#123;&apos;data&apos;:msg[&apos;data&apos;]&#125;)</div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">    socketio.run(app, host=&apos;0.0.0.0&apos;)</div></pre></td></tr></table></figure></p>
+<p>index.html</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE HTML&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &lt;title&gt;Flask-SocketIO Test&lt;/title&gt;</div><div class="line">    &lt;script type=&quot;text/javascript&quot; src=&quot;//cdn.bootcss.com/jquery/3.1.1/jquery.min.js&quot;&gt;&lt;/script&gt;</div><div class="line">    &lt;script type=&quot;text/javascript&quot; src=&quot;//cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js&quot;&gt;&lt;/script&gt;</div><div class="line">    &lt;script type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;</div><div class="line">    $(document).ready(function() &#123;</div><div class="line">        //建立连接</div><div class="line">        var socket = io.connect();</div><div class="line">        //监听事件,socket连接成功之后触发，用于初始化。</div><div class="line">        socket.on(&apos;connect&apos;, function() &#123;</div><div class="line">            alert(&quot;test&quot;)</div><div class="line">            socket.emit(&apos;connect_event&apos;, &#123;data: &apos;connected!&apos;&#125;);</div><div class="line">        &#125;)</div><div class="line">        //监听事件</div><div class="line">        socket.on(&apos;server_response&apos;, function(msg) &#123;</div><div class="line">            $(&apos;#log&apos;).append(&apos;&lt;br&gt;&apos; + $(&apos;&lt;div/&gt;&apos;).text(&apos;root #&apos; + &apos;: &apos; + msg.data).html());</div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        $(&apos;form#emit&apos;).submit(function(event) &#123;</div><div class="line">                alert(&quot;--------------&quot;)</div><div class="line">                //客户端将socket发给某个监听事件</div><div class="line">                socket.emit(&apos;client_test&apos;, &#123;data: $(&apos;#emit_data&apos;).val()&#125;);</div><div class="line">                alert(&quot;zero&quot;)</div><div class="line">                return false;</div><div class="line">            &#125;);</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    &lt;/script&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">    &lt;h2&gt;WebSokect&lt;/h2&gt;</div><div class="line">    &lt;form id=&quot;emit&quot; method=&quot;POST&quot; action=&apos;#&apos;&gt;</div><div class="line">        &lt;input type=&quot;text&quot; name=&quot;emit_data&quot; id=&quot;emit_data&quot; placeholder=&quot;Message&quot;&gt;</div><div class="line">        &lt;input type=&quot;submit&quot; value=&quot;Echo&quot;&gt;</div><div class="line">    &lt;/form&gt;</div><div class="line">    &lt;div id=&apos;log&apos;&gt;&lt;/div&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<h1 id="websocket进阶"><a href="#websocket进阶" class="headerlink" title="websocket进阶"></a>websocket进阶</h1><p>体验完websocket的初级功能之后，我们来看个典型的websocket握手：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">GET /chat HTTP/1.1</div><div class="line">Host: server.example.com</div><div class="line">Upgrade: websocket</div><div class="line">Connection: Upgrade</div><div class="line">Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==</div><div class="line">Sec-WebSocket-Protocol: chat, superchat</div><div class="line">Sec-WebSocket-Version: 13</div><div class="line">Origin: http://example.com</div></pre></td></tr></table></figure></p>
+<p>熟悉http的童鞋可能发现了，这段类似http协议的握手请求中，多了几个东西。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Upgrade: websocket</div><div class="line">Connection: Upgrade</div></pre></td></tr></table></figure></p>
+<p>这个就是Websocket的核心了，告诉 Apache 、 Nginx 等服务器：注意啦，我发起的是Websocket协议，快点帮我找到对应的助理处理~不是那个老土的HTTP。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==</div><div class="line">Sec-WebSocket-Protocol: chat, superchat</div><div class="line">Sec-WebSocket-Version: 13</div></pre></td></tr></table></figure></p>
+<p>首先,Sec-WebSocket-Key是一个 Base64 encode 的值，这个是浏览器随机生成的，告诉服务器：泥煤，不要忽悠窝，我要验证尼是不是真的是Websocket助理。<br>然后， Sec_WebSocket-Protocol 是一个用户定义的字符串，用来区分同URL下，不同的服务所需要的协议。简单理解：今晚我要服务A，别搞错啦~<br>最后， Sec-WebSocket-Version 是告诉服务器所使用的 Websocket Draft（协议版本），在最初的时候，Websocket协议还在 Draft 阶段，各种奇奇怪怪的协议都有，<br>而且还有很多期奇奇怪怪不同的东西，什么Firefox和Chrome用的不是一个版本之类的，当初Websocket协议太多可是一个大难题。。不过现在还好，已经定下来啦~大家<br>都使用的一个东西.讲解下：服务员，我要的是13岁的噢。<br>然后服务器返回下列东西，表示已经接收到请求，成功建立websocket啦。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">HTTP/1.1 101 Switching Protocols</div><div class="line">Upgrade: websocket</div><div class="line">Connection: Upgrade</div><div class="line">Sec-WebSocket-Accept: HSmrc0sMlYUkAGmm5OPpG2HaGWk=</div><div class="line">Sec-WebSocket-Protocol: chat</div></pre></td></tr></table></figure></p>
+<p>这里开始就是HTTP最后负责的区域了，告诉客户，我已经成功切换协议啦~<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Upgrade: websocket</div><div class="line">Connection: Upgrade</div></pre></td></tr></table></figure></p>
+<h1 id="websocket作用"><a href="#websocket作用" class="headerlink" title="websocket作用"></a>websocket作用</h1><p>在讲Websocket之前，我就顺带着讲下 long poll 和 ajax轮询 的原理。</p>
+<h2 id="ajax轮询"><a href="#ajax轮询" class="headerlink" title="ajax轮询"></a>ajax轮询</h2><p>ajax轮询的原理非常简单，让浏览器隔个几秒就发送一次请求，询问服务器是否有新信息。<br>场景再现：<br>客户端：啦啦啦，有没有新信息(Request)<br>服务端：没有（Response）<br>客户端：啦啦啦，有没有新信息(Request)<br>服务端：没有。。（Response）<br>客户端：啦啦啦，有没有新信息(Request)<br>服务端：你好烦啊，没有啊。。（Response）<br>客户端：啦啦啦，有没有新消息（Request）<br>服务端：好啦好啦，有啦给你。（Response）<br>客户端：啦啦啦，有没有新消息（Request）<br>服务端：。。。。。没。。。。没。。。没有（Response） —- loop</p>
+<h2 id="long-poll"><a href="#long-poll" class="headerlink" title="long poll"></a>long poll</h2><p>long poll 其实原理跟ajax轮询差不多，都是采用轮询的方式，不过采取的是阻塞模型（一直打电话，没收到就不挂电话），也就是说，客户端发起连接后，如果没消息，就一直不返回<br>Response给客户端。直到有消息才返回，返回完之后，客户端再次建立连接，周而复始。<br>场景再现：<br>客户端：啦啦啦，有没有新信息，没有的话就等有了才返回给我吧（Request）<br>服务端：额。。 等待到有消息的时候。。来 给你（Response）<br>客户端：啦啦啦，有没有新信息，没有的话就等有了才返回给我吧（Request） -loop<br>总结：ajax轮询和long poll的区别，long poll是发个ajax请求，服务器先不响应。等有什么东西需要告诉客户端了，服务器再响应。<br>从上面可以看出其实这两种方式，都是在不断地建立HTTP连接，然后等待服务端处理，可以体现HTTP协议的另外一个特点，被动性。<br>何为被动性呢，其实就是，服务端不能主动联系客户端，只能有客户端发起。<br>简单地说就是，服务器是一个很懒的冰箱（这是个梗）（不会、不能主动发起连接），但是上司有命令，如果有客户来，不管多么累都要好好接待。<br>说完这个，我们再来说一说上面的缺陷。<br>从上面很容易看出来，不管怎么样，上面这两种都是非常消耗资源的。<br>ajax轮询 需要服务器有很快的处理速度和资源。（速度）long poll 需要有很高的并发，也就是说同时接待客户的能力。（场地大小）<br>所以 ajax轮询 和 long poll 都有可能发生这种情况。<br>客户端：啦啦啦啦，有新信息么？<br>服务端：月线正忙，请稍后再试（503 Server Unavailable）<br>客户端：。。。。好吧，啦啦啦，有新信息么？<br>服务端：月线正忙，请稍后再试（503 Server Unavailable）<br>客户端：然后服务端在一旁忙的要死：冰箱，我要更多的冰箱！更多。。更多。。（我错了。。这又是梗。。）</p>
+<h2 id="websocket-1"><a href="#websocket-1" class="headerlink" title="websocket"></a>websocket</h2><p>通过上面两个例子，我们可以看出，这两种方式都不是最好的方式，需要很多资源。一种需要更快的速度，一种需要更多的电话。这两种都会导致电话的需求越来越高。<br>哦，对了忘了说http还是一个无状态的协议。通俗的说就是服务器是个健忘鬼，你一挂电话，他就把你所有东西都忘光了，把你的东西全丢了。第二次的时候还得再高速服务器一遍。<br>所以，在这种情况下websocket出现了。他解决了http的这几个难题。<br>首先，被动性，当服务器完成协议升级后（HTTP-&gt;Websocket），服务端就可以主动推送信息给客户端啦。<br>所以上面的情景可以做如下修改。<br>客户端：啦啦啦，我要建立Websocket协议，需要的服务：chat，Websocket协议版本：17（HTTP Request）<br>服务端：ok，确认，已升级为Websocket协议（HTTP Protocols Switched）<br>客户端：麻烦你有信息的时候推送给我噢。。<br>服务端：ok，有的时候会告诉你的。<br>服务端：balabalabalabala<br>服务端：balabalabalabala<br>服务端：哈哈哈哈哈啊哈哈哈哈<br>服务端：笑死我了哈哈哈哈哈哈哈<br>就变成了这样，只需要经过 一次HTTP请求，就可以做到源源不断的信息传送了。（在程序设计中，这种设计叫做回调，即：你有信息了再来通知我，而不是我傻乎乎的每次跑来问你）<br>这样的协议解决了上面同步有延迟，而且还非常消耗资源的这种情况。 那么为什么他会解决服务器上消耗资源的问题呢？<br>其实我们所用的程序是要经过两层代理的，即 HTTP协议在Nginx等服务器的解析下，然后再传送给相应的 Handler（PHP等） 来处理。<br>简单地说，我们有一个非常快速的 接线员（Nginx），他负责把问题转交给相应的 客服（Handler）。<br>本身 接线员基本上速度是足够的，但是每次都卡在 客服（Handler） 了，老有 客服 处理速度太慢。，导致客服不够。<br>Websocket就解决了这样一个难题，建立后，可以直接跟接线员建立 持久连接，有信息的时候客服想办法通知接线员，然后 接线员 在统一转交给客户。<br>这样就可以解决客服处理速度过慢的问题了。<br>同时，在传统的方式上，要不断的建立，关闭HTTP协议，由于HTTP是非状态性的，每次都要 重新传输identity info（鉴别信息），来告诉服务端你是谁。<br>虽然接线员很快速，但是每次都要听这么一堆，效率也会有所下降的，同时还得不断把这些信息转交给客服，不但浪费客服的 处理时间，而且还会在网路传输中消耗 过多的流量/时间。<br>但是Websocket只需要 一次HTTP握手，所以说整个通讯过程是建立在一次连接/状态中，也就避免了HTTP的非状态性，服务端会一直知道你的信息，直到你关闭请求，这样就解决了接线员<br>要反复解析HTTP协议，还要查看identity info的信息。<br>同时由客户主动询问，转换为服务器（推送）有信息的时候就发送（当然客户端还是等主动发送信息过来的。。），没有信息的时候就交给接线员（Nginx），不需要占用本身速度就慢的<br>客服（Handler） 了。</p>
+<h1 id="websocket提升"><a href="#websocket提升" class="headerlink" title="websocket提升"></a>websocket提升</h1><h2 id="应用场景1"><a href="#应用场景1" class="headerlink" title="应用场景1"></a>应用场景1</h2><p><a href="https://hulumei.net/2017/03/25/Flask-socketio%E7%AC%94%E8%AE%B0/" target="_blank" rel="external">https://hulumei.net/2017/03/25/Flask-socketio%E7%AC%94%E8%AE%B0/</a></p>
+<h2 id="应用场景2"><a href="#应用场景2" class="headerlink" title="应用场景2"></a>应用场景2</h2><p>参考文档<br><a href="https://github.com/miguelgrinberg/Flask-SocketIO/blob/master/example/app.py" target="_blank" rel="external">https://github.com/miguelgrinberg/Flask-SocketIO/blob/master/example/app.py</a><br>网传使用eventlet实现的性能要比geventlet要好。这里先都进行安装，后面进行性能的详细测试及说明。<br>SocketIO中另一个特别有用的特性就是消息广播。Flask-SocketIO通过在send()和emit()函数中设定参数broadcast=True来支持这<br>一特性：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@socketio.on(&apos;my_broadcast_event&apos;, namespace=&apos;/test&apos;)</div><div class="line">def test_broadcast_message(message):</div><div class="line">    emit(&apos;my_response&apos;,</div><div class="line">         &#123;&apos;data&apos;: message[&apos;data&apos;]&#125;,</div><div class="line">         broadcast=True)</div></pre></td></tr></table></figure></p>
+<p>当一条消息以广播方式发送时，同命名空间下的所有建立了链接的客户端都将收到这条消息，包括发送者自己。如果没有使用命<br>名空间，所以链接到全局命名空间的客户端都将收到这条消息。注意，回调函数不会被广播消息触发。</p>
+<p>至此，上述所有的示例都在说明服务端如何响应客户端发起的事件请求，但对于某些情况，服务端需要作为消息的发起者。比如服务器需<br>要在后端向所有客户端发送通知的情景中，socketio.send()和socketio.emit()可以用来向所有用户发送广播：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def some_function():</div><div class="line">    socketio.emit(&apos;some event&apos;, &#123;&apos;data&apos;: 42&#125;)</div></pre></td></tr></table></figure></p>
+<p>这里注意：socketio.send()/socketio.emit()/emit()函数并不相同。</p>
+<h2 id="房间"><a href="#房间" class="headerlink" title="房间"></a>房间</h2><p>在很多程序需要对用户进行分组，并且每个组之间的成员可以相互发送消息。典型的例子就是聊天室程序，用户接受他们进入的<br>房间的消息，而不会收到其它房间发送的消息。Flask-SocketIO通过join_room() 和leave_room()函数来支持这种特性：<br>加入一个房间，js代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$(&apos;form#join&apos;).submit(function(event) &#123;</div><div class="line">    socket.emit(&apos;join&apos;, &#123;room: $(&apos;#join_room&apos;).val()&#125;);</div><div class="line">    return false;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>后端代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@socketio.on(&apos;join&apos;, namespace=&apos;/test&apos;)</div><div class="line">def join(message):</div><div class="line">    join_room(message[&apos;room&apos;])</div></pre></td></tr></table></figure></p>
+<p>如下是官方的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">from flask_socketio import join_room, leave_room</div><div class="line">@socketio.on(&apos;join&apos;)</div><div class="line">def on_join(data):</div><div class="line">    username = data[&apos;username&apos;]</div><div class="line">    room = data[&apos;room&apos;]</div><div class="line">    join_room(room)</div><div class="line">    send(username + &apos; has entered the room.&apos;, room=room)</div><div class="line">@socketio.on(&apos;leave&apos;)</div><div class="line">def on_leave(data):</div><div class="line">    username = data[&apos;username&apos;]</div><div class="line">    room = data[&apos;room&apos;]</div><div class="line">    leave_room(room)</div><div class="line">    send(username + &apos; has left the room.&apos;, room=room)</div></pre></td></tr></table></figure></p>
+<p>每个客户端都被指定了个人房间后，向个人发送消息可以使用客户端的session id作为room的参数。（个人理解就是私聊功能）。</p>
+<h2 id="链接事件"><a href="#链接事件" class="headerlink" title="链接事件"></a>链接事件</h2><p>Flask-SocketIO也分离了建立链接和断开链接事件，下面的示例展示了如何为这2个事件注册处理函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">@socketio.on(&apos;connect&apos;, namespace=&apos;/chat&apos;)</div><div class="line">def test_connect():</div><div class="line">    emit(&apos;my response&apos;, &#123;&apos;data&apos;: &apos;Connected&apos;&#125;)</div><div class="line">@socketio.on(&apos;disconnect&apos;, namespace=&apos;/chat&apos;)</div><div class="line">def test_disconnect():</div><div class="line">    print(&apos;Client disconnected&apos;)</div></pre></td></tr></table></figure></p>
+<p>connect事件可以选择return False来拒绝链接，这样可以对客户端进行身份认证。<br>注意connect和disconnect事件在每个命名空间中被单独发送。</p>
+<h2 id="错误控制"><a href="#错误控制" class="headerlink" title="错误控制"></a>错误控制</h2><p>flask-socketio也可以处理异常<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">@socketio.on_error()        # Handles the default namespace</div><div class="line">def error_handler(e):</div><div class="line">    pass</div><div class="line">@socketio.on_error(&apos;/chat&apos;) # handles the &apos;/chat&apos; namespace</div><div class="line">def error_handler_chat(e):</div><div class="line">    pass</div><div class="line">@socketio.on_error_default  # handles all namespaces without an explicit error handler</div><div class="line">def default_error_handler(e):</div><div class="line">    pass</div></pre></td></tr></table></figure></p>
+<p>错误处理程序接受exception object作为参数。<br>当前请求的消息和数据可以通过request.event 来获取，这在记录错误日志和调试程序时候是非常有用的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">from flask import request</div><div class="line">@socketio.on(&quot;my error event&quot;)</div><div class="line">def on_my_event(data):</div><div class="line">    raise RuntimeError()</div><div class="line">@socketio.on_error_default</div><div class="line">def default_error_handler(e):</div><div class="line">    print request.event[&quot;message&quot;] # &quot;my error event&quot;</div><div class="line">    print request.event[&quot;args&quot;]    # (data,)</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wx.png" alt="Zero WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/zhifu.png" alt="Zero Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python-websocket/" rel="tag"># python websocket</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/31/kafka实战-kafka-cluster/" rel="next" title="kafka实战-kafka cluster">
+                <i class="fa fa-chevron-left"></i> kafka实战-kafka cluster
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2018/02/06/websocket/"
+           data-title="websocket（一）" data-url="http://yoursite.com/2018/02/06/websocket/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Zero" />
+          <p class="site-author-name" itemprop="name">Zero</p>
+          <p class="site-description motion-element" itemprop="description">走过山山水水,脚下高高低低,人生难得糊涂！</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">96</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">64</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.unixhot.com/" title="运维社区" target="_blank">运维社区</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.yfshare.vip" title="Jack Wang Blog" target="_blank">Jack Wang Blog</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.25555579.com/" title="背锅侠" target="_blank">背锅侠</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文章"><span class="nav-number">1.</span> <span class="nav-text">参考文章</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">2.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#html5"><span class="nav-number">3.</span> <span class="nav-text">html5</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#websocket"><span class="nav-number">4.</span> <span class="nav-text">websocket</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#socket-io"><span class="nav-number">5.</span> <span class="nav-text">socket.io</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#eventlet介绍"><span class="nav-number">6.</span> <span class="nav-text">eventlet介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#flask-socketio"><span class="nav-number">7.</span> <span class="nav-text">flask-socketio</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化"><span class="nav-number">7.1.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#监听事件"><span class="nav-number">7.2.</span> <span class="nav-text">监听事件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发送消息"><span class="nav-number">7.3.</span> <span class="nav-text">发送消息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Namespace"><span class="nav-number">7.4.</span> <span class="nav-text">Namespace</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Room"><span class="nav-number">7.5.</span> <span class="nav-text">Room</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#简单demo"><span class="nav-number">8.</span> <span class="nav-text">简单demo</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#websocket进阶"><span class="nav-number">9.</span> <span class="nav-text">websocket进阶</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#websocket作用"><span class="nav-number">10.</span> <span class="nav-text">websocket作用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ajax轮询"><span class="nav-number">10.1.</span> <span class="nav-text">ajax轮询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#long-poll"><span class="nav-number">10.2.</span> <span class="nav-text">long poll</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#websocket-1"><span class="nav-number">10.3.</span> <span class="nav-text">websocket</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#websocket提升"><span class="nav-number">11.</span> <span class="nav-text">websocket提升</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#应用场景1"><span class="nav-number">11.1.</span> <span class="nav-text">应用场景1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用场景2"><span class="nav-number">11.2.</span> <span class="nav-text">应用场景2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#房间"><span class="nav-number">11.3.</span> <span class="nav-text">房间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#链接事件"><span class="nav-number">11.4.</span> <span class="nav-text">链接事件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#错误控制"><span class="nav-number">11.5.</span> <span class="nav-text">错误控制</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zero</span>
+</div>
+
+<script  language="javascript">
+window.onload = function() { 
+var show = document.getElementById("show"); 
+setInterval(function() { 
+var time = new Date(); 
+// 程序计时的月从0开始取值后+1 
+var m = time.getMonth() + 2; 
+//根据自己博客的创建时间更改数值 
+var t = "Welcome to Zero's  Blog! 宝宝已经存在"+(time.getFullYear()-2017) + "年" + m + "月" 
++ time.getDate() + "天 " + time.getHours() + "时" 
++ time.getMinutes() + "分" + time.getSeconds() + "秒了"; 
+show.innerHTML = t; 
+}, 1000); 
+}; 
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?ecc9733854359d44324d6063c4776ffb";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+<span id="busuanzi_container_site_uv">
+  你是本站的第<span id="busuanzi_value_site_uv"></span>个访客
+</span>
+<!--
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+
+
+-->
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zerosre"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("DoxG0uQxF81TSYnLX2XSmf3s-gzGzoHsz", "Q4wLV6Vdxd4YnCWesJ0qk9cO");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>
